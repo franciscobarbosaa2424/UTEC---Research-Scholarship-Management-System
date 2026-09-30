@@ -1,18 +1,20 @@
 package uy.utec.pa.modelo;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Administrador extends Usuario{
 
     private String admin_Permiso;
     private String puesto;
-    private Date fecha_alta;
+    private LocalDate fecha_alta;
 
-    public Administrador(int id_usuario, String ci, String nacionalidad, String contrasena, String nombre, String apellido, String calle, int numero, String estado, String correo, String admin_Permiso, String puesto, Date fecha_alta) {
+
+    public Administrador(int id_usuario, String ci, String nacionalidad, String contrasena, String nombre, String apellido, String calle, int numero, String estado, String correo, String puesto) {
         super(id_usuario,ci,nacionalidad,contrasena,nombre,apellido,calle,numero,estado,correo);
-        this.admin_Permiso=admin_Permiso;
+        this.admin_Permiso="admin";
         this.puesto=puesto;
-        this.fecha_alta= fecha_alta;
+        this.fecha_alta = LocalDate.now();
     }
 
     //constructor para crear en el main
