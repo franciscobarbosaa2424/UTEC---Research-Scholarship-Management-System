@@ -9,6 +9,11 @@ public class EvaluadorExterno extends Usuario {
         this.institucion=institucion;
     }
 
+    public EvaluadorExterno(String ci, String nacionalidad, String contrasena, String nombre, String apellido, String calle, int numero, String estado, String correo, String institucion) {
+        super(ci,nacionalidad,contrasena,nombre,apellido,calle,numero,estado,correo);
+        this.institucion=institucion;
+    }
+
     public String getInstitucion() {
         return institucion;
     }
@@ -20,6 +25,7 @@ public class EvaluadorExterno extends Usuario {
     @Override
     public String toString() {
         return "EvaluadorExterno{" +
+                "usuario='"+ super.toString()+'\'' +
                 "institucion='" + institucion + '\'' +
                 '}';
     }

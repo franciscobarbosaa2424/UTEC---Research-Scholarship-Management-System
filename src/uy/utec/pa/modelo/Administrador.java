@@ -9,12 +9,11 @@ public class Administrador extends Usuario{
     private String puesto;
     private LocalDate fecha_alta;
 
-
-    public Administrador(int id_usuario, String ci, String nacionalidad, String contrasena, String nombre, String apellido, String calle, int numero, String estado, String correo, String puesto) {
+    public Administrador(int id_usuario, String ci, String nacionalidad, String contrasena, String nombre, String apellido, String calle, int numero, String estado, String correo, String puesto, Date fecha_alta) {
         super(id_usuario,ci,nacionalidad,contrasena,nombre,apellido,calle,numero,estado,correo);
         this.admin_Permiso="admin";
         this.puesto=puesto;
-        this.fecha_alta = LocalDate.now();
+        this.fecha_alta= LocalDate.now();
     }
 
     //constructor para crear en el main
