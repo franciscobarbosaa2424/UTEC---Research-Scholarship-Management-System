@@ -25,6 +25,18 @@ abstract class Usuario {
         this.correo = correo;
     }
 
+    public Usuario(String ci, String nacionalidad, String contrasena, String nombre, String apellido, String calle, int numero, String estado, String correo) {
+        this.ci = ci;
+        this.nacionalidad = nacionalidad;
+        this.contrasena = contrasena;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.calle = calle;
+        this.numero = numero;
+        this.estado = estado;
+        this.correo = correo;
+    }
+
     //SETTER Y GETTER
     public String getNacionalidad() {
         return nacionalidad;

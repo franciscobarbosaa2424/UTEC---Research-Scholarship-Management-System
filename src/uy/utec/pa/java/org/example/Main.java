@@ -1,8 +1,10 @@
-package uy.utec.pa.java.org.example;
+import uy.utec.pa.modelo.*;
+
+
 import java.util.Scanner;
 
-public class Main {
-    public static void main(String[] args) {
+
+    public void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("=== INICIAR SESIÓN ===");
@@ -13,9 +15,106 @@ public class Main {
         System.out.print("Ingrese la contraseña: ");
         String contrasena = scanner.nextLine();
 
+        //VALIDAR
 
-        System.out.println("¡Sesión iniciada correctamente!");
 
+
+
+            System.out.println("¡Sesión iniciada correctamente!");
+            System.out.println();
+            System.out.println();
+
+            //MENU
+            MenuBytech();
+
+            scanner.close();
     }
+
+
+public void MenuBytech(){
+    Scanner scanner = new Scanner(System.in);
+    System.out.println("Bienvenido. ¿Qué desea realizar?");
+    System.out.println("1. Crear Usuario");
+    System.out.print("Ingrese la opción a realizar: ");
+    int numero = scanner.nextInt();
+
+    if(numero==1){
+        CrearUsuario();
+    }
+    scanner.close();
+}
+
+public void CrearUsuario(){
+    Scanner scanner = new Scanner(System.in);
+    System.out.println("CREACION DE USUARIO:");
+    System.out.println("Seleccione modalidad de Usuario: ");
+    System.out.println("1.Administrador");
+    System.out.println("2.Evaluador Externo");
+
+    int numero = scanner.nextInt();
+
+    if (numero == 1){
+        CrearUsuarioAdministrador();
+    }//x lista
+        if (numero == 2){
+            CrearUsuarioEvaluadorExterno();
+        }//x lista
+          else {}//por defecto
+
+    scanner.close();
+}
+
+
+public void CrearUsuarioAdministrador(){
+    Scanner scanner = new Scanner(System.in);
+
+    System.out.println("=== Crear usuario ===");
+
+    System.out.println("Cédula: ");
+    String cedula = scanner.nextLine();
+
+    System.out.println("Nacionalidad: ");
+    String nacionalidad = scanner.nextLine();
+
+    System.out.println("Contraseña: ");
+    String contrasena = scanner.nextLine();
+
+    System.out.println("Nombre: ");
+    String nombre = scanner.nextLine();
+
+
+    System.out.println("Apellido: ");
+    String apellido = scanner.nextLine();
+
+
+    System.out.println("Calle: ");
+    String calle = scanner.nextLine();
+
+
+    System.out.println("Número de puerta: ");
+    int numeroPuerta = scanner.nextInt();
+
+
+    System.out.println("Estado: ");
+    String estado = scanner.nextLine();
+
+
+    System.out.println("Correo: ");
+    String correoAdmin = scanner.nextLine();
+
+    System.out.println("Ingrese Puesto: ");
+    String puesto = scanner.nextLine();
+
+    Administrador administrador = new Administrador
+            (cedula,nacionalidad,contrasena,nombre, apellido, calle, numeroPuerta, estado, correoAdmin, puesto);
+
+    System.out.println("Usuario Administrador creado éxitosamente!");
+
+    administrador.toString();
+    scanner.close();
+}
+
+public void CrearUsuarioEvaluadorExterno(){
+
 }
 
