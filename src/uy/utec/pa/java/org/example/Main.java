@@ -93,7 +93,7 @@ public void CrearUsuarioAdministrador(){
 
     System.out.println("Número de puerta: ");
     int numeroPuerta = scanner.nextInt();
-
+    scanner.nextLine();
 
     System.out.println("Estado: ");
     String estado = scanner.nextLine();
@@ -110,7 +110,7 @@ public void CrearUsuarioAdministrador(){
 
     System.out.println("Usuario Administrador creado éxitosamente!");
 
-    administrador.toString();
+    System.out.println(administrador.toString());
     scanner.close();
 }
 
