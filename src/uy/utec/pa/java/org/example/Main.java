@@ -1,10 +1,28 @@
+import uy.utec.pa.dao.UsuarioDAO;
 import uy.utec.pa.modelo.*;
+import uy.utec.pa.util.ConexionBDSingleton;
 
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 
     public void main(String[] args) {
+        try (Connection conexion = ConexionBDSingleton.conectar()) {
+            System.out.println("¡Conexión a PostgreSQL correcta!");
+        } catch (SQLException e) {
+            System.out.println("Error de conexión: " + e.getMessage());
+        }
+
+        try {
+            UsuarioDAO dao = new UsuarioDAO();
+            System.out.println(dao.buscarPorCorreo("francisco@gmail.com"));
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("=== INICIAR SESIÓN ===");
