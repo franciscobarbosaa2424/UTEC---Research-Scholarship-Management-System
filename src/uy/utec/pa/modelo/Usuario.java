@@ -1,6 +1,6 @@
 package uy.utec.pa.modelo;
 
-abstract class Usuario {
+public class Usuario {
     private int id_usuario;
     private String ci;
     private String nacionalidad;
@@ -11,8 +11,9 @@ abstract class Usuario {
     private int numero;
     private String estado;
     private  String correo;
+    private String rol;
 
-    public Usuario(int id_usuario, String ci, String nacionalidad, String contrasena, String nombre, String apellido, String calle, int numero, String estado, String correo) {
+    public Usuario(int id_usuario, String ci, String nacionalidad, String contrasena, String nombre, String apellido, String calle, int numero, String estado, String correo, String rol) {
         this.id_usuario = id_usuario;
         this.ci = ci;
         this.nacionalidad = nacionalidad;
@@ -23,9 +24,10 @@ abstract class Usuario {
         this.numero = numero;
         this.estado = estado;
         this.correo = correo;
+        this.rol=rol;
     }
 
-    public Usuario(String ci, String nacionalidad, String contrasena, String nombre, String apellido, String calle, int numero, String estado, String correo) {
+    public Usuario(String ci, String nacionalidad, String contrasena, String nombre, String apellido, String calle, int numero, String estado, String correo, String rol) {
         this.ci = ci;
         this.nacionalidad = nacionalidad;
         this.contrasena = contrasena;
@@ -35,6 +37,7 @@ abstract class Usuario {
         this.numero = numero;
         this.estado = estado;
         this.correo = correo;
+        this.rol=rol;
     }
 
     //SETTER Y GETTER
@@ -118,11 +121,21 @@ abstract class Usuario {
         this.correo = correo;
     }
 
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
+
+
+
     //TOSTRING
     @Override
     public String toString() {
         return "Usuario{" +
-                "id_usuario=" + id_usuario +
+                 id_usuario + "."+
                 ", ci='" + ci + '\'' +
                 ", nacionalidad='" + nacionalidad + '\'' +
                 ", contrasena='" + contrasena + '\'' +
@@ -132,6 +145,7 @@ abstract class Usuario {
                 ", numero=" + numero +
                 ", estado='" + estado + '\'' +
                 ", correo='" + correo + '\'' +
+                ", rol='" + rol + '\'' +
                 '}';
     }
 }

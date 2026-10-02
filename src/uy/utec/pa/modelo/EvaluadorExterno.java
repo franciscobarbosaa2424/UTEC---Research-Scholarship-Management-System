@@ -4,13 +4,13 @@ public class EvaluadorExterno extends Usuario {
 
     private String institucion;
 
-    public EvaluadorExterno(int id_usuario, String ci, String nacionalidad, String contrasena, String nombre, String apellido, String calle, int numero, String estado, String correo, String institucion) {
-        super(id_usuario,ci,nacionalidad,contrasena,nombre,apellido,calle,numero,estado,correo);
+    public EvaluadorExterno(int id_usuario, String ci, String nacionalidad, String contrasena, String nombre, String apellido, String calle, int numero, String estado, String correo, String rol, String institucion) {
+        super(id_usuario,ci,nacionalidad,contrasena,nombre,apellido,calle,numero,estado,correo, rol);
         this.institucion=institucion;
     }
 
-    public EvaluadorExterno(String ci, String nacionalidad, String contrasena, String nombre, String apellido, String calle, int numero, String estado, String correo, String institucion) {
-        super(ci,nacionalidad,contrasena,nombre,apellido,calle,numero,estado,correo);
+    public EvaluadorExterno(String ci, String nacionalidad, String contrasena, String nombre, String apellido, String calle, int numero, String estado, String correo, String rol, String institucion) {
+        super(ci,nacionalidad,contrasena,nombre,apellido,calle,numero,estado,correo, rol);
         this.institucion=institucion;
     }
 
