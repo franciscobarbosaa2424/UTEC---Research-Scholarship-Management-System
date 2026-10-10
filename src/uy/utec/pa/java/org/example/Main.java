@@ -261,7 +261,7 @@ public void CrearUsuarioAdministrador() throws SQLException {
             System.out.println("Opción inválida, vuelva a seleccionar.");
         }
     }
-
+//
 // El formulario continúa acá, solo después de elegir 1 o 2.
 
     System.out.println("Correo: ");
