@@ -1,6 +1,7 @@
 package uy.utec.pa.dao;
 
 import uy.utec.pa.modelo.Administrador;
+import uy.utec.pa.modelo.EvaluadorExterno;
 import uy.utec.pa.modelo.Usuario;
 import uy.utec.pa.util.ConexionBDSingleton;
 import java.sql.*;
@@ -42,7 +43,7 @@ public class UsuarioDAOImpl implements UsuarioDAO{
         String sql = """
         INSERT INTO proyecto.usuarios
             (correo, nombre, apellido, calle, nacionalidad,
-             ci, contraseña, estado, rol)
+             ci, contrasena, estado, rol)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """;
 
@@ -257,6 +258,99 @@ public class UsuarioDAOImpl implements UsuarioDAO{
         }
     }
 
+    public void crearUsuarioEvaluador(EvaluadorExterno evaluador){
+        String sql = """
+        INSERT INTO proyecto.usuarios
+            (correo, nombre, apellido, calle, nacionalidad,
+             ci, contrasena, estado, rol)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """;
 
+        String sql2 = """
+        INSERT INTO proyecto.eva_externos
+            (id_usuario,institucion)
+        VALUES (?, ?)
+        """;
 
+        Connection conexion = null;
+        PreparedStatement sentencia = null;
+
+        try {
+            conexion = ConexionBDSingleton.getInstancia().conectar();
+            sentencia = conexion.prepareStatement(sql);
+
+            sentencia.setString(1, evaluador.getCorreo());
+            sentencia.setString(2, evaluador.getNombre());
+            sentencia.setString(3, evaluador.getApellido());
+            sentencia.setString(4, evaluador.getCalle());
+            sentencia.setString(5, evaluador.getNacionalidad());
+            sentencia.setString(6, evaluador.getCi());
+            sentencia.setString(7, evaluador.getContrasena());
+            sentencia.setString(8, evaluador.getEstado());
+            sentencia.setString(9, evaluador.getRol());
+
+            sentencia.executeUpdate();
+
+            int id_usuario_generado = buscarUsuarioPorCorreo(evaluador.getCorreo());
+
+            sentencia = conexion.prepareStatement(sql2);
+            sentencia.setInt(1, id_usuario_generado);
+            sentencia.setString(2, evaluador.getInstitucion());
+
+            sentencia.executeUpdate();
+
+            System.out.println("Evaluador Externo creado correctamente.");
+
+        } catch (SQLException e) {
+            System.out.println("Error al crear evaluador externo: " + e.getMessage());
+
+        } finally {
+            try {
+                if (sentencia != null) {
+                    sentencia.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Error al cerrar sentencia: " + e.getMessage());
+            }
+
+        }
+    }
+
+    public void darDeBajaUsuario (int id_usuario) {
+
+        String sql = """
+                UPDATE proyecto.usuarios
+                        SET estado = 'inactivo'
+                        WHERE
+                id_Usuario = ?
+        """;
+
+        Connection conexion = null;
+        PreparedStatement sentencia = null;
+
+        try {
+            conexion = ConexionBDSingleton.getInstancia().conectar();
+            sentencia = conexion.prepareStatement(sql);
+
+            sentencia.setInt(1, id_usuario);
+
+            sentencia.executeUpdate();
+
+            System.out.println("Usuario dado de baja correctamente.");
+
+        } catch (SQLException e) {
+            System.out.println("Error al dar de baja el usuario: " + e.getMessage());
+
+        } finally {
+            try {
+                if (sentencia != null) {
+                    sentencia.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Error al cerrar sentencia: " + e.getMessage());
+            }
+
+        }
+
+    }
 }

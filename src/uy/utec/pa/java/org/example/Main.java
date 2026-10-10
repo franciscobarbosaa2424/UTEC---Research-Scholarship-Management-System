@@ -1,5 +1,8 @@
 import uy.utec.pa.dao.UsuarioDAOImpl;
 import uy.utec.pa.modelo.*;
+import uy.utec.pa.servicio.AutenticacionProxy;
+import uy.utec.pa.servicio.AutenticacionReal;
+import uy.utec.pa.servicio.ServicioAutenticacion;
 
 
 import java.sql.SQLException;
@@ -8,9 +11,13 @@ import java.util.Scanner;
 
     public void main(String[] args) throws SQLException {
 
-
-
         Scanner scanner = new Scanner(System.in);
+
+        //VALIDAR
+        UsuarioDAOImpl dao = new UsuarioDAOImpl();
+        LinkedList<Usuario> usuarios = dao.obtenerTodosLosUsuarios();
+        ServicioAutenticacion servicioReal = new AutenticacionReal(usuarios);
+        ServicioAutenticacion proxy = new AutenticacionProxy(servicioReal);
 
         System.out.println("=== INICIAR SESIÓN ===");
 
@@ -20,19 +27,20 @@ import java.util.Scanner;
         System.out.print("Ingrese la contraseña: ");
         String contrasena = scanner.nextLine();
 
-        //VALIDAR
+        boolean accede = proxy.autenticar(correo, contrasena);
 
-
-
-
-            System.out.println("¡Sesión iniciada correctamente!");
-            System.out.println();
-            System.out.println();
-
+        if (accede) {
+            System.out.println("Inicio de sesión correcto.");
             //MENU
             MenuBytech();
+        } else {
+            System.out.println("Correo o contraseña incorrectos.");
+        }
 
-            scanner.close();
+        System.out.println();
+        System.out.println();
+
+        scanner.close();
     }
 
 
@@ -42,6 +50,7 @@ public void MenuBytech() throws SQLException {
     System.out.println("1. Crear Usuario");
     System.out.println("2. Editar Usuario");
     System.out.println("3. Listar Usuarios");
+    System.out.println("4. Dar de Baja un Usuario");
     System.out.print("Ingrese la opción a realizar: ");
     int numero = scanner.nextInt();
 
@@ -55,7 +64,10 @@ public void MenuBytech() throws SQLException {
         //llamar a ese metodo aca
     }else if(numero==3){
         listarUsuarios();
+    }else if(numero==4){
+        darDeBajaUsuario();
     }
+
     scanner.close();
 }
 
@@ -232,8 +244,6 @@ public void CrearUsuarioAdministrador() throws SQLException {
     scanner.nextLine();
 
 
-
-
 // El formulario continúa acá, solo después de elegir 1 o 2.
 
     String estado;
@@ -308,9 +318,28 @@ public void CrearUsuarioEvaluadorExterno(){
     int numeroPuerta = scanner.nextInt();
     scanner.nextLine();
 
-    System.out.println("Estado: ");
-    String estado = scanner.nextLine();
 
+// El formulario continúa acá, solo después de elegir 1 o 2.
+
+    String estado;
+
+    while (true) {
+        System.out.println("Estado (1.Activo o 2.Inactivo): ");
+        int seleccionEstado = scanner.nextInt();
+        scanner.nextLine();
+
+        if (seleccionEstado == 1) {
+            estado = "activo";
+            break;
+        } else if (seleccionEstado == 2) {
+            estado = "inactivo";
+            break;
+        } else {
+            System.out.println("Opción inválida, vuelva a seleccionar.");
+        }
+    }
+
+// El formulario continúa acá, solo después de elegir 1 o 2.
 
     System.out.println("Correo: ");
     String correoAdmin = scanner.nextLine();
@@ -326,8 +355,17 @@ public void CrearUsuarioEvaluadorExterno(){
             (cedula,nacionalidad,contrasena,nombre, apellido, calle, numeroPuerta, estado, correoAdmin, rol, institucion);
 
 
-    System.out.println(evaluadorExterno.toString());
+    UsuarioDAOImpl dao = new UsuarioDAOImpl();
+    dao.crearUsuarioEvaluador(evaluadorExterno);
 
     scanner.close();
+}
+
+public void darDeBajaUsuario(){
+    Scanner scanner = new Scanner(System.in);
+    listarUsuarios();
+    int id = scanner.nextInt();
+    UsuarioDAOImpl dao = new UsuarioDAOImpl();
+    dao.darDeBajaUsuario(id);
 }
 

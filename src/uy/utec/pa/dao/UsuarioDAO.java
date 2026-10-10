@@ -1,6 +1,7 @@
 package uy.utec.pa.dao;
 
 import uy.utec.pa.modelo.Administrador;
+import uy.utec.pa.modelo.EvaluadorExterno;
 import uy.utec.pa.modelo.Usuario;
 
 import java.util.LinkedList;
@@ -12,4 +13,7 @@ public interface UsuarioDAO {
     void editarUsuario(Usuario usuario);
     Administrador buscarRestoDeDatosAdministrador(Usuario usuario);
     void editarAdministrador(Administrador administrador);
+    void crearUsuarioEvaluador(EvaluadorExterno evaluador);
+    void darDeBajaUsuario (int id_usuario);
+
 }
