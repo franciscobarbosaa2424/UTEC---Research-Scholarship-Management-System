@@ -25,8 +25,6 @@ public class Administrador extends Usuario{
     }
 
 
-
-
     public String getAdmin_Permiso() {
         return admin_Permiso;
     }

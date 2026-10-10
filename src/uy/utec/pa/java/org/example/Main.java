@@ -1,8 +1,6 @@
 import uy.utec.pa.dao.UsuarioDAOImpl;
 import uy.utec.pa.modelo.*;
-import uy.utec.pa.servicio.AutenticacionProxy;
-import uy.utec.pa.servicio.AutenticacionReal;
-import uy.utec.pa.servicio.ServicioAutenticacion;
+import uy.utec.pa.servicio.*;
 
 
 import java.sql.SQLException;
@@ -274,15 +272,21 @@ public void CrearUsuarioAdministrador() throws SQLException {
 
     String rol ="administrador";
 
-    Administrador administrador = new Administrador
-            (cedula,nacionalidad,contrasena,nombre, apellido, calle, numeroPuerta, estado, correoAdmin, puesto, rol);
+    AdministradorFactory creadorAdmin = new AdministradorFactory(puesto);
+    Administrador usuarioAdmin = creadorAdmin.crearUsuario(
+            cedula,
+            nacionalidad,
+            contrasena,nombre, apellido, calle, numeroPuerta, estado, correoAdmin, rol);
+
+    //Administrador administrador = new Administrador
+    //        (cedula,nacionalidad,contrasena,nombre, apellido, calle, numeroPuerta, estado, correoAdmin, puesto, rol);
 
     System.out.println("Usuario Administrador creado éxitosamente!");
 
-    System.out.println(administrador.toString());
+    System.out.println(usuarioAdmin.toString());
 
     UsuarioDAOImpl dao = new UsuarioDAOImpl();
-    dao.crearUsuarioAdministrador(administrador);
+    dao.crearUsuarioAdministrador(usuarioAdmin);
 
     scanner.close();
 }
@@ -357,6 +361,7 @@ public void CrearUsuarioEvaluadorExterno(){
 
     UsuarioDAOImpl dao = new UsuarioDAOImpl();
     dao.crearUsuarioEvaluador(evaluadorExterno);
+
 
     scanner.close();
 }
