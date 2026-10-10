@@ -353,14 +353,22 @@ public void CrearUsuarioEvaluadorExterno(){
 
     String rol = "evaluador";
 
+
+    EvaluadorFactory creadorEvaluador = new EvaluadorFactory(institucion);
+    EvaluadorExterno usuarioEvaluador = creadorEvaluador.crearUsuario(
+            cedula,
+            nacionalidad,
+            contrasena,nombre, apellido, calle, numeroPuerta, estado, correoAdmin, rol);
+
+    //Administrador administrador = new Administrador
+    //        (cedula,nacionalidad,contrasena,nombre, apellido, calle, numeroPuerta, estado, correoAdmin, puesto, rol);
+
     System.out.println("Usuario Evaluador Externo creado éxitosamente!");
 
-    EvaluadorExterno evaluadorExterno = new EvaluadorExterno
-            (cedula,nacionalidad,contrasena,nombre, apellido, calle, numeroPuerta, estado, correoAdmin, rol, institucion);
-
+    System.out.println(usuarioEvaluador.toString());
 
     UsuarioDAOImpl dao = new UsuarioDAOImpl();
-    dao.crearUsuarioEvaluador(evaluadorExterno);
+    dao.crearUsuarioEvaluador(usuarioEvaluador);
 
 
     scanner.close();
