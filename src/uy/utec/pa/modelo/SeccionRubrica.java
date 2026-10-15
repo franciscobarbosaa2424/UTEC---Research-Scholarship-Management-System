@@ -24,4 +24,12 @@ public class SeccionRubrica {
     public void setPeso(int peso) {
         this.peso = peso;
     }
+
+    @Override
+    public String toString() {
+        return "SeccionRubrica{" +
+                "nombre='" + nombre + '\'' +
+                ", peso=" + peso +
+                '}';
+    }
 }

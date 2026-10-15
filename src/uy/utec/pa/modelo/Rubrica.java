@@ -1,12 +1,21 @@
 package uy.utec.pa.modelo;
 
+import java.util.LinkedList;
+
 public class Rubrica {
     private String nombre;
     private int id_rubrica;
+    private LinkedList<SeccionRubrica> seccionesRubrica;
 
-    public Rubrica(String nombre, int id_rubrica) {
+    public Rubrica(String nombre, int id_rubrica, LinkedList<SeccionRubrica> seccionesRubrica) {
         this.nombre = nombre;
         this.id_rubrica = id_rubrica;
+        this.seccionesRubrica = seccionesRubrica;
+    }
+
+    public Rubrica(String nombre, LinkedList<SeccionRubrica> seccionesRubrica) {
+        this.nombre = nombre;
+        this.seccionesRubrica = seccionesRubrica;
     }
 
     public String getNombre() {
@@ -25,4 +34,20 @@ public class Rubrica {
         this.id_rubrica = id_rubrica;
     }
 
+    public LinkedList<SeccionRubrica> getSeccionesRubrica() {
+        return seccionesRubrica;
+    }
+
+    public void setSeccionesRubrica(LinkedList<SeccionRubrica> seccionesRubrica) {
+        this.seccionesRubrica = seccionesRubrica;
+    }
+
+    @Override
+    public String toString() {
+        return "Rubrica{" +
+                "nombre='" + nombre + '\'' +
+                ", id_rubrica=" + id_rubrica +
+                ", seccionesRubrica=" + seccionesRubrica +
+                '}';
+    }
 }

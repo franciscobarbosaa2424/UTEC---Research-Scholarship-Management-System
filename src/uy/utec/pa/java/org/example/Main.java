@@ -1,9 +1,11 @@
+import uy.utec.pa.dao.RubricaDAOImpl;
 import uy.utec.pa.dao.UsuarioDAOImpl;
 import uy.utec.pa.modelo.*;
 import uy.utec.pa.servicio.*;
 
 
 import java.sql.SQLException;
+import java.sql.SQLOutput;
 import java.util.Scanner;
 
 
@@ -25,15 +27,28 @@ import java.util.Scanner;
         System.out.print("Ingrese la contraseña: ");
         String contrasena = scanner.nextLine();
 
-        boolean accede = proxy.autenticar(correo, contrasena);
+        //boolean accede = proxy.autenticar(correo, contrasena);
 
-        if (accede) {
+       // if (accede) {
             System.out.println("Inicio de sesión correcto.");
             //MENU
-            MenuBytech();
-        } else {
-            System.out.println("Correo o contraseña incorrectos.");
-        }
+            String rol = "";
+            for(Usuario u: usuarios){
+                if(u.getCorreo().equalsIgnoreCase(correo)){
+                    rol=u.getRol();
+                }
+            }
+          //  if(rol.equalsIgnoreCase("administrador")){
+                MenuPrincipalAdmin();
+                System.out.println("Bienvenido Administrador");
+
+          //  }else { if(rol.equalsIgnoreCase("evaluador")){
+                //aca iria el menu cuando el acceso es correcto pero no es administrador
+          //  }}
+
+        //} else {
+        //    System.out.println("Correo o contraseña incorrectos.");
+       // }
 
         System.out.println();
         System.out.println();
@@ -41,9 +56,106 @@ import java.util.Scanner;
         scanner.close();
     }
 
+    public void MenuPrincipalAdmin() throws SQLException {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Bienvenido. ¿Qué desea realizar?");
+        System.out.println("1. Menú de Usuarios");
+        System.out.println("2. Gestión de Convocatorias");
+        System.out.println("3. Gestión de Rúbricas");
+        System.out.println("4. ");
+        System.out.print("Ingrese la opción a realizar: ");
 
-public void MenuBytech() throws SQLException {
+        int numero = scanner.nextInt();
+
+
+        if(numero==1){
+            MenuUsuario();
+        }else if(numero==2){
+            GestionConvocatorias();
+        }else if(numero==3){
+            MenuRubricas();
+        }
+
+
+        scanner.close();
+
+    }
+
+    public void MenuRubricas() throws SQLException {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Gestión de Rúbricas:");
+        System.out.println("1. Crear Rúbrica");
+        System.out.println("2. Editar Rúbrica");
+        System.out.println("3. Listar Rúbricas");
+        System.out.println("4. Dar de Baja una Rúbrica");
+        System.out.print("Ingrese la opción a realizar: ");
+        int numero = scanner.nextInt();
+
+
+        if(numero==1){
+            //Crear Rubrica
+            System.out.println("Ingrese el nombre de la rubrica:");
+            String nombreRubrica = scanner.nextLine();
+
+
+
+            boolean valido = true;
+            System.out.println("Secciones de la Rúbrica:");
+            System.out.println("(Ingrese 0 en nombre para dejar de agregar secciones)");
+
+
+            LinkedList<SeccionRubrica> seccionesRubrica = new LinkedList<>();
+
+            while(valido==true){
+                System.out.println("Ingrese el nombre de la seccion:");
+                String nombreSeccion = scanner.nextLine();
+
+                if(nombreSeccion.equalsIgnoreCase("0")){
+                    valido=false;
+                    break;
+                }
+
+                System.out.println("Ingrese el peso de la seccion:");
+                int pesoSeccion = scanner.nextInt();
+                scanner.nextLine();
+
+                System.out.println();
+
+                if(pesoSeccion>0 && nombreSeccion!=null && nombreSeccion!=""){
+                    SeccionRubrica seccion = new SeccionRubrica(nombreSeccion,pesoSeccion);
+                    seccionesRubrica.add(seccion);
+
+                }else{
+                    System.out.println("El peso debe ser mayor a 0 y el nombre no debe estar vacio.");
+                }
+
+            }
+
+            Rubrica rubrica = new Rubrica(nombreRubrica,seccionesRubrica);
+            System.out.println("Rubrica creada con exito!:");
+            System.out.println(rubrica.toString());
+
+            RubricaDAOImpl dao = new RubricaDAOImpl();
+            dao.crearRubrica(rubrica);
+
+        }else if(numero==2){
+            //listar rubricas
+            //elegir rubrica y poder editarla
+        }else if(numero==3){
+            // listar rubricas
+        }
+        else if(numero==4){
+            //listar rubricas
+            // dar de baja rubrica
+        }
+
+        scanner.close();
+    }
+
+public void MenuUsuario() throws SQLException {
     Scanner scanner = new Scanner(System.in);
+
     System.out.println("Bienvenido. ¿Qué desea realizar?");
     System.out.println("1. Crear Usuario");
     System.out.println("2. Editar Usuario");
@@ -64,6 +176,33 @@ public void MenuBytech() throws SQLException {
         listarUsuarios();
     }else if(numero==4){
         darDeBajaUsuario();
+    }
+
+    scanner.close();
+}
+
+public void GestionConvocatorias() throws SQLException {
+    Scanner scanner = new Scanner(System.in);
+
+    System.out.println("Gestión de Convocatorias:");
+    System.out.println("1. Crear Convocatoria");
+    System.out.println("2. Editar Convocatoria");
+    System.out.println("3. Listar Convocatorias");
+    System.out.println("4. Dar de Baja una Convocatoria");
+    System.out.print("Ingrese la opción a realizar: ");
+    int numero = scanner.nextInt();
+
+    if(numero==1){
+        //Crear convocatorias
+    }else if(numero==2){
+        //listar convocatorias
+        //elegir convocatorias y poder editarla
+    }else if(numero==3){
+        //listar convocatorias
+    }
+    else if(numero==4){
+        //listar convocatorias
+        // dar de baja convocatoria seleccionada
     }
 
     scanner.close();
@@ -261,7 +400,7 @@ public void CrearUsuarioAdministrador() throws SQLException {
             System.out.println("Opción inválida, vuelva a seleccionar.");
         }
     }
-//
+
 // El formulario continúa acá, solo después de elegir 1 o 2.
 
     System.out.println("Correo: ");
