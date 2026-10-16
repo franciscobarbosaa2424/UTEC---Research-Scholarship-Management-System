@@ -1,3 +1,4 @@
+import uy.utec.pa.dao.RubricaDAO;
 import uy.utec.pa.dao.RubricaDAOImpl;
 import uy.utec.pa.dao.UsuarioDAOImpl;
 import uy.utec.pa.modelo.*;
@@ -27,9 +28,9 @@ import java.util.Scanner;
         System.out.print("Ingrese la contraseña: ");
         String contrasena = scanner.nextLine();
 
-        //boolean accede = proxy.autenticar(correo, contrasena);
+        boolean accede = proxy.autenticar(correo, contrasena);
 
-       // if (accede) {
+        if (accede) {
             System.out.println("Inicio de sesión correcto.");
             //MENU
             String rol = "";
@@ -38,17 +39,17 @@ import java.util.Scanner;
                     rol=u.getRol();
                 }
             }
-          //  if(rol.equalsIgnoreCase("administrador")){
-                MenuPrincipalAdmin();
+            if(rol.equalsIgnoreCase("administrador")){
                 System.out.println("Bienvenido Administrador");
+                MenuPrincipalAdmin();
 
-          //  }else { if(rol.equalsIgnoreCase("evaluador")){
+            }else { if(rol.equalsIgnoreCase("evaluador")){
                 //aca iria el menu cuando el acceso es correcto pero no es administrador
-          //  }}
+            }}
 
-        //} else {
-        //    System.out.println("Correo o contraseña incorrectos.");
-       // }
+        } else {
+            System.out.println("Correo o contraseña incorrectos.");
+        }
 
         System.out.println();
         System.out.println();
@@ -91,6 +92,7 @@ import java.util.Scanner;
         System.out.println("4. Dar de Baja una Rúbrica");
         System.out.print("Ingrese la opción a realizar: ");
         int numero = scanner.nextInt();
+        scanner.nextLine();
 
 
         if(numero==1){
@@ -117,7 +119,7 @@ import java.util.Scanner;
                 }
 
                 System.out.println("Ingrese el peso de la seccion:");
-                int pesoSeccion = scanner.nextInt();
+                double pesoSeccion = scanner.nextDouble();
                 scanner.nextLine();
 
                 System.out.println();
@@ -140,14 +142,123 @@ import java.util.Scanner;
             dao.crearRubrica(rubrica);
 
         }else if(numero==2){
-            //listar rubricas
-            //elegir rubrica y poder editarla
+                RubricaDAOImpl dao = new RubricaDAOImpl();
+                LinkedList<Rubrica> rubricas = dao.listarRubricas();
+
+                //listar rubricas
+                for(Rubrica r: rubricas){
+                    System.out.println(r.toString());
+                }
+
+                Rubrica rubricaAux = null;
+
+                System.out.println("Ingrese el id de la rubrica a editar:");
+                int id_rubrica = scanner.nextInt();
+                scanner.nextLine();
+
+                for(Rubrica r: rubricas){
+                    if(r.getId_rubrica()==id_rubrica){
+                        rubricaAux = r;
+                        break;
+                    }
+                }
+                boolean auxWhile1 = true;
+                boolean auxWhile2 = true;
+
+                //PRIMER WHILE PARA EL PRIMER MENU
+                while (auxWhile1==true) {
+                        System.out.println("Seleccione la opción que desea editar:");
+                        System.out.println("1. Nombre: " + rubricaAux.getNombre());
+                        System.out.println("2. Secciones de la rubrica");
+                        int opcionEditar = scanner.nextInt();
+                        scanner.nextLine();
+                        if (opcionEditar == 1) {
+                                System.out.println("Ingrese nuevo nombre:");
+                                String nombreNuevo = scanner.nextLine();
+                                rubricaAux.setNombre(nombreNuevo);
+                                dao.editarRubrica(rubricaAux);
+                                auxWhile1=false;
+                        } else if (opcionEditar == 2) {
+                                LinkedList<SeccionRubrica> secciones = dao.listarSecciones(id_rubrica);
+
+                                for (SeccionRubrica s : secciones){
+                                    System.out.println(s.toString());
+                                }
+                                System.out.println("Ingrese el id de seccion a editar:");
+                                int opcionSeccion = scanner.nextInt();
+                                scanner.nextLine();
+
+                                SeccionRubrica auxiliarSeccion = null;
+                                for(SeccionRubrica s: secciones){
+                                    if(s.getId_secRubrica() == opcionSeccion){
+                                        auxiliarSeccion = s;
+                                        break;
+                                    }
+                                }
+                                        //SEGUNDO WHILE PARA EL SEGUNDO MENU
+                                        while (auxWhile2==true) {
+                                            System.out.println("Ingrese la opción que desea editar");
+                                            System.out.println("1. Nombre: " + auxiliarSeccion.getNombre());
+                                            System.out.println("2. Peso: " + auxiliarSeccion.getPeso());
+                                            int opcionEditarSeccion = scanner.nextInt();
+                                            scanner.nextLine();
+                                            if (opcionEditarSeccion == 1) {
+                                                System.out.println("Ingrese nuevo nombre:");
+                                                String nuevoNombre = scanner.nextLine();
+                                                auxiliarSeccion.setNombre(nuevoNombre);
+                                                auxWhile2=false;
+                                            } else if (opcionEditarSeccion == 2) {
+                                                System.out.println("Ingrese nuevo peso:");
+                                                double nuevoPeso = scanner.nextDouble();
+                                                scanner.nextLine();
+                                                auxiliarSeccion.setPeso(nuevoPeso);
+                                                auxWhile2=false;
+                                            }
+                                        }
+
+                                dao.editarSeccionRubrica(auxiliarSeccion);
+
+                                auxWhile1=false;
+                        } else {
+                                System.out.println("Opcion invalida, vuelva a seleccionar");
+                        }
+                }
+
+
+
         }else if(numero==3){
             // listar rubricas
+            RubricaDAOImpl dao = new RubricaDAOImpl();
+
+            for(Rubrica r: dao.listarRubricas()){
+                System.out.println("Rubrica:" + r.getId_rubrica() + "-" + r.getNombre());
+
+                if(r.getSeccionesRubrica() != null){
+                    for(SeccionRubrica s: r.getSeccionesRubrica()){
+                        System.out.println("Seccion:" + s.getNombre() + "-" + s.getPeso());
+                    }
+                }
+            }
         }
         else if(numero==4){
             //listar rubricas
+            RubricaDAOImpl dao = new RubricaDAOImpl();
+
+            for(Rubrica r: dao.listarRubricas()){
+                System.out.println("Rubrica:" + r.getId_rubrica() + "-" + r.getNombre());
+
+                if(r.getSeccionesRubrica() != null){
+                    for(SeccionRubrica s: r.getSeccionesRubrica()){
+                        System.out.println("Seccion:" + s.getNombre() + "-" + s.getPeso());
+                    }
+                }
+            }
+
             // dar de baja rubrica
+            System.out.println("Ingrese el ID de la Rubrica a eliminar:");
+            int idRubrica = scanner.nextInt();
+            scanner.nextLine();
+            dao.eliminarRubrica(idRubrica);
         }
 
         scanner.close();
@@ -163,6 +274,7 @@ public void MenuUsuario() throws SQLException {
     System.out.println("4. Dar de Baja un Usuario");
     System.out.print("Ingrese la opción a realizar: ");
     int numero = scanner.nextInt();
+    scanner.nextLine();
 
     if(numero==1){
         CrearUsuario();
@@ -170,6 +282,7 @@ public void MenuUsuario() throws SQLException {
         System.out.println("Ingrese el ID del usuario a editar de la siguiente lista:");
         LinkedList<Usuario> usuarios = listarUsuarios();
         int id = scanner.nextInt();
+        scanner.nextLine();
         editarUsuario(usuarios,id);
         //llamar a ese metodo aca
     }else if(numero==3){
@@ -191,6 +304,7 @@ public void GestionConvocatorias() throws SQLException {
     System.out.println("4. Dar de Baja una Convocatoria");
     System.out.print("Ingrese la opción a realizar: ");
     int numero = scanner.nextInt();
+    scanner.nextLine();
 
     if(numero==1){
         //Crear convocatorias
@@ -217,6 +331,7 @@ public void CrearUsuario() throws SQLException {
     System.out.println("2.Evaluador Externo");
 
     int numero = scanner.nextInt();
+    scanner.nextLine();
 
     if (numero == 1){
         CrearUsuarioAdministrador();
@@ -261,7 +376,6 @@ public void editarUsuario(LinkedList<Usuario> usuarios,int id){
 
 
     int opcionMenuEdicion = scanner.nextInt();
-
     scanner.nextLine();
 
     switch (opcionMenuEdicion) {
@@ -516,7 +630,8 @@ public void CrearUsuarioEvaluadorExterno(){
 public void darDeBajaUsuario(){
     Scanner scanner = new Scanner(System.in);
     listarUsuarios();
-    int id = scanner.nextInt();
+    int id = scanner.nextInt();{}
+    scanner.nextLine();
     UsuarioDAOImpl dao = new UsuarioDAOImpl();
     dao.darDeBajaUsuario(id);
 }

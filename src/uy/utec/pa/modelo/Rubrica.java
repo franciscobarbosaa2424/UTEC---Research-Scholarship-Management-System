@@ -18,6 +18,12 @@ public class Rubrica {
         this.seccionesRubrica = seccionesRubrica;
     }
 
+    public Rubrica(int id_rubrica,String nombre){
+        this.id_rubrica = id_rubrica;
+        this.nombre = nombre;
+    }
+
+
     public String getNombre() {
         return nombre;
     }
@@ -45,8 +51,8 @@ public class Rubrica {
     @Override
     public String toString() {
         return "Rubrica{" +
-                "nombre='" + nombre + '\'' +
-                ", id_rubrica=" + id_rubrica +
+                "id_rubrica=" + id_rubrica + '\'' +
+                ",nombre='" + nombre + '\'' +
                 ", seccionesRubrica=" + seccionesRubrica +
                 '}';
     }
