@@ -1,3 +1,4 @@
+import uy.utec.pa.dao.ConvocatoriaDAOImpl;
 import uy.utec.pa.dao.RubricaDAO;
 import uy.utec.pa.dao.RubricaDAOImpl;
 import uy.utec.pa.dao.UsuarioDAOImpl;
@@ -5,6 +6,7 @@ import uy.utec.pa.modelo.*;
 import uy.utec.pa.servicio.*;
 
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.SQLOutput;
 import java.util.Scanner;
@@ -308,7 +310,45 @@ public void GestionConvocatorias() throws SQLException {
 
     if(numero==1){
         //Crear convocatorias
-        s
+
+
+            System.out.print("Ingrese el nombre: ");
+            String nombre = scanner.nextLine();
+
+            System.out.print("Ingrese el año de la convocatoria: ");
+            int anio = scanner.nextInt();
+            scanner.nextLine();
+
+            System.out.print("Ingrese la descripción: ");
+            String descripcion = scanner.nextLine();
+
+            System.out.print("Ingrese la cantidad de becas: ");
+            int cantidadBecas = scanner.nextInt();
+            scanner.nextLine();
+
+            System.out.print("Ingrese el tipo de beca: ");
+            String tipoBeca = scanner.nextLine();
+
+            System.out.print("Ingrese el estado: ");
+            String estado = scanner.nextLine();
+
+            System.out.print("Ingrese fecha de apertura (YYYY-MM-DD): ");
+            java.sql.Date fechaApertura = java.sql.Date.valueOf(scanner.nextLine());
+
+            System.out.print("Ingrese fecha de cierre (YYYY-MM-DD): ");
+            java.sql.Date fechaCierre = java.sql.Date.valueOf(scanner.nextLine());
+
+            LinkedList<TipoDocumento> tipoDocumento = new LinkedList<>();
+
+            Convocatoria convocatoria = new Convocatoria(
+                    nombre, anio, descripcion, cantidadBecas, tipoBeca, estado,
+                    fechaApertura, fechaCierre, tipoDocumento
+            );
+
+            ConvocatoriaDAOImpl dao = new ConvocatoriaDAOImpl();
+            dao.crearConvocatoria(convocatoria);
+
+
     }else if(numero==2){
         //listar convocatorias
         //elegir convocatorias y poder editarla
