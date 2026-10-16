@@ -308,6 +308,7 @@ public void GestionConvocatorias() throws SQLException {
 
     if(numero==1){
         //Crear convocatorias
+        s
     }else if(numero==2){
         //listar convocatorias
         //elegir convocatorias y poder editarla
