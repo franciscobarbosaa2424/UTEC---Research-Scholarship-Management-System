@@ -1,12 +1,11 @@
 package uy.utec.pa.dao;
 
 import uy.utec.pa.modelo.Convocatoria;
+import uy.utec.pa.modelo.Rubrica;
 import uy.utec.pa.util.ConexionBDSingleton;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.LinkedList;
 
 public class ConvocatoriaDAOImpl implements ConvocatoriaDAO {
 
@@ -16,8 +15,8 @@ public class ConvocatoriaDAOImpl implements ConvocatoriaDAO {
     INSERT INTO proyecto.Convocatorias
         (id_convocatoria,descripcion,anio_convocatoria,
          cantidad_becas,tipo_beca,estado,fecha_cierre,
-         fecha_apertura,id_rubrica)
-    VALUES (?, ?, ?, ?,?,?,?,?,?)
+         fecha_apertura,id_rubrica,nombre)
+    VALUES (?, ?, ?, ?,?,?,?,?,?,?)
     """;
 
 
@@ -37,8 +36,9 @@ public class ConvocatoriaDAOImpl implements ConvocatoriaDAO {
             sentencia.setString(6, convocatoria.getEstado());
             sentencia.setDate(7, convocatoria.getFecha_cierre());
             sentencia.setDate(8,  convocatoria.getFecha_apertura());
-            sentencia.setInt(9, convocatoria.getIdConvocatoria());
-
+            Rubrica aux = convocatoria.getRubrica();
+            sentencia.setInt(9, aux.getId_rubrica());
+            sentencia.setString(10, convocatoria.getNombre());
 
             sentencia.executeUpdate();
             System.out.println("Se creo correctamente la convocatoria");
@@ -57,4 +57,44 @@ public class ConvocatoriaDAOImpl implements ConvocatoriaDAO {
 
         }
     }
+
+    @Override
+    public LinkedList<Convocatoria> listarConvocatorias(){
+        LinkedList<Convocatoria> convocatorias = new LinkedList<>();
+        String sql = "SELECT * FROM proyecto.convocatorias";
+
+
+        try  {
+            Connection conexion = ConexionBDSingleton.getInstancia().conectar();
+            PreparedStatement sentencia = conexion.prepareStatement(sql);
+
+            ResultSet resultado = sentencia.executeQuery();
+
+            while (resultado.next()) {
+                int idConvocatoria = resultado.getInt("id_convocatoria");
+                String nombre = resultado.getString("nombre");
+                String descripcion = resultado.getString("descripcion");
+                int anioConvocatoria = resultado.getInt("anio_convocatoria");
+                int cantidadBecas = resultado.getInt("cantidad_becas");
+                String tipoBeca = resultado.getString("tipo_beca");
+                String estado = resultado.getString("estado");
+                java.sql.Date fechaCierre = resultado.getDate("fecha_cierre");
+                java.sql.Date fechaApertura = resultado.getDate("fecha_apertura");
+
+                Convocatoria convocatoria = new Convocatoria(idConvocatoria,nombre, anioConvocatoria,descripcion, cantidadBecas, tipoBeca, estado, fechaApertura, fechaCierre);
+                convocatorias.add(convocatoria);
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException(
+                    "Error al buscar la convocatoria.", e
+            );
+        }
+        return convocatorias;
+    }
+
+
+
+
+
 }

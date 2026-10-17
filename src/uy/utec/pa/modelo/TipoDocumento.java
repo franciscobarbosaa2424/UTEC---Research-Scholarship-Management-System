@@ -9,6 +9,10 @@ public class TipoDocumento {
         this.id_TipoDocumento = id_TipoDocumento;
     }
 
+    public TipoDocumento(String nombre) {
+        this.nombre = nombre;
+    }
+
     public String getNombre() {
         return nombre;
     }

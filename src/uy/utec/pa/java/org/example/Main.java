@@ -1,7 +1,4 @@
-import uy.utec.pa.dao.ConvocatoriaDAOImpl;
-import uy.utec.pa.dao.RubricaDAO;
-import uy.utec.pa.dao.RubricaDAOImpl;
-import uy.utec.pa.dao.UsuarioDAOImpl;
+import uy.utec.pa.dao.*;
 import uy.utec.pa.modelo.*;
 import uy.utec.pa.servicio.*;
 
@@ -338,15 +335,50 @@ public void GestionConvocatorias() throws SQLException {
             System.out.print("Ingrese fecha de cierre (YYYY-MM-DD): ");
             java.sql.Date fechaCierre = java.sql.Date.valueOf(scanner.nextLine());
 
-            LinkedList<TipoDocumento> tipoDocumento = new LinkedList<>();
+            RubricaDAOImpl dao = new RubricaDAOImpl();
+            LinkedList<Rubrica> rubricas = dao.listarRubricas();
 
-         /*   Convocatoria convocatoria = new Convocatoria(
-                    nombre, anio, descripcion, cantidadBecas, tipoBeca, estado,
-                    fechaApertura, fechaCierre, tipoDocumento
-            );
+            System.out.print("Ingrese el id de rubrica a implementar: ");
 
-            ConvocatoriaDAOImpl dao = new ConvocatoriaDAOImpl();
-            dao.crearConvocatoria(convocatoria);*/
+            Rubrica rubricaAuxiliar = null;
+
+            for(Rubrica r: rubricas){
+                System.out.println(r.toString());
+            }
+            int idRubrica = scanner.nextInt();
+            scanner.nextLine();
+
+            for(Rubrica r: rubricas){
+                if(r.getId_rubrica()==idRubrica){
+                    rubricaAuxiliar = r;
+                    break;
+                }
+            }
+
+
+            LinkedList<TipoDocumento> tipoDocumentos = new LinkedList<>();
+
+            boolean valido = true;
+                while(valido==true){
+                    System.out.print("Ingrese Nombre de Tipo Documento (Presione 0 para salir): ");
+                    String nombreTipoDocumento = scanner.nextLine();
+
+                    if(nombreTipoDocumento.equalsIgnoreCase("0")){
+                        valido=false;
+                        break;
+                    }
+
+                    TipoDocumento tipoDocumento = new TipoDocumento(nombreTipoDocumento);
+                    tipoDocumentos.add(tipoDocumento);
+
+                    TipoDocumentoDAOImpl daoTipoDocumento = new TipoDocumentoDAOImpl();
+                    daoTipoDocumento.crearTipoDocumento(tipoDocumento);
+                }
+
+            Convocatoria convocatoria = new Convocatoria(nombre, anio, descripcion, cantidadBecas,  tipoBeca, estado,  fechaApertura, fechaCierre, rubricaAuxiliar, tipoDocumentos);
+
+            ConvocatoriaDAOImpl daoConvocatoria = new ConvocatoriaDAOImpl();
+            daoConvocatoria.crearConvocatoria(convocatoria);
 
 
     }else if(numero==2){
