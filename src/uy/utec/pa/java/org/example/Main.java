@@ -308,7 +308,6 @@ public void GestionConvocatorias() throws SQLException {
     if(numero==1){
         //Crear convocatorias
 
-
             System.out.print("Ingrese el nombre: ");
             String nombre = scanner.nextLine();
 
@@ -357,7 +356,7 @@ public void GestionConvocatorias() throws SQLException {
 
 
             LinkedList<TipoDocumento> tipoDocumentos = new LinkedList<>();
-
+            TipoDocumentoDAOImpl daoTipoDocumento = new TipoDocumentoDAOImpl();
             boolean valido = true;
                 while(valido==true){
                     System.out.print("Ingrese Nombre de Tipo Documento (Presione 0 para salir): ");
@@ -371,14 +370,24 @@ public void GestionConvocatorias() throws SQLException {
                     TipoDocumento tipoDocumento = new TipoDocumento(nombreTipoDocumento);
                     tipoDocumentos.add(tipoDocumento);
 
-                    TipoDocumentoDAOImpl daoTipoDocumento = new TipoDocumentoDAOImpl();
+
                     daoTipoDocumento.crearTipoDocumento(tipoDocumento);
+
                 }
 
             Convocatoria convocatoria = new Convocatoria(nombre, anio, descripcion, cantidadBecas,  tipoBeca, estado,  fechaApertura, fechaCierre, rubricaAuxiliar, tipoDocumentos);
 
             ConvocatoriaDAOImpl daoConvocatoria = new ConvocatoriaDAOImpl();
             daoConvocatoria.crearConvocatoria(convocatoria);
+
+            int idConvocatoria = daoConvocatoria.buscarConvocatoriaPorNombre(convocatoria.getNombre());
+
+            for(TipoDocumento t: tipoDocumentos){
+                int idTipoDocumento = daoTipoDocumento.buscarTipoDocumentoPorNombre(t.getNombre());
+                daoTipoDocumento.asignarTipoDocumentoConvocatoria(idConvocatoria,idTipoDocumento);
+            }
+
+
 
 
     }else if(numero==2){

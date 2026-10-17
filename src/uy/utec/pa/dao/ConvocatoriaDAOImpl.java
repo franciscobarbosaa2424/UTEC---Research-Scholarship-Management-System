@@ -13,10 +13,10 @@ public class ConvocatoriaDAOImpl implements ConvocatoriaDAO {
     public void crearConvocatoria(Convocatoria convocatoria){
         String sql = """
     INSERT INTO proyecto.Convocatorias
-        (id_convocatoria,descripcion,anio_convocatoria,
+        (descripcion,anio_convocatoria,
          cantidad_becas,tipo_beca,estado,fecha_cierre,
          fecha_apertura,id_rubrica,nombre)
-    VALUES (?, ?, ?, ?,?,?,?,?,?,?)
+    VALUES (?,?,?,?,?,?,?,?,?)
     """;
 
 
@@ -28,17 +28,16 @@ public class ConvocatoriaDAOImpl implements ConvocatoriaDAO {
             conexion = ConexionBDSingleton.getInstancia().conectar();
             sentencia = conexion.prepareStatement(sql);
 
-            sentencia.setInt(1, convocatoria.getIdConvocatoria());
-            sentencia.setString(2, convocatoria.getDescripcion());
-            sentencia.setInt(3, convocatoria.getAnio());
-            sentencia.setInt(4, convocatoria.getCantidadBecas());
-            sentencia.setString(5, convocatoria.getTipoBeca());
-            sentencia.setString(6, convocatoria.getEstado());
-            sentencia.setDate(7, convocatoria.getFecha_cierre());
-            sentencia.setDate(8,  convocatoria.getFecha_apertura());
+            sentencia.setString(1, convocatoria.getDescripcion());
+            sentencia.setInt(2, convocatoria.getAnio());
+            sentencia.setInt(3, convocatoria.getCantidadBecas());
+            sentencia.setString(4, convocatoria.getTipoBeca());
+            sentencia.setString(5, convocatoria.getEstado());
+            sentencia.setDate(6, convocatoria.getFecha_cierre());
+            sentencia.setDate(7,  convocatoria.getFecha_apertura());
             Rubrica aux = convocatoria.getRubrica();
-            sentencia.setInt(9, aux.getId_rubrica());
-            sentencia.setString(10, convocatoria.getNombre());
+            sentencia.setInt(8, aux.getId_rubrica());
+            sentencia.setString(9, convocatoria.getNombre());
 
             sentencia.executeUpdate();
             System.out.println("Se creo correctamente la convocatoria");
@@ -93,7 +92,33 @@ public class ConvocatoriaDAOImpl implements ConvocatoriaDAO {
         return convocatorias;
     }
 
+    @Override
+    public int buscarConvocatoriaPorNombre(String nombreConvocatoria){
+        String sql = """
+        SELECT id_convocatoria FROM proyecto.convocatorias
+        WHERE nombre = ?
+        """;
+        try {
+            Connection conexion = ConexionBDSingleton.getInstancia().conectar();
+            PreparedStatement sentencia = conexion.prepareStatement(sql);
+            sentencia.setString(1, nombreConvocatoria);
+            ResultSet resultado = sentencia.executeQuery();
 
+
+            if (resultado.next()) {
+                return resultado.getInt("id_convocatoria");
+            }
+
+            return 0;
+
+        } catch (SQLException e) {
+            throw new IllegalStateException("Error .", e);
+        }
+
+
+
+
+    }
 
 
 

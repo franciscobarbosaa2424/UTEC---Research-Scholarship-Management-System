@@ -47,6 +47,44 @@ public class TipoDocumentoDAOImpl implements TipoDocumentoDAO{
 
         }
     }
+
+    @Override
+    public void asignarTipoDocumentoConvocatoria(int idConvocatoria,int idTipoDocumento){
+        String sql = """
+        INSERT INTO proyecto.requieren(id_convocatoria,id_tipoDocumento)
+        VALUES (?,?)
+        """;
+
+        Connection conexion = null;
+        PreparedStatement sentencia = null;
+
+        try {
+            conexion = ConexionBDSingleton.getInstancia().conectar();
+            sentencia = conexion.prepareStatement(sql);
+
+            sentencia.setInt(1, idConvocatoria);
+            sentencia.setInt(2, idTipoDocumento);
+            sentencia.executeUpdate();
+
+
+            System.out.println("IDs asignados correctamente.");
+
+        } catch (SQLException e) {
+            System.out.println("Error al asignar tablas: " + e.getMessage());
+
+        } finally {
+            try {
+                if (sentencia != null) {
+                    sentencia.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Error al cerrar sentencia: " + e.getMessage());
+            }
+
+        }
+
+    }
+
     //EDITAR TIPO DOC
     @Override
     public void editarTipoDocumento(TipoDocumento tipoDocumento) {
@@ -93,7 +131,7 @@ public class TipoDocumentoDAOImpl implements TipoDocumentoDAO{
     @Override
     public int buscarTipoDocumentoPorNombre(String nombre){
         String sql = """
-        SELECT id_tipodocumento FROM proyecto.tipo_documento
+        SELECT id_tipodocumento FROM proyecto.tipo_documentos
         WHERE nom_tipo_doc = ?
         """;
         try {
@@ -102,7 +140,6 @@ public class TipoDocumentoDAOImpl implements TipoDocumentoDAO{
             sentencia.setString(1, nombre);
             ResultSet resultado = sentencia.executeQuery();
 
-
             if (resultado.next()) {
                 return resultado.getInt("id_tipodocumento");
             }
@@ -110,7 +147,7 @@ public class TipoDocumentoDAOImpl implements TipoDocumentoDAO{
             return 0;
 
         } catch (SQLException e) {
-            throw new IllegalStateException("Error al eliminar Tipo Documento.", e);
+            throw new IllegalStateException("Error al obtener Tipo Documento.", e);
         }
 
     }

@@ -7,5 +7,6 @@ public interface TipoDocumentoDAO {
     void editarTipoDocumento(TipoDocumento tipoDocumento);
     void eliminarTipoDocumento(int id_tipoDocumento);
     int buscarTipoDocumentoPorNombre(String nombre);
+    void asignarTipoDocumentoConvocatoria(int idConvocatoria,int idTipoDocumento);
 
 }
