@@ -25,4 +25,12 @@ public class TipoDocumento {
         this.id_TipoDocumento = id_TipoDocumento;
     }
 
+    @Override
+    public String toString() {
+        return "TipoDocumento{" +
+                "nombre='" + nombre + '\'' +
+                ", id_TipoDocumento=" + id_TipoDocumento +
+                '}';
+    }
+
 }
