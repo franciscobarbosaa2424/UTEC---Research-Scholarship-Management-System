@@ -1,4 +1,16 @@
-{
+package uy.utec.pa.dao;
+
+import uy.utec.pa.modelo.Rubrica;
+import uy.utec.pa.modelo.TipoDocumento;
+import uy.utec.pa.util.ConexionBDSingleton;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.LinkedList;
+
+public class TipoDocumentoDAOImpl implements TipoDocumentoDAO{
     //CREAR TIPO DOC
     @Override
     public void crearTipoDocumento(TipoDocumento tipoDocumento){
