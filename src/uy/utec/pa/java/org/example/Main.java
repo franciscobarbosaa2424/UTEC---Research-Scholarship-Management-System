@@ -311,28 +311,42 @@ public void GestionConvocatorias() throws SQLException {
             System.out.print("Ingrese el nombre: ");
             String nombre = scanner.nextLine();
 
-            System.out.print("Ingrese el año de la convocatoria: ");
-            int anio = scanner.nextInt();
+        System.out.print("Ingrese el año de la convocatoria: ");
+        int anio = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.print("Ingrese la descripción: ");
+        String descripcion = scanner.nextLine();
+
+        System.out.print("Ingrese la cantidad de becas: ");
+        int cantidadBecas = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.print("Ingrese el tipo de beca: ");
+        String tipoBeca = scanner.nextLine();
+
+        String estado;
+        while (true) {
+            System.out.println("Estado (1.Activo o 2.Inactivo): ");
+            int seleccionEstado = scanner.nextInt();
             scanner.nextLine();
 
-            System.out.print("Ingrese la descripción: ");
-            String descripcion = scanner.nextLine();
+            if (seleccionEstado == 1) {
+                estado = "activo";
+                break;
+            } else if (seleccionEstado == 2) {
+                estado = "inactivo";
+                break;
+            } else {
+                System.out.println("Opción inválida, vuelva a seleccionar.");
+            }
+        }
 
-            System.out.print("Ingrese la cantidad de becas: ");
-            int cantidadBecas = scanner.nextInt();
-            scanner.nextLine();
+        System.out.print("Ingrese fecha de apertura (YYYY-MM-DD): ");
+        java.sql.Date fechaApertura = java.sql.Date.valueOf(scanner.nextLine());
 
-            System.out.print("Ingrese el tipo de beca: ");
-            String tipoBeca = scanner.nextLine();
-
-            System.out.print("Ingrese el estado: ");
-            String estado = scanner.nextLine();
-
-            System.out.print("Ingrese fecha de apertura (YYYY-MM-DD): ");
-            java.sql.Date fechaApertura = java.sql.Date.valueOf(scanner.nextLine());
-
-            System.out.print("Ingrese fecha de cierre (YYYY-MM-DD): ");
-            java.sql.Date fechaCierre = java.sql.Date.valueOf(scanner.nextLine());
+        System.out.print("Ingrese fecha de cierre (YYYY-MM-DD): ");
+        java.sql.Date fechaCierre = java.sql.Date.valueOf(scanner.nextLine());
 
             RubricaDAOImpl dao = new RubricaDAOImpl();
             LinkedList<Rubrica> rubricas = dao.listarRubricas();

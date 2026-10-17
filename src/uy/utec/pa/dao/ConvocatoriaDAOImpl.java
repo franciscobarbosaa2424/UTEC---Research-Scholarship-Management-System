@@ -61,7 +61,7 @@ public class ConvocatoriaDAOImpl implements ConvocatoriaDAO {
     public LinkedList<Convocatoria> listarConvocatorias(){
         LinkedList<Convocatoria> convocatorias = new LinkedList<>();
         String sql = "SELECT * FROM proyecto.convocatorias";
-
+        String sql2 = "SELECT nombre FROM proyecto.rubricas WHERE id_rubrica = ?";
 
         try  {
             Connection conexion = ConexionBDSingleton.getInstancia().conectar();
@@ -79,8 +79,19 @@ public class ConvocatoriaDAOImpl implements ConvocatoriaDAO {
                 String estado = resultado.getString("estado");
                 java.sql.Date fechaCierre = resultado.getDate("fecha_cierre");
                 java.sql.Date fechaApertura = resultado.getDate("fecha_apertura");
+                int idRubrica = resultado.getInt("id_rubrica");
 
-                Convocatoria convocatoria = new Convocatoria(idConvocatoria,nombre, anioConvocatoria,descripcion, cantidadBecas, tipoBeca, estado, fechaApertura, fechaCierre);
+                PreparedStatement sentencia2 = conexion.prepareStatement(sql2);
+                sentencia2.setInt(1, idRubrica);
+                ResultSet resultado2 = sentencia2.executeQuery();
+
+                Rubrica rubrica = null;
+                while (resultado2.next()) {
+                    String nombreRubrica = resultado.getString("nombre");
+                    rubrica = new Rubrica(idRubrica,nombreRubrica);
+                }
+
+                Convocatoria convocatoria = new Convocatoria(idConvocatoria,nombre, anioConvocatoria,descripcion, cantidadBecas, tipoBeca, estado, fechaApertura, fechaCierre,rubrica);
                 convocatorias.add(convocatoria);
             }
 

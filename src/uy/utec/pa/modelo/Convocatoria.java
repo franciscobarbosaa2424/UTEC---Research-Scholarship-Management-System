@@ -45,7 +45,7 @@ public class Convocatoria {
         this.tipoDocumento = tipoDocumento;
     }
 
-    public Convocatoria(int idConvocatoria,String nombre, int anio, String descripcion, int cantidadBecas, String tipoBeca, String estado, Date fecha_apertura, Date fecha_cierre) {
+    public Convocatoria(int idConvocatoria,String nombre, int anio, String descripcion, int cantidadBecas, String tipoBeca, String estado, Date fecha_apertura, Date fecha_cierre,Rubrica rubrica) {
         this.idConvocatoria = idConvocatoria;
         this.nombre = nombre;
         this.anio = anio;
@@ -55,6 +55,7 @@ public class Convocatoria {
         this.estado = estado;
         this.fecha_apertura = fecha_apertura;
         this.fecha_cierre = fecha_cierre;
+        this.rubrica=rubrica;
     }
 
     public int getIdConvocatoria() {

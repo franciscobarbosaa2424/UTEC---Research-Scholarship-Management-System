@@ -11,4 +11,5 @@ public interface ConvocatoriaDAO {
     LinkedList<Convocatoria> listarConvocatorias();
     void editarConvocatoria(Convocatoria convocatoria);
     int buscarConvocatoriaPorNombre(String nombreConvocatoria);
+    void darDeBajaConvocatoria(int idConvocatoria);
 }

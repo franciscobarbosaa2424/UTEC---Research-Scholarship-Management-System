@@ -89,7 +89,7 @@ public class TipoDocumentoDAOImpl implements TipoDocumentoDAO{
     @Override
     public void editarTipoDocumento(TipoDocumento tipoDocumento) {
         String sql = """
-        UPDATE proyecto.tipo_documento
+        UPDATE proyecto.tipo_documentos
         SET nom_tipo_doc = ?
         WHERE id_tipodocumento = ?
         """;
@@ -112,7 +112,7 @@ public class TipoDocumentoDAOImpl implements TipoDocumentoDAO{
     @Override
     public void eliminarTipoDocumento(int id_tipoDocumento){
         String sql = """
-        DELETE FROM proyecto.tipo_documento
+        DELETE FROM proyecto.tipo_documentos
         WHERE id_tipodocumento = ?
         """;
 
