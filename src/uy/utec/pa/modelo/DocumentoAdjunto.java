@@ -4,11 +4,16 @@ public class DocumentoAdjunto {
     private String nombre;
     private String rutaArchivo;
     private int id_DocumentoAdjunto;
+    private TipoDocumento tipoDocumento;
+    private Postulacion postulacion;
 
-    public DocumentoAdjunto(String nombre, String rutaArchivo, int id_DocumentoAdjunto) {
+
+    public DocumentoAdjunto(String nombre, String rutaArchivo, int id_DocumentoAdjunto, TipoDocumento tipoDocumento, Postulacion postulacion) {
         this.nombre = nombre;
         this.rutaArchivo = rutaArchivo;
         this.id_DocumentoAdjunto = id_DocumentoAdjunto;
+        this.tipoDocumento = tipoDocumento;
+        this.postulacion = postulacion;
     }
 
     public String getNombre() {
@@ -35,5 +40,31 @@ public class DocumentoAdjunto {
         this.id_DocumentoAdjunto = id_DocumentoAdjunto;
     }
 
+    public TipoDocumento getTipoDocumento() {
+        return tipoDocumento;
+    }
 
+    public void setTipoDocumento(TipoDocumento tipoDocumento) {
+        this.tipoDocumento = tipoDocumento;
+    }
+
+    public Postulacion getPostulacion() {
+        return postulacion;
+    }
+
+    public void setPostulacion(Postulacion postulacion) {
+        this.postulacion = postulacion;
+    }
+
+
+    @Override
+    public String toString() {
+        return "DocumentoAdjunto{" +
+                "nombre='" + nombre + '\'' +
+                ", rutaArchivo='" + rutaArchivo + '\'' +
+                ", id_DocumentoAdjunto=" + id_DocumentoAdjunto +
+                ", tipoDocumento=" + tipoDocumento +
+                ", postulacion=" + postulacion +
+                '}';
+    }
 }
