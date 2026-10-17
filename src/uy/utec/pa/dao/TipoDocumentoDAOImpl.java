@@ -152,4 +152,34 @@ public class TipoDocumentoDAOImpl implements TipoDocumentoDAO{
 
     }
 
+    @Override
+    public LinkedList<TipoDocumento> buscarTipoDocumentos(int idConvocatoria){
+        String sql = """
+        SELECT r.id_tipodocumento, t.nom_tipo_doc FROM proyecto.requieren r
+        INNER JOIN proyecto.tipo_documentos t ON r.id_tipodocumento = t.id_tipodocumento
+        WHERE id_convocatoria = ?
+        """;
+
+        LinkedList<TipoDocumento> tipoDocumentos = new LinkedList<>();
+        try {
+            Connection conexion = ConexionBDSingleton.getInstancia().conectar();
+            PreparedStatement sentencia = conexion.prepareStatement(sql);
+            sentencia.setInt(1, idConvocatoria);
+            ResultSet resultado = sentencia.executeQuery();
+
+            if (resultado.next()) {
+                 int idTipoDocumento = resultado.getInt("id_tipodocumento");
+                 String nombre = resultado.getString("nom_tipo_doc");
+                 TipoDocumento tp = new TipoDocumento(nombre,idTipoDocumento);
+                 tipoDocumentos.add(tp);
+            }
+
+            return tipoDocumentos;
+
+        } catch (SQLException e) {
+            throw new IllegalStateException("Error al obtener Tipo Documento.", e);
+        }
+
+    }
+
 }

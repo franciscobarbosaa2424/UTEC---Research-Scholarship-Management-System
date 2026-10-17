@@ -121,5 +121,107 @@ public class ConvocatoriaDAOImpl implements ConvocatoriaDAO {
     }
 
 
+    //UPDATE, editar convocatoria
+    @Override
+    public void editarConvocatoria(Convocatoria convocatoria) {
+        String sql = """
+        UPDATE proyecto.Convocatorias
+        SET descripcion = ?,
+            anio_convocatoria = ?,
+            cantidad_becas = ?,
+            tipo_beca = ?,
+            estado = ?,
+            fecha_cierre = ?,
+            fecha_apertura = ?,
+            id_rubrica = ?,
+            nombre = ?
+        WHERE id_convocatoria = ?
+        """;
 
-}
+        Connection conexion = null;
+        PreparedStatement sentencia = null;
+
+        try {
+            conexion = ConexionBDSingleton.getInstancia().conectar();
+            sentencia = conexion.prepareStatement(sql);
+
+            sentencia.setString(1, convocatoria.getDescripcion());
+            sentencia.setInt(2, convocatoria.getAnio());
+            sentencia.setInt(3, convocatoria.getCantidadBecas());
+            sentencia.setString(4, convocatoria.getTipoBeca());
+            sentencia.setString(5, convocatoria.getEstado());
+            sentencia.setDate(6, convocatoria.getFecha_cierre());
+            sentencia.setDate(7, convocatoria.getFecha_apertura());
+
+            Rubrica aux = convocatoria.getRubrica();
+            sentencia.setInt(8, aux.getId_rubrica());
+
+            sentencia.setString(9, convocatoria.getNombre());
+            int idConvocatoria = buscarConvocatoriaPorNombre(convocatoria.getNombre());
+            sentencia.setInt(10, idConvocatoria);
+
+            int filas = sentencia.executeUpdate();
+
+            if (filas > 0) {
+                System.out.println("Se editó correctamente la convocatoria");
+            } else {
+                System.out.println("No se encontró la convocatoria para editar");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al editar Convocatoria: " + e.getMessage());
+
+        } finally {
+            try {
+                if (sentencia != null) {
+                    sentencia.close();
+                }
+                if (conexion != null) {
+                    conexion.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Error al cerrar recursos: " + e.getMessage());
+            }
+        }
+    }
+
+    @Override
+    public void darDeBajaConvocatoria(int idConvocatoria){
+            String sql = """
+                UPDATE proyecto.convocatorias
+                        SET estado = 'inactivo'
+                        WHERE id_convocatoria = ?
+        """;
+
+            Connection conexion = null;
+            PreparedStatement sentencia = null;
+
+            try {
+                conexion = ConexionBDSingleton.getInstancia().conectar();
+                sentencia = conexion.prepareStatement(sql);
+
+                sentencia.setInt(1, idConvocatoria);
+
+                sentencia.executeUpdate();
+
+                System.out.println("Convocatoria dada de baja correctamente.");
+
+            } catch (SQLException e) {
+                System.out.println("Error al dar de baja la convocatoria: " + e.getMessage());
+
+            } finally {
+                try {
+                    if (sentencia != null) {
+                        sentencia.close();
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Error al cerrar sentencia: " + e.getMessage());
+                }
+
+            }
+
+        }
+    }
+
+
+

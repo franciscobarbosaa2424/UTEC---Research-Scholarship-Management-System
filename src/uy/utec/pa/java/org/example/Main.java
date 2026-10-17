@@ -392,21 +392,207 @@ public void GestionConvocatorias() throws SQLException {
 
     }else if(numero==2){
         //listar convocatorias
-
         ConvocatoriaDAOImpl dao = new ConvocatoriaDAOImpl();
-       // List<Convocatoria> listaConvocatoria = ConvocatoriaDAOImpl.listaConvocatoria();
+        List<Convocatoria> listaConvocatorias = dao.listarConvocatorias();
+        System.out.println("Ingrese el id de convocatoria a editar: ");
+        for(Convocatoria c: listaConvocatorias){
+            System.out.println(c.toString());
+        }
+        int idConvocatoria = scanner.nextInt();
+        scanner.nextLine();
 
-       // if(listaConvocatoria.isEmpty()){
-
-     //       System.out.println("No");
-       // }
         //elegir convocatorias y poder editarla
+                Convocatoria convocatoriaAux = null;
+
+                for(Convocatoria c: listaConvocatorias){
+                    if(c.getIdConvocatoria()==idConvocatoria){
+                        convocatoriaAux = c;
+                        break;
+                    }
+                }
+                boolean auxWhile1 = true;
+
+
+                //PRIMER WHILE PARA EL PRIMER MENU
+                while (auxWhile1==true) {
+                    System.out.println("Seleccione la opción que desea editar:");
+                    System.out.println("1. Nombre: " + convocatoriaAux.getNombre());
+                    System.out.println("2. Descripción: "+convocatoriaAux.getDescripcion());
+                    System.out.println("3. Año: "+convocatoriaAux.getAnio());
+                    System.out.println("4. Cantidad de becas: "+convocatoriaAux.getIdConvocatoria());
+                    System.out.println("5. Tipo de beca: "+convocatoriaAux.getTipoBeca());
+                    System.out.println("6. Estado: "+convocatoriaAux.getEstado());
+                    System.out.println("7. Fecha de Apertura: "+convocatoriaAux.getFecha_apertura());
+                    System.out.println("8. Fecha de Cierre: "+convocatoriaAux.getFecha_cierre());
+                    Rubrica rubricaConvocatoria = convocatoriaAux.getRubrica();
+                    System.out.println("9. Rubrica: "+rubricaConvocatoria.toString());
+                    System.out.println("10. Editar Tipos Documentos");
+
+                    int opcionEditar = scanner.nextInt();
+                    scanner.nextLine();
+
+                        if (opcionEditar == 1) {
+                            System.out.println("Ingrese nuevo nombre:");
+                            String nombreNuevo = scanner.nextLine();
+                            convocatoriaAux.setNombre(nombreNuevo);
+                            dao.editarConvocatoria(convocatoriaAux);
+                            auxWhile1 = false;
+
+                        } else if (opcionEditar == 2) {
+                            System.out.println("Ingrese nueva descripción:");
+                            String descripcionNueva = scanner.nextLine();
+                            convocatoriaAux.setDescripcion(descripcionNueva);
+                            dao.editarConvocatoria(convocatoriaAux);
+                            auxWhile1 = false;
+
+                        } else if (opcionEditar == 3) {
+                            System.out.println("Ingrese nuevo año:");
+                            int anioNuevo = scanner.nextInt();
+                            scanner.nextLine();
+                            convocatoriaAux.setAnio(anioNuevo);
+                            dao.editarConvocatoria(convocatoriaAux);
+                            auxWhile1 = false;
+
+                        } else if (opcionEditar == 4) {
+                            System.out.println("Ingrese nueva cantidad de becas:");
+                            int cantidadNueva = scanner.nextInt();
+                            scanner.nextLine();
+                            convocatoriaAux.setCantidadBecas(cantidadNueva); // (Asumiendo que tienes este setter en Convocatoria)
+                            dao.editarConvocatoria(convocatoriaAux);
+                            auxWhile1 = false;
+
+                        } else if (opcionEditar == 5) {
+                            System.out.println("Ingrese nuevo tipo de beca:");
+                            String tipoBecaNuevo = scanner.nextLine();
+                            convocatoriaAux.setTipoBeca(tipoBecaNuevo);
+                            dao.editarConvocatoria(convocatoriaAux);
+                            auxWhile1 = false;
+
+                        } else if (opcionEditar == 6) {
+                            String estadoNuevo;
+                            while (true) {
+                                System.out.println("Seleccione nuevo estado (1. Activo o 2. Inactivo): ");
+                                int seleccionEstado = scanner.nextInt();
+                                scanner.nextLine();
+
+                                if (seleccionEstado == 1) {
+                                    estadoNuevo = "activo";
+                                    break;
+                                } else if (seleccionEstado == 2) {
+                                    estadoNuevo = "inactivo";
+                                    break;
+                                } else {
+                                    System.out.println("Opción inválida, vuelva a seleccionar.");
+                                }
+                            }
+                            convocatoriaAux.setEstado(estadoNuevo);
+                            dao.editarConvocatoria(convocatoriaAux);
+                            auxWhile1 = false;
+
+                        } else if (opcionEditar == 7) {
+                            System.out.print("Ingrese nueva fecha de apertura (YYYY-MM-DD): ");
+                            java.sql.Date fechaAperturaNueva = java.sql.Date.valueOf(scanner.nextLine());
+                            convocatoriaAux.setFecha_apertura(fechaAperturaNueva);
+                            dao.editarConvocatoria(convocatoriaAux);
+                            auxWhile1 = false;
+
+                        } else if (opcionEditar == 8) {
+                            System.out.print("Ingrese nueva fecha de cierre (YYYY-MM-DD): ");
+                            java.sql.Date fechaCierreNueva = java.sql.Date.valueOf(scanner.nextLine());
+                            convocatoriaAux.setFecha_cierre(fechaCierreNueva);
+                            dao.editarConvocatoria(convocatoriaAux);
+                            auxWhile1 = false;
+
+                        } else if (opcionEditar == 9) {
+                            // Listar rúbricas disponibles para cambiar la actual
+                            RubricaDAOImpl rubricaDao = new RubricaDAOImpl();
+                            LinkedList<Rubrica> rubricas = rubricaDao.listarRubricas();
+
+                            System.out.println("Rúbricas disponibles:");
+                            for (Rubrica r : rubricas) {
+                                System.out.println(r.toString());
+                            }
+
+                            System.out.print("Ingrese el id de la nueva rúbrica: ");
+                            int idRubricaNueva = scanner.nextInt();
+                            scanner.nextLine();
+
+                            Rubrica rubricaAuxiliarNueva = null;
+                            for (Rubrica r : rubricas) {
+                                if (r.getId_rubrica() == idRubricaNueva) {
+                                    rubricaAuxiliarNueva = r;
+                                    break;
+                                }
+                            }
+
+                            if (rubricaAuxiliarNueva != null) {
+                                convocatoriaAux.setRubrica(rubricaAuxiliarNueva);
+                                dao.editarConvocatoria(convocatoriaAux);
+                                System.out.println("Rúbrica actualizada correctamente.");
+                            } else {
+                                System.out.println("ID de rúbrica no encontrado.");
+                            }
+                            auxWhile1 = false;
+
+                        } else if (opcionEditar == 10) {
+                            // Lógica para editar los tipos de documentos asociados
+                            TipoDocumentoDAOImpl daoTipoDocumento = new TipoDocumentoDAOImpl();
+                            LinkedList<TipoDocumento> tipoDocumentos = daoTipoDocumento.buscarTipoDocumentos(idConvocatoria);
+
+
+                            for(TipoDocumento tp: tipoDocumentos){
+                                System.out.println(tp.toString());
+                            }
+                            System.out.println("Ingrese el id del tipo de documento a editar:");
+                            int idDocumentoTipo = scanner.nextInt();
+                            scanner.nextLine();
+
+                            TipoDocumento tpAux = null;
+                            for(TipoDocumento tp: tipoDocumentos){
+                                if(tp.getId_TipoDocumento()==idDocumentoTipo){
+                                    tpAux = tp;
+                                    break;
+                                }
+                            }
+
+
+                            System.out.println("Ingrese nombre nuevo del tipo de documento:");
+                            String nuevoNombreDoc = scanner.nextLine();
+                            tpAux.setNombre(nuevoNombreDoc);
+                            daoTipoDocumento.editarTipoDocumento(tpAux);
+
+                            auxWhile1 = false;
+
+                        } else {
+                            System.out.println("Opción inválida, intente nuevamente.");
+                        }
+
+                }
+
+
+
     }else if(numero==3){
         //listar convocatorias
+        ConvocatoriaDAOImpl dao = new ConvocatoriaDAOImpl();
+        LinkedList<Convocatoria> convocatorias  = dao.listarConvocatorias();
+        for(Convocatoria c : convocatorias){
+            System.out.println(c.toString());
+        }
+
     }
     else if(numero==4){
         //listar convocatorias
-        // dar de baja convocatoria seleccionada
+        ConvocatoriaDAOImpl dao = new ConvocatoriaDAOImpl();
+        LinkedList<Convocatoria> convocatorias  = dao.listarConvocatorias();
+        for(Convocatoria c : convocatorias){
+            System.out.println(c.toString());
+        }
+        // dar de baja convocatoria
+        System.out.println("Ingrese el id de la convocatoria a dar de baja:");
+        int auxid = scanner.nextInt();
+        scanner.nextLine();
+
+        dao.darDeBajaConvocatoria(auxid);
     }
 
     scanner.close();
@@ -621,8 +807,6 @@ public void CrearUsuarioAdministrador() throws SQLException {
             nacionalidad,
             contrasena,nombre, apellido, calle, numeroPuerta, estado, correoAdmin, rol);
 
-    //Administrador administrador = new Administrador
-    //        (cedula,nacionalidad,contrasena,nombre, apellido, calle, numeroPuerta, estado, correoAdmin, puesto, rol);
 
     System.out.println("Usuario Administrador creado éxitosamente!");
 
@@ -703,8 +887,6 @@ public void CrearUsuarioEvaluadorExterno(){
             nacionalidad,
             contrasena,nombre, apellido, calle, numeroPuerta, estado, correoAdmin, rol);
 
-    //Administrador administrador = new Administrador
-    //        (cedula,nacionalidad,contrasena,nombre, apellido, calle, numeroPuerta, estado, correoAdmin, puesto, rol);
 
     System.out.println("Usuario Evaluador Externo creado éxitosamente!");
 

@@ -12,7 +12,7 @@ public class ConexionBDSingleton {
 
     private static final String URL = "jdbc:postgresql://localhost:5432/proyecto";
     private static final String USUARIO = "postgres";
-    private static final String CONTRASENA = "1234";
+    private static final String CONTRASENA = "mandira87";
 
     public static synchronized ConexionBDSingleton getInstancia() {
         if (instancia == null) {
