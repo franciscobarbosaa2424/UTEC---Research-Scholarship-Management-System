@@ -1,8 +1,13 @@
 package uy.utec.pa.dao;
 
 import uy.utec.pa.modelo.Convocatoria;
+import uy.utec.pa.modelo.Rubrica;
+
+import java.util.LinkedList;
 
 public interface ConvocatoriaDAO {
 
     void crearConvocatoria(Convocatoria convocatoria);
+    LinkedList<Convocatoria> listarConvocatorias();
+    //void editarConvocatoria(Convocatoria convocatoria);
 }

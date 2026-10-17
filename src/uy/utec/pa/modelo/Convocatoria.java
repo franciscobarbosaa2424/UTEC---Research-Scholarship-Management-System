@@ -45,6 +45,18 @@ public class Convocatoria {
         this.tipoDocumento = tipoDocumento;
     }
 
+    public Convocatoria(int idConvocatoria,String nombre, int anio, String descripcion, int cantidadBecas, String tipoBeca, String estado, Date fecha_apertura, Date fecha_cierre) {
+        this.idConvocatoria = idConvocatoria;
+        this.nombre = nombre;
+        this.anio = anio;
+        this.descripcion = descripcion;
+        this.cantidadBecas = cantidadBecas;
+        this.tipoBeca = tipoBeca;
+        this.estado = estado;
+        this.fecha_apertura = fecha_apertura;
+        this.fecha_cierre = fecha_cierre;
+    }
+
     public int getIdConvocatoria() {
         return idConvocatoria;
     }
@@ -133,4 +145,20 @@ public class Convocatoria {
         this.tipoDocumento = tipoDocumento;
     }
 
+    @Override
+    public String toString() {
+        return "Convocatoria{" +
+                "idConvocatoria=" + idConvocatoria +
+                ", nombre='" + nombre + '\'' +
+                ", anio=" + anio +
+                ", descripcion='" + descripcion + '\'' +
+                ", cantidadBecas=" + cantidadBecas +
+                ", tipoBeca='" + tipoBeca + '\'' +
+                ", estado='" + estado + '\'' +
+                ", fecha_apertura=" + fecha_apertura +
+                ", fecha_cierre=" + fecha_cierre +
+                ", rubrica=" + rubrica +
+                ", tipoDocumento=" + tipoDocumento +
+                '}';
+    }
 }

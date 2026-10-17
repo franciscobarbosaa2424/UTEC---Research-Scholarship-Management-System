@@ -351,6 +351,14 @@ public void GestionConvocatorias() throws SQLException {
 
     }else if(numero==2){
         //listar convocatorias
+
+        ConvocatoriaDAOImpl dao = new ConvocatoriaDAOImpl();
+       // List<Convocatoria> listaConvocatoria = ConvocatoriaDAOImpl.listaConvocatoria();
+
+       // if(listaConvocatoria.isEmpty()){
+
+     //       System.out.println("No");
+       // }
         //elegir convocatorias y poder editarla
     }else if(numero==3){
         //listar convocatorias
