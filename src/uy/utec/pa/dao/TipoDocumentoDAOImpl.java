@@ -1,25 +1,10 @@
-package uy.utec.pa.dao;
-
-import uy.utec.pa.modelo.TipoDocumento;
-import uy.utec.pa.util.ConexionBDSingleton;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
-public class TipoDocumentoDAOImpl implements TipoDocumentoDAO{
+{
+    //CREAR TIPO DOC
     @Override
     public void crearTipoDocumento(TipoDocumento tipoDocumento){
-    /*    String sql = """
-        INSERT INTO proyecto.tipo_documentos
-            (correo)
+        String sql = """
+        INSERT INTO proyecto.tipo_documentos(nom_tipo_doc)
         VALUES (?)
-        """;
-
-        String sql2 = """
-        INSERT INTO proyecto.eva_externos
-            (id_usuario,institucion)
-        VALUES (?, ?)
         """;
 
         Connection conexion = null;
@@ -29,30 +14,15 @@ public class TipoDocumentoDAOImpl implements TipoDocumentoDAO{
             conexion = ConexionBDSingleton.getInstancia().conectar();
             sentencia = conexion.prepareStatement(sql);
 
-            sentencia.setString(1, evaluador.getCorreo());
-            sentencia.setString(2, evaluador.getNombre());
-            sentencia.setString(3, evaluador.getApellido());
-            sentencia.setString(4, evaluador.getCalle());
-            sentencia.setString(5, evaluador.getNacionalidad());
-            sentencia.setString(6, evaluador.getCi());
-            sentencia.setString(7, evaluador.getContrasena());
-            sentencia.setString(8, evaluador.getEstado());
-            sentencia.setString(9, evaluador.getRol());
+            sentencia.setString(1, tipoDocumento.getNombre());
 
             sentencia.executeUpdate();
 
-            int id_usuario_generado = buscarUsuarioPorCorreo(evaluador.getCorreo());
 
-            sentencia = conexion.prepareStatement(sql2);
-            sentencia.setInt(1, id_usuario_generado);
-            sentencia.setString(2, evaluador.getInstitucion());
-
-            sentencia.executeUpdate();
-
-            System.out.println("Evaluador Externo creado correctamente.");
+            System.out.println("Tipo documento creado correctamente.");
 
         } catch (SQLException e) {
-            System.out.println("Error al crear evaluador externo: " + e.getMessage());
+            System.out.println("Error al crear Tipo documento: " + e.getMessage());
 
         } finally {
             try {
@@ -63,8 +33,74 @@ public class TipoDocumentoDAOImpl implements TipoDocumentoDAO{
                 System.out.println("Error al cerrar sentencia: " + e.getMessage());
             }
 
-        }*/
+        }
+    }
+    //EDITAR TIPO DOC
+    @Override
+    public void editarTipoDocumento(TipoDocumento tipoDocumento) {
+        String sql = """
+        UPDATE proyecto.tipo_documento
+        SET nom_tipo_doc = ?
+        WHERE id_tipodocumento = ?
+        """;
+
+        try {
+            Connection conexion = ConexionBDSingleton.getInstancia().conectar();
+            PreparedStatement sentencia = conexion.prepareStatement(sql);
+            sentencia.setString(1, tipoDocumento.getNombre());
+            sentencia.setInt(2, tipoDocumento.getId_TipoDocumento());
+            sentencia.executeUpdate();
+
+            System.out.println("Documento editado correctamente");
+
+        } catch (SQLException e) {
+            throw new IllegalStateException("Error al editar el tipo de documento.", e);
+        }
     }
 
+    //ELIMINAR TIPO DOC
+    @Override
+    public void eliminarTipoDocumento(int id_tipoDocumento){
+        String sql = """
+        DELETE FROM proyecto.tipo_documento
+        WHERE id_tipodocumento = ?
+        """;
+
+        try {
+            Connection conexion = ConexionBDSingleton.getInstancia().conectar();
+            PreparedStatement sentencia = conexion.prepareStatement(sql);
+            sentencia.setInt(1, id_tipoDocumento);
+            sentencia.executeUpdate();
+            System.out.println("Tipo documento eliminado correctamente!");
+        } catch (SQLException e) {
+            throw new IllegalStateException("Error al eliminar Tipo Documento.", e);
+        }
+
+    }
+
+    @Override
+    public int buscarTipoDocumentoPorNombre(String nombre){
+        String sql = """
+        SELECT id_tipodocumento FROM proyecto.tipo_documento
+        WHERE nom_tipo_doc = ?
+        """;
+        try {
+            Connection conexion = ConexionBDSingleton.getInstancia().conectar();
+            PreparedStatement sentencia = conexion.prepareStatement(sql);
+            sentencia.setString(1, nombre);
+            ResultSet resultado = sentencia.executeQuery();
+
+
+            if (resultado.next()) {
+                return resultado.getInt("id_tipodocumento");
+            }
+
+            return 0;
+
+        } catch (SQLException e) {
+            throw new IllegalStateException("Error al eliminar Tipo Documento.", e);
+        }
+
+    }
 
 }
