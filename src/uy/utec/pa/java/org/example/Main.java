@@ -340,13 +340,13 @@ public void GestionConvocatorias() throws SQLException {
 
             LinkedList<TipoDocumento> tipoDocumento = new LinkedList<>();
 
-            Convocatoria convocatoria = new Convocatoria(
+         /*   Convocatoria convocatoria = new Convocatoria(
                     nombre, anio, descripcion, cantidadBecas, tipoBeca, estado,
                     fechaApertura, fechaCierre, tipoDocumento
             );
 
             ConvocatoriaDAOImpl dao = new ConvocatoriaDAOImpl();
-            dao.crearConvocatoria(convocatoria);
+            dao.crearConvocatoria(convocatoria);*/
 
 
     }else if(numero==2){
