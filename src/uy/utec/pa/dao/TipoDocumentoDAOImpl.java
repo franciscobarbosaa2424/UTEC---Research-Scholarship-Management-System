@@ -111,6 +111,11 @@ public class TipoDocumentoDAOImpl implements TipoDocumentoDAO{
     //ELIMINAR TIPO DOC
     @Override
     public void eliminarTipoDocumento(int id_tipoDocumento){
+        String sql2 = """
+        DELETE FROM proyecto.requieren
+        WHERE id_tipodocumento = ?
+        """;
+
         String sql = """
         DELETE FROM proyecto.tipo_documentos
         WHERE id_tipodocumento = ?
@@ -118,6 +123,11 @@ public class TipoDocumentoDAOImpl implements TipoDocumentoDAO{
 
         try {
             Connection conexion = ConexionBDSingleton.getInstancia().conectar();
+            PreparedStatement sentencia2 = conexion.prepareStatement(sql2);
+            sentencia2.setInt(1, id_tipoDocumento);
+            sentencia2.executeUpdate();
+
+
             PreparedStatement sentencia = conexion.prepareStatement(sql);
             sentencia.setInt(1, id_tipoDocumento);
             sentencia.executeUpdate();

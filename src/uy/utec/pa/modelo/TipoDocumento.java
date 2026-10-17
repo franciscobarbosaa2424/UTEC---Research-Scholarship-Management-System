@@ -32,8 +32,8 @@ public class TipoDocumento {
     @Override
     public String toString() {
         return "TipoDocumento{" +
-                "nombre='" + nombre + '\'' +
-                ", id_TipoDocumento=" + id_TipoDocumento +
+                " id_TipoDocumento=" + id_TipoDocumento + '\'' +
+                "nombre='" + nombre +
                 '}';
     }
 

@@ -549,36 +549,60 @@ public void GestionConvocatorias() throws SQLException {
                             auxWhile1 = false;
 
                         } else if (opcionEditar == 10) {
-                            // Lógica para editar los tipos de documentos asociados
-                            TipoDocumentoDAOImpl daoTipoDocumento = new TipoDocumentoDAOImpl();
-                            LinkedList<TipoDocumento> tipoDocumentos = daoTipoDocumento.buscarTipoDocumentos(idConvocatoria);
+                                    // Lógica para editar los tipos de documentos asociados
+                                    TipoDocumentoDAOImpl daoTipoDocumento = new TipoDocumentoDAOImpl();
+                                    LinkedList<TipoDocumento> tipoDocumentos = daoTipoDocumento.buscarTipoDocumentos(idConvocatoria);
 
 
-                            for(TipoDocumento tp: tipoDocumentos){
-                                System.out.println(tp.toString());
-                            }
-                            System.out.println("Ingrese el id del tipo de documento a editar:");
-                            int idDocumentoTipo = scanner.nextInt();
-                            scanner.nextLine();
+                                    for(TipoDocumento tp: tipoDocumentos){
+                                        System.out.println(tp.toString());
+                                    }
+                                    System.out.println("Ingrese el id del tipo de documento a editar:");
+                                    int idDocumentoTipo = scanner.nextInt();
+                                    scanner.nextLine();
 
-                            TipoDocumento tpAux = null;
-                            for(TipoDocumento tp: tipoDocumentos){
-                                if(tp.getId_TipoDocumento()==idDocumentoTipo){
-                                    tpAux = tp;
-                                    break;
-                                }
-                            }
+                                    TipoDocumento tpAux = null;
+                                    for(TipoDocumento tp: tipoDocumentos){
+                                        if(tp.getId_TipoDocumento()==idDocumentoTipo){
+                                            tpAux = tp;
+                                            break;
+                                        }
+                                    }
 
+                                            if (tpAux == null) {
+                                                System.out.println("No se encontró ese tipo de documento en la convocatoria.");
+                                            } else {
+                                                System.out.println("¿Qué desea hacer?");
+                                                System.out.println("1. Editar el nombre");
+                                                System.out.println("2. Quitar el documento de la convocatoria");
 
-                            System.out.println("Ingrese nombre nuevo del tipo de documento:");
-                            String nuevoNombreDoc = scanner.nextLine();
-                            tpAux.setNombre(nuevoNombreDoc);
-                            daoTipoDocumento.editarTipoDocumento(tpAux);
+                                                int accion = scanner.nextInt();
+                                                scanner.nextLine();
 
-                            auxWhile1 = false;
+                                                if (accion == 1) {
+                                                    System.out.println("Ingrese el nuevo nombre del tipo de documento:");
+                                                    String nuevoNombreDoc = scanner.nextLine();
 
-                        } else {
-                            System.out.println("Opción inválida, intente nuevamente.");
+                                                    tpAux.setNombre(nuevoNombreDoc);
+                                                    daoTipoDocumento.editarTipoDocumento(tpAux);
+
+                                                    System.out.println("Tipo de documento editado correctamente.");
+
+                                                } else if (accion == 2) {
+                                                    daoTipoDocumento.eliminarTipoDocumento(idDocumentoTipo);
+
+                                                    System.out.println("Tipo de documento quitado de la convocatoria.");
+
+                                                } else {
+                                                    System.out.println("Opción inválida.");
+                                                }
+
+                                                auxWhile1 = false;
+
+                                            }
+
+                        }else{
+                            System.out.println("Error, vuelva a ingresar una opción");
                         }
 
                 }

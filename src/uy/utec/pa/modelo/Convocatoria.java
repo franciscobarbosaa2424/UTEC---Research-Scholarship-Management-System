@@ -159,7 +159,6 @@ public class Convocatoria {
                 ", fecha_apertura=" + fecha_apertura +
                 ", fecha_cierre=" + fecha_cierre +
                 ", rubrica=" + rubrica +
-                ", tipoDocumento=" + tipoDocumento +
                 '}';
     }
 }
