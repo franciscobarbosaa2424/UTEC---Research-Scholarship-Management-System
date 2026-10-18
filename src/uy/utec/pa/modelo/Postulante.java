@@ -1,5 +1,7 @@
 package uy.utec.pa.modelo;
 
+import java.util.LinkedList;
+
 public class Postulante {
     private String documento;
     private String pais_procedencia;
@@ -12,11 +14,13 @@ public class Postulante {
     private boolean esDocenteUtec;
     private String nacionalidad;
     private String actividad_laboral;
-    private int celular;
+    private LinkedList<String> celulares;
     private String calle;
     private String apartamento;
+    private String bis;
+    private int numeroCasa;
 
-    public Postulante(String documento, String pais_procedencia, String departamento_procedencia, String localidad_procedencia, int id_Postulante, String correo, String nombre, String apellidos, boolean esDocenteUtec, String nacionalidad, String actividad_laboral, int celular, String calle, String apartamento) {
+    public Postulante(String documento, String pais_procedencia, String departamento_procedencia, String localidad_procedencia, int id_Postulante, String correo, String nombre, String apellidos, boolean esDocenteUtec, String nacionalidad, String actividad_laboral, LinkedList<String> celulares, String calle, String apartamento, String bis, int numeroCasa) {
         this.documento = documento;
         this.pais_procedencia = pais_procedencia;
         this.departamento_procedencia = departamento_procedencia;
@@ -28,9 +32,11 @@ public class Postulante {
         this.esDocenteUtec = esDocenteUtec;
         this.nacionalidad = nacionalidad;
         this.actividad_laboral = actividad_laboral;
-        this.celular = celular;
+        this.celulares = celulares;
         this.calle = calle;
         this.apartamento = apartamento;
+        this.bis=bis;
+        this.numeroCasa=numeroCasa;
     }
 
     public String getDocumento() {
@@ -97,7 +103,7 @@ public class Postulante {
         this.apellidos = apellidos;
     }
 
-    public boolean isEsDocenteUtec() {
+    public boolean esDocenteUtec() {
         return esDocenteUtec;
     }
 
@@ -121,12 +127,12 @@ public class Postulante {
         this.actividad_laboral = actividad_laboral;
     }
 
-    public int getCelular() {
-        return celular;
+    public LinkedList<String> getCelulares() {
+        return celulares;
     }
 
-    public void setCelular(int celular) {
-        this.celular = celular;
+    public void setCelulares(LinkedList<String> celulares) {
+        this.celulares = celulares;
     }
 
     public String getCalle() {
@@ -144,5 +150,24 @@ public class Postulante {
     public void setApartamento(String apartamento) {
         this.apartamento = apartamento;
     }
+
+
+    public String getBis() {
+        return bis;
+    }
+
+    public void setBis(String bis) {
+        this.bis = bis;
+    }
+
+    public int getNumeroCasa() {
+        return numeroCasa;
+    }
+
+    public void setNumeroCasa(int numeroCasa) {
+        this.numeroCasa = numeroCasa;
+    }
+
+
 
 }

@@ -13,45 +13,56 @@ import java.util.Scanner;
 
         Scanner scanner = new Scanner(System.in);
 
-        //VALIDAR
-        UsuarioDAOImpl dao = new UsuarioDAOImpl();
-        LinkedList<Usuario> usuarios = dao.obtenerTodosLosUsuarios();
-        ServicioAutenticacion servicioReal = new AutenticacionReal(usuarios);
-        ServicioAutenticacion proxy = new AutenticacionProxy(servicioReal);
+        System.out.println("=== Menú Principal ===");
+        System.out.println("1. Realizar Postulación a una convocatoria");
+        System.out.println("2. Loguearse como Administrador/Evaluador Externo");
+        int opcionMenuPrincipal= scanner.nextInt();
+        scanner.nextLine();
 
-        System.out.println("=== INICIAR SESIÓN ===");
+         if(opcionMenuPrincipal==1){
+             MenuPostulante();
+         }else if(opcionMenuPrincipal==2) {
+                 //VALIDAR
+                 UsuarioDAOImpl dao = new UsuarioDAOImpl();
+                 LinkedList<Usuario> usuarios = dao.obtenerTodosLosUsuarios();
+                 ServicioAutenticacion servicioReal = new AutenticacionReal(usuarios);
+                 ServicioAutenticacion proxy = new AutenticacionProxy(servicioReal);
 
-        System.out.print("Ingrese su correo: ");
-        String correo = scanner.nextLine();
+                 System.out.println("=== INICIAR SESIÓN ===");
 
-        System.out.print("Ingrese la contraseña: ");
-        String contrasena = scanner.nextLine();
+                 System.out.print("Ingrese su correo: ");
+                 String correo = scanner.nextLine();
 
-        boolean accede = proxy.autenticar(correo, contrasena);
+                 System.out.print("Ingrese la contraseña: ");
+                 String contrasena = scanner.nextLine();
 
-        if (accede) {
-            System.out.println("Inicio de sesión correcto.");
-            //MENU
-            String rol = "";
-            for(Usuario u: usuarios){
-                if(u.getCorreo().equalsIgnoreCase(correo)){
-                    rol=u.getRol();
-                }
-            }
-            if(rol.equalsIgnoreCase("administrador")){
-                System.out.println("Bienvenido Administrador");
-                MenuPrincipalAdmin();
+                 boolean accede = proxy.autenticar(correo, contrasena);
 
-            }else { if(rol.equalsIgnoreCase("evaluador")){
-                //aca iria el menu cuando el acceso es correcto pero no es administrador
-            }}
+                 if (accede) {
+                     System.out.println("Inicio de sesión correcto.");
+                     //MENU
+                     String rol = "";
+                     for (Usuario u : usuarios) {
+                         if (u.getCorreo().equalsIgnoreCase(correo)) {
+                             rol = u.getRol();
+                         }
+                     }
+                     if (rol.equalsIgnoreCase("administrador")) {
+                         System.out.println("Bienvenido Administrador");
+                         MenuPrincipalAdmin();
 
-        } else {
-            System.out.println("Correo o contraseña incorrectos.");
-        }
+                     } else {
+                         if (rol.equalsIgnoreCase("evaluador")) {
+                             //aca iria el menu cuando el acceso es correcto pero no es administrador
+                         }
+                     }
 
-        System.out.println();
-        System.out.println();
+                 } else {
+                     System.out.println("Correo o contraseña incorrectos.");
+                 }
+         }
+            System.out.println();
+            System.out.println();
 
         scanner.close();
     }
@@ -946,3 +957,189 @@ public void darDeBajaUsuario(){
     dao.darDeBajaUsuario(id);
 }
 
+public void MenuPostulante(){
+    Scanner scanner = new Scanner(System.in);
+    System.out.println("=== Menú Postulante ===");
+    System.out.println();
+    System.out.println("Ingrese el ID de la Convocatoria que desea postularse:");
+
+    ConvocatoriaDAOImpl dao = new ConvocatoriaDAOImpl();
+    LinkedList<Convocatoria> convocatorias  = dao.listarConvocatorias();
+    for(Convocatoria c : convocatorias){
+        System.out.println(c.toString());
+    }
+
+    int idConvocatoria = scanner.nextInt();
+    scanner.nextLine();
+
+    //aca
+    System.out.println("Documento:");
+    String documento = scanner.nextLine();
+
+    System.out.println("Nombre:");
+    String nombre = scanner.nextLine();
+
+    System.out.println("Apellido:");
+    String apellido = scanner.nextLine();
+
+    System.out.println("Correo:");
+    String correo = scanner.nextLine();
+
+    System.out.println("Nacionalidad:");
+    String nacionalidad = scanner.nextLine();
+
+    System.out.println("Actividad laboral:");
+    String actLaboral = scanner.nextLine();
+
+    boolean esDocUtec;
+    while (true) {
+        System.out.println("¿Es documento de UTEC? (1.Sí o 2.No): ");
+        int seleccionEstado = scanner.nextInt();
+        scanner.nextLine();
+
+        if (seleccionEstado == 1) {
+            esDocUtec = true;
+            break;
+        } else if (seleccionEstado == 2) {
+            esDocUtec = false;
+            break;
+        } else {
+            System.out.println("Opción inválida, vuelva a seleccionar.");
+        }
+    }
+
+
+    System.out.println("Calle:");
+    String calle = scanner.nextLine();
+
+    System.out.println("Número:");
+    String numero = scanner.nextLine();
+
+    System.out.println("Apartamento:");
+    String apartamento = scanner.nextLine();
+
+    System.out.println("Bis:");
+    String bis = scanner.nextLine();
+
+    System.out.println("Localidad de procedencia:");
+    String locProcedencia = scanner.nextLine();
+
+    System.out.println("Departamento de procedencia:");
+    String depProcedencia = scanner.nextLine();
+
+    System.out.println("País de procedencia:");
+    String paiProcedencia = scanner.nextLine();
+
+//BUCLE PARA CELULARES
+    boolean auxWhile=true;
+    System.out.println("Celulares del postulante");
+    LinkedList<String> celulares = new LinkedList<>();
+    while (auxWhile==true){
+        System.out.println("Ingresar celular (ingrese solamente 0 para salir):");
+        String celular = scanner.nextLine();
+
+        if(celular.equalsIgnoreCase("0")){
+            auxWhile=false;
+            break;
+        }
+
+        celulares.add(celular);
+
+    }
+
+
+
+    //INGRESAR FORMACION
+    //DENTRO DE FORMACION PONER CARRERA Y POSGRADOS
+    //DENTRO DE CARRERA/POSGRADO LA INSTITUCION
+    MenuFormacion(false,false);
+
+
+
+    scanner.close();
+}
+
+public void MenuFormacion(boolean carreraBool,boolean posgradoBool){
+    Scanner scanner = new Scanner(System.in);
+    System.out.println("Ingrese nombre formacion:");
+    String nombreFormacion = scanner.nextLine();
+
+
+    System.out.println("Dentro de la formación "+nombreFormacion+". ¿Qué desea ingresar?");
+    if (!carreraBool) {
+        System.out.println("1. Carrera");
+    }
+    if(!posgradoBool) {
+        System.out.println("2. Posgrado");
+    }
+
+    System.out.println("0. Salir de Formaciones");
+
+
+    int opcionFormacion = scanner.nextInt();
+    scanner.nextLine();
+
+    String nombreCarrera = null;
+    String nombrePosgrado = null;
+
+    if(opcionFormacion==1 && !carreraBool){
+        System.out.println("Ingrese Nombre de Carrera:");
+        nombreCarrera = scanner.nextLine();
+
+    } else if (opcionFormacion==2 && !posgradoBool) {
+        System.out.println("Ingrese Nombre del Posgrado:");
+        nombrePosgrado = scanner.nextLine();
+
+    } else if (opcionFormacion==0) {
+        return;
+    }
+
+    System.out.println("Instituciones disponibles: ");
+    InstitucionDAOImpl daoInstitucion = new InstitucionDAOImpl();
+    LinkedList<Institucion> instituciones = daoInstitucion.listarInstituciones();
+
+
+
+        for (Institucion i : instituciones) {
+            System.out.println(i.toString());
+        }
+
+
+        System.out.println("Ingrese ID de su Institucion:");
+        System.out.println("Si no ve su institucion disponible, presione 0 para agregar una nueva institucion.");
+        int idInstitucion = scanner.nextInt();
+        scanner.nextLine();
+
+
+        Institucion institucion = null;
+
+        if (idInstitucion == 0) {
+            System.out.println("Ingrese el nombre de la institucion:");
+            String institucionNombre = scanner.nextLine();
+            institucion = new Institucion(institucionNombre);
+            daoInstitucion.crearInstitucion(institucion);
+        } else {
+
+            for (Institucion i : instituciones) {
+                if (i.getId_Institucion() == idInstitucion) {
+                    institucion = i;
+                    break;
+                }
+            }
+        }
+
+        if (opcionFormacion == 1 && carreraBool == false) {
+            Carrera carrera = new Carrera(nombreCarrera, institucion);
+            CarreraDAOImpl daoCarrera = new CarreraDAOImpl();
+            daoCarrera.crearCarrera(carrera);
+            MenuFormacion(true,false);
+
+        } else if (opcionFormacion == 2 && posgradoBool == false) {
+            Posgrado posgrado = new Posgrado(nombrePosgrado, institucion);
+            PosgradoDAOImpl daoPosgrado = new PosgradoDAOImpl();
+            daoPosgrado.crearPosgrado(posgrado);
+            MenuFormacion(false,true);
+        }
+
+
+}

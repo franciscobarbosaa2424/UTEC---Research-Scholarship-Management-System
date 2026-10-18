@@ -4,10 +4,12 @@ public class Formacion {
 
     private int id_formacion;
     private String nombre_formacion;
+    private Postulante postulante;
 
-    public Formacion(int id_formacion, String nombre_formacion) {
+    public Formacion(int id_formacion, String nombre_formacion,Postulante postulante) {
         this.id_formacion = id_formacion;
         this.nombre_formacion = nombre_formacion;
+        this.postulante=postulante;
     }
 
     public int getId_formacion() {
@@ -24,5 +26,13 @@ public class Formacion {
 
     public void setNombre_formacion(String nombre_formacion) {
         this.nombre_formacion = nombre_formacion;
+    }
+
+    public Postulante getPostulante() {
+        return postulante;
+    }
+
+    public void setPostulante(Postulante postulante) {
+        this.postulante = postulante;
     }
 }

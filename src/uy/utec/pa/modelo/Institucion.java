@@ -4,10 +4,15 @@ public class Institucion {
     private String nombre;
     private int id_Institucion;
 
+
     public Institucion(String nombre, int id_Institucion) {
         this.nombre = nombre;
         this.id_Institucion = id_Institucion;
     }
+    public Institucion(String nombre) {
+        this.nombre = nombre;
+    }
+
 
     public String getNombre() {
         return nombre;
@@ -25,4 +30,11 @@ public class Institucion {
         this.id_Institucion = id_Institucion;
     }
 
+    @Override
+    public String toString() {
+        return "Institucion{" +
+                "nombre='" + nombre + '\'' +
+                ", id_Institucion=" + id_Institucion +
+                '}';
+    }
 }
