@@ -17,8 +17,10 @@ public class Postulacion {
     private LinkedList<DocumentoAdjunto> documentoAdjunto;
     private DepartamentoAcademico departamentoAcademico;
     private Sede sede;
+    private Postulante postulante;
 
-    public Postulacion(int id_postulacion, String localidad_procedencia, int cantidad_meses, String nombre_postulacion, LocalDate fecha_solicitud, String observacion_CES, String orden_final, String orden_precalculado, String linea_Investigacion, String estado, LinkedList<DocumentoAdjunto> documentoAdjunto, DepartamentoAcademico departamentoAcademico, Sede sede) {
+
+    public Postulacion(int id_postulacion, String localidad_procedencia, int cantidad_meses, String nombre_postulacion, LocalDate fecha_solicitud, String observacion_CES, String orden_final, String orden_precalculado, String linea_Investigacion, String estado, LinkedList<DocumentoAdjunto> documentoAdjunto, DepartamentoAcademico departamentoAcademico, Sede sede, Postulante postulante) {
         this.id_postulacion = id_postulacion;
         this.localidad_procedencia = localidad_procedencia;
         this.cantidad_meses = cantidad_meses;
@@ -32,6 +34,7 @@ public class Postulacion {
         this.documentoAdjunto = documentoAdjunto;
         this.departamentoAcademico = departamentoAcademico;
         this.sede = sede;
+        this.postulante = postulante;
     }
 
     public int getId_postulacion() {
@@ -136,5 +139,13 @@ public class Postulacion {
 
     public void setSede(Sede sede) {
         this.sede = sede;
+    }
+
+
+    public Postulante getPostulante() {
+        return postulante;
+    }
+    public void setPostulante(Postulante postulante) {
+        this.postulante = postulante;
     }
 }

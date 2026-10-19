@@ -15,6 +15,7 @@ public class DepartamentoAcademico {
 
     }
 
+
     public String getNombre() {
         return nombre;
     }
