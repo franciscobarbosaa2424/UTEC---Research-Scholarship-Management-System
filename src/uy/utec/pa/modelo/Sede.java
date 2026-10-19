@@ -9,6 +9,10 @@ public class Sede {
         this.id_sede = id_sede;
     }
 
+    public Sede(String nombre) {
+        this.nombre = nombre;
+    }
+
     public String getNombre() {
         return nombre;
     }
@@ -23,5 +27,13 @@ public class Sede {
 
     public void setId_sede(int id_sede) {
         this.id_sede = id_sede;
+    }
+
+    @Override
+    public String toString() {
+        return "Sede{" +
+                "nombre='" + nombre + '\'' +
+                ", id_sede=" + id_sede +
+                '}';
     }
 }

@@ -4,17 +4,14 @@ import uy.utec.pa.modelo.Institucion;
 import uy.utec.pa.modelo.Posgrado;
 import uy.utec.pa.util.ConexionBDSingleton;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.LinkedList;
 
 public class PosgradoDAOImpl implements  PosgradoDAO{
 
     //CREATE
     @Override
-    public void crearPosgrado(Posgrado posgrado){
+    public int crearPosgrado(Posgrado posgrado){
         String sql = """
         INSERT INTO proyecto.posgrados(nom_posgrado, id_institucion)
         VALUES (?,?)
@@ -22,15 +19,21 @@ public class PosgradoDAOImpl implements  PosgradoDAO{
 
         Connection conexion = null;
         PreparedStatement sentencia = null;
-
+        ResultSet resultado = null;
+        int idGenerado=0;
         try {
             conexion = ConexionBDSingleton.getInstancia().conectar();
-            sentencia = conexion.prepareStatement(sql);
+            sentencia = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             sentencia.setString(1, posgrado.getNombre());
             sentencia.setInt(2, posgrado.getInstitucion().getId_Institucion());
 
             sentencia.executeUpdate();
+
+            resultado = sentencia.getGeneratedKeys();
+            if (resultado.next()) {
+                idGenerado = resultado.getInt(1);
+            }
 
             System.out.println("Posgrado creado correctamente.");
 
@@ -47,7 +50,7 @@ public class PosgradoDAOImpl implements  PosgradoDAO{
             }
 
         }
-
+    return idGenerado;
     }
 
 

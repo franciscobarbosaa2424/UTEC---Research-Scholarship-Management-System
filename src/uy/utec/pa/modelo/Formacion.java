@@ -12,6 +12,11 @@ public class Formacion {
         this.postulante=postulante;
     }
 
+    public Formacion(String nombre_formacion,Postulante postulante) {
+        this.nombre_formacion = nombre_formacion;
+        this.postulante=postulante;
+    }
+
     public int getId_formacion() {
         return id_formacion;
     }

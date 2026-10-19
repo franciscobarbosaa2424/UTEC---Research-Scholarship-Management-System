@@ -39,6 +39,24 @@ public class Postulante {
         this.numeroCasa=numeroCasa;
     }
 
+    public Postulante(String documento, String pais_procedencia, String departamento_procedencia, String localidad_procedencia, String correo, String nombre, String apellidos, boolean esDocenteUtec, String nacionalidad, String actividad_laboral, LinkedList<String> celulares, String calle, String apartamento, String bis, int numeroCasa) {
+        this.documento = documento;
+        this.pais_procedencia = pais_procedencia;
+        this.departamento_procedencia = departamento_procedencia;
+        this.localidad_procedencia = localidad_procedencia;
+        this.correo = correo;
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.esDocenteUtec = esDocenteUtec;
+        this.nacionalidad = nacionalidad;
+        this.actividad_laboral = actividad_laboral;
+        this.celulares = celulares;
+        this.calle = calle;
+        this.apartamento = apartamento;
+        this.bis = bis;
+        this.numeroCasa = numeroCasa;
+    }
+
     public String getDocumento() {
         return documento;
     }

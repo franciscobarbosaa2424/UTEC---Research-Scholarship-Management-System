@@ -73,7 +73,9 @@ import java.util.Scanner;
         System.out.println("1. Menú de Usuarios");
         System.out.println("2. Gestión de Convocatorias");
         System.out.println("3. Gestión de Rúbricas");
-        System.out.println("4. ");
+        System.out.println("4. Gestión de Tutores");
+        System.out.println("5. Gestión de Sedes");
+        System.out.println("6. Gestión de Departamentos Academicos");
         System.out.print("Ingrese la opción a realizar: ");
 
         int numero = scanner.nextInt();
@@ -85,6 +87,12 @@ import java.util.Scanner;
             GestionConvocatorias();
         }else if(numero==3){
             MenuRubricas();
+        } else if (numero==4) {
+            MenuTutores();
+        } else if (numero==5) {
+            MenuSede();
+        } else if (numero==6) {
+            MenuDepartamentoAcademico();
         }
 
 
@@ -957,6 +965,8 @@ public void darDeBajaUsuario(){
     dao.darDeBajaUsuario(id);
 }
 
+
+
 public void MenuPostulante(){
     Scanner scanner = new Scanner(System.in);
     System.out.println("=== Menú Postulante ===");
@@ -993,7 +1003,7 @@ public void MenuPostulante(){
 
     boolean esDocUtec;
     while (true) {
-        System.out.println("¿Es documento de UTEC? (1.Sí o 2.No): ");
+        System.out.println("¿Es docente de UTEC? (1.Sí o 2.No): ");
         int seleccionEstado = scanner.nextInt();
         scanner.nextLine();
 
@@ -1013,7 +1023,8 @@ public void MenuPostulante(){
     String calle = scanner.nextLine();
 
     System.out.println("Número:");
-    String numero = scanner.nextLine();
+    int numero = scanner.nextInt();
+    scanner.nextLine();
 
     System.out.println("Apartamento:");
     String apartamento = scanner.nextLine();
@@ -1047,79 +1058,120 @@ public void MenuPostulante(){
 
     }
 
+    Postulante postulante = new Postulante(documento, paiProcedencia, depProcedencia, locProcedencia, correo, nombre, apellido, esDocUtec, nacionalidad, actLaboral, celulares, calle, apartamento,  bis, numero);
+    PostulanteDAOImpl daoPostulante = new PostulanteDAOImpl();
+    daoPostulante.crearPostulante(postulante);
+    int idPostulanteGenerado = daoPostulante.buscarPostulantePorDocumento(postulante.getDocumento());
+    postulante.setId_Postulante(idPostulanteGenerado);
 
 
-    //INGRESAR FORMACION
-    //DENTRO DE FORMACION PONER CARRERA Y POSGRADOS
-    //DENTRO DE CARRERA/POSGRADO LA INSTITUCION
-    MenuFormacion(false,false);
-
-
+    MenuFormacion(postulante);
 
     scanner.close();
 }
 
-public void MenuFormacion(boolean carreraBool,boolean posgradoBool){
+
+public void MenuFormacion(Postulante postulante){
     Scanner scanner = new Scanner(System.in);
-    System.out.println("Ingrese nombre formacion:");
+    System.out.println();
+    System.out.println("Ingrese nombre de su formacion:");
     String nombreFormacion = scanner.nextLine();
 
 
-    System.out.println("Dentro de la formación "+nombreFormacion+". ¿Qué desea ingresar?");
-    if (!carreraBool) {
-        System.out.println("1. Carrera");
-    }
-    if(!posgradoBool) {
-        System.out.println("2. Posgrado");
-    }
-
-    System.out.println("0. Salir de Formaciones");
+    boolean carreraAgregada = false;
+    boolean posgradoAgregado = false;
+    int opcionFormacion;
+    int idCarreraGenerado = 0;
+    int idPosgradoGenerado = 0;
+    int idFormacionGenerado = 0;
 
 
-    int opcionFormacion = scanner.nextInt();
-    scanner.nextLine();
+    Formacion formacion = new Formacion(nombreFormacion,postulante);
+    FormacionDAOImpl dao = new FormacionDAOImpl();
+    idFormacionGenerado = dao.crearFormacion(formacion);
 
-    String nombreCarrera = null;
-    String nombrePosgrado = null;
+    do {
+        System.out.println("--- Gestión de la Formación: " + nombreFormacion + "¿Qué desea ingresar?");
 
-    if(opcionFormacion==1 && !carreraBool){
-        System.out.println("Ingrese Nombre de Carrera:");
-        nombreCarrera = scanner.nextLine();
+        if (carreraAgregada==false) {
+            System.out.println("1. Carrera");
+        }
+        if (posgradoAgregado==false) {
+            System.out.println("2. Posgrado");
+        }
+        System.out.println("0. Terminar y Salir de Formaciones");
 
-    } else if (opcionFormacion==2 && !posgradoBool) {
-        System.out.println("Ingrese Nombre del Posgrado:");
-        nombrePosgrado = scanner.nextLine();
+        opcionFormacion = scanner.nextInt();
+        scanner.nextLine();
 
-    } else if (opcionFormacion==0) {
-        return;
-    }
+        if (opcionFormacion == 1 && carreraAgregada==false) {
+            System.out.println("Ingrese Nombre de Carrera:");
+            String nombreCarrera = scanner.nextLine();
 
-    System.out.println("Instituciones disponibles: ");
-    InstitucionDAOImpl daoInstitucion = new InstitucionDAOImpl();
-    LinkedList<Institucion> instituciones = daoInstitucion.listarInstituciones();
+            //llamamos al metodo auxiliar en vez de hacer el socotroco de recursividad q hicimos
+            Institucion institucion = gestionarInstitucion(scanner);
 
+            if (institucion != null) {
+                Carrera carrera = new Carrera(nombreCarrera, institucion);
+                CarreraDAOImpl daoCarrera = new CarreraDAOImpl();
+                idCarreraGenerado =  daoCarrera.crearCarrera(carrera);
+                carreraAgregada = true;
+                System.out.println("Carrera agregada con exito");
+            }
+        }
+        else if (opcionFormacion == 2 && posgradoAgregado==false) {
+            System.out.println("Ingrese Nombre del Posgrado:");
+            String nombrePosgrado = scanner.nextLine();
 
+            Institucion institucion = gestionarInstitucion(scanner);
+
+            if (institucion != null) {
+                Posgrado posgrado = new Posgrado(nombrePosgrado, institucion);
+                PosgradoDAOImpl daoPosgrado = new PosgradoDAOImpl();
+                idPosgradoGenerado = daoPosgrado.crearPosgrado(posgrado);
+                posgradoAgregado = true;
+                System.out.println("Posgrado agregado con exito");
+            }
+        }
+        else if (opcionFormacion != 0) {
+            System.out.println("la opción es inválida o ya fue ingresada en esta formación.");
+        }
+
+        if(opcionFormacion == 1) {
+            dao.asignarFormacionCarrera(idFormacionGenerado, idCarreraGenerado);
+        }
+        if(opcionFormacion == 2) {
+            dao.asignarFormacionPosgrado(idFormacionGenerado, idPosgradoGenerado);
+        }
+
+        // El bucle sigue mientras no elija salir y falte agregar al menos una de las dos cosas
+    } while (opcionFormacion != 0 && (carreraAgregada==false || posgradoAgregado==false));
+
+}
+
+    //aca le mande un metodo auxiliar para evitar recursividad,
+    //le mande private para q solo lo llame menuformacion es medio al dope pero no esta de mas
+    private Institucion gestionarInstitucion(Scanner scanner) {
+        System.out.println("Instituciones disponibles: ");
+        InstitucionDAOImpl daoInstitucion = new InstitucionDAOImpl();
+        LinkedList<Institucion> instituciones = daoInstitucion.listarInstituciones();
 
         for (Institucion i : instituciones) {
             System.out.println(i.toString());
         }
 
-
-        System.out.println("Ingrese ID de su Institucion:");
-        System.out.println("Si no ve su institucion disponible, presione 0 para agregar una nueva institucion.");
+        System.out.println("Ingrese ID de su Institución (o presione 0 para agregar una nueva):");
         int idInstitucion = scanner.nextInt();
         scanner.nextLine();
-
 
         Institucion institucion = null;
 
         if (idInstitucion == 0) {
-            System.out.println("Ingrese el nombre de la institucion:");
+            System.out.println("Ingrese el nombre de la institución:");
             String institucionNombre = scanner.nextLine();
             institucion = new Institucion(institucionNombre);
             daoInstitucion.crearInstitucion(institucion);
         } else {
-
             for (Institucion i : instituciones) {
                 if (i.getId_Institucion() == idInstitucion) {
                     institucion = i;
@@ -1127,19 +1179,292 @@ public void MenuFormacion(boolean carreraBool,boolean posgradoBool){
                 }
             }
         }
+        return institucion;
+    }
 
-        if (opcionFormacion == 1 && carreraBool == false) {
-            Carrera carrera = new Carrera(nombreCarrera, institucion);
-            CarreraDAOImpl daoCarrera = new CarreraDAOImpl();
-            daoCarrera.crearCarrera(carrera);
-            MenuFormacion(true,false);
 
-        } else if (opcionFormacion == 2 && posgradoBool == false) {
-            Posgrado posgrado = new Posgrado(nombrePosgrado, institucion);
-            PosgradoDAOImpl daoPosgrado = new PosgradoDAOImpl();
-            daoPosgrado.crearPosgrado(posgrado);
-            MenuFormacion(false,true);
+    public void MenuTutores(){
+        System.out.println();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Gestión de Tutores:");
+        System.out.println("1. Crear Tutor");
+        System.out.println("2. Editar Tutor");
+        System.out.println("3. Listar Tutores");
+        System.out.println("4. Eliminar un Tutor");
+        System.out.print("Ingrese la opción a realizar: ");
+        int numero = scanner.nextInt();
+        scanner.nextLine();
+
+        if (numero == 1){
+
+            System.out.println("Ingrese correo de UTEC:");
+            String correo = scanner.nextLine();
+            System.out.println("Ingrese nombre:");
+            String nombre= scanner.nextLine();
+            System.out.println("Ingrese apellido:");
+            String apellido= scanner.nextLine();
+            System.out.println("Ingrese departamento(área):");
+            String dep_area = scanner.nextLine();
+
+            TutorUtec tutor = new TutorUtec(nombre,apellido,dep_area,correo);
+            TutorDAOImpl dao = new TutorDAOImpl();
+            dao.crearTutor(tutor);
+
+        } else if (numero==2) {
+            TutorDAOImpl dao = new TutorDAOImpl();
+            LinkedList<TutorUtec> tutores = dao.listarTutores();
+
+            for(TutorUtec tutor: tutores){
+                System.out.println(tutor.toString());
+            }
+
+            System.out.println("Ingrese el ID del tutor que desea editar:");
+            int idTutor = scanner.nextInt();
+            scanner.nextLine();
+
+            TutorUtec tutorAux = null;
+            for(TutorUtec tutor: tutores){
+                if(tutor.getId_tutor()==idTutor){
+                   tutorAux = tutor;
+                   break;
+                }
+            }
+
+            System.out.println("Seleccione el campo que desea editar:");
+            System.out.println("1. Nombre: "+tutorAux.getNombre());
+            System.out.println("2. Apellido: "+tutorAux.getApellido());
+            System.out.println("3. Correo UTEC: "+tutorAux.getCorreo_utec());
+            System.out.println("4. Departamento(área): "+tutorAux.getDepartamento());
+
+            int opcionEditar = scanner.nextInt();
+            scanner.nextInt();
+            scanner.nextLine();
+
+            if(opcionEditar==1){
+                System.out.println("Ingrese nuevo nombre:");
+                String nuevoNombre = scanner.nextLine();
+                tutorAux.setNombre(nuevoNombre);
+
+            } else if (opcionEditar==2) {
+                System.out.println("Ingrese nuevo apellido:");
+                String nuevoApellido = scanner.nextLine();
+                tutorAux.setApellido(nuevoApellido);
+            }else if (opcionEditar==3) {
+                System.out.println("Ingrese nuevo correo UTEC:");
+                String nuevoCorreo = scanner.nextLine();
+                tutorAux.setCorreo_utec(nuevoCorreo);
+            }else if (opcionEditar==4) {
+                System.out.println("Ingrese nuevo departamento:");
+                String nuevoDepartamento = scanner.nextLine();
+                tutorAux.setDepartamento(nuevoDepartamento);
+            }
+
+            dao.editarTutor(tutorAux);
+
+
+        } else if (numero==3) {
+            //listar
+            TutorDAOImpl dao = new TutorDAOImpl();
+            LinkedList<TutorUtec> tutores = dao.listarTutores();
+
+            for(TutorUtec tutor: tutores){
+                System.out.println(tutor.toString());
+            }
+
+
+        } else if (numero==4) {
+            //listar
+            TutorDAOImpl dao = new TutorDAOImpl();
+            LinkedList<TutorUtec> tutores = dao.listarTutores();
+
+            for(TutorUtec tutor: tutores){
+                System.out.println(tutor.toString());
+            }
+
+            //eliminarle segun id por scanner
+            System.out.println("Digite id del tutor a eliminar: ");
+            int idtutotAux = scanner.nextInt();
+            scanner.nextLine();
+
+            dao.eliminarTutor(idtutotAux);
         }
 
 
-}
+        scanner.close();
+    }
+
+
+    public void MenuSede(){
+        System.out.println();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Gestión de Sedes:");
+        System.out.println("1. Crear Sede");
+        System.out.println("2. Editar Sede");
+        System.out.println("3. Listar Sede");
+        System.out.println("4. Eliminar una Sede");
+        System.out.print("Ingrese la opción a realizar: ");
+        int numero = scanner.nextInt();
+        scanner.nextLine();
+
+        if (numero == 1){
+
+            System.out.println("Ingrese nombre:");
+            String nombre= scanner.nextLine();
+
+            Sede sede = new Sede(nombre);
+            SedeDAOImpl dao = new SedeDAOImpl();
+            dao.crearSede(sede);
+
+        } else if (numero==2) {
+            SedeDAOImpl dao = new SedeDAOImpl();
+            LinkedList<Sede> sedes = dao.listarSede();
+
+            for(Sede s: sedes){
+                System.out.println(s.toString());
+            }
+
+            System.out.println("Ingrese el ID de la sede que desea editar:");
+            int idSede = scanner.nextInt();
+            scanner.nextLine();
+
+            Sede sedeAux = null;
+            for(Sede s: sedes){
+                if(s.getId_sede()==idSede){
+                    sedeAux = s;
+                    break;
+                }
+            }
+
+            System.out.println("Seleccione el campo que desea editar:");
+            System.out.println("1. Nombre: "+sedeAux.getNombre());
+
+            int opcionEditar = scanner.nextInt();
+            scanner.nextLine();
+
+            if(opcionEditar==1){
+                System.out.println("Ingrese nuevo nombre:");
+                String nuevoNombre = scanner.nextLine();
+                sedeAux.setNombre(nuevoNombre);
+            }
+
+            dao.editarSede(sedeAux);
+
+
+        } else if (numero==3) {
+            //listar
+            SedeDAOImpl dao = new SedeDAOImpl();
+            LinkedList<Sede> sedes = dao.listarSede();
+
+            for(Sede s: sedes){
+                System.out.println(s.toString());
+            }
+
+
+        } else if (numero==4) {
+            //listar
+            SedeDAOImpl dao = new SedeDAOImpl();
+            LinkedList<Sede> sedes = dao.listarSede();
+
+            for(Sede s: sedes){
+                System.out.println(s.toString());
+            }
+
+            //eliminarle segun id por scanner
+            System.out.println("Digite id de la sede a eliminar: ");
+            int idSedeAux = scanner.nextInt();
+            scanner.nextLine();
+
+            dao.eliminarSede(idSedeAux);
+        }
+
+        scanner.close();
+    }
+
+
+    public void MenuDepartamentoAcademico(){
+        System.out.println();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Gestión de Sedes:");
+        System.out.println("1. Crear Departamento Academico");
+        System.out.println("2. Editar Departamento Academico");
+        System.out.println("3. Listar Departamento Academico");
+        System.out.println("4. Eliminar un Departamento Academico");
+        System.out.print("Ingrese la opción a realizar: ");
+        int numero = scanner.nextInt();
+        scanner.nextLine();
+
+        if (numero == 1){
+            System.out.println("Ingrese nombre:");
+            String nombre= scanner.nextLine();
+
+            DepartamentoAcademico departamentoAcademico = new DepartamentoAcademico(nombre);
+            DepaAcademicoDAOImpl dao = new DepaAcademicoDAOImpl();
+            dao.crearDepaAcademico(departamentoAcademico);
+
+        } else if (numero==2) {
+            DepaAcademicoDAOImpl dao = new DepaAcademicoDAOImpl();
+            LinkedList<DepartamentoAcademico> departamentos = dao.listarDepartamentoAcademico();
+
+            for(DepartamentoAcademico d: departamentos){
+                System.out.println(d.toString());
+            }
+
+            System.out.println("Ingrese el ID del departamento que desea editar:");
+            int idDep = scanner.nextInt();
+            scanner.nextLine();
+
+            DepartamentoAcademico depAux = null;
+            for(DepartamentoAcademico d: departamentos){
+                if(d.getId_DepartamentoAcademico()==idDep){
+                    depAux = d;
+                    break;
+                }
+            }
+
+            System.out.println("Seleccione el campo que desea editar:");
+            System.out.println("1. Nombre: "+depAux.getNombre());
+
+            int opcionEditar = scanner.nextInt();
+            scanner.nextLine();
+
+            if(opcionEditar==1){
+                System.out.println("Ingrese nuevo nombre:");
+                String nuevoNombre = scanner.nextLine();
+                depAux.setNombre(nuevoNombre);
+            }
+
+            dao.editarDepaAcademico(depAux);
+
+
+        } else if (numero==3) {
+            //listar
+            DepaAcademicoDAOImpl dao = new DepaAcademicoDAOImpl();
+            LinkedList<DepartamentoAcademico> departamentos = dao.listarDepartamentoAcademico();
+
+            for(DepartamentoAcademico d: departamentos){
+                System.out.println(d.toString());
+            }
+
+
+        } else if (numero==4) {
+            //listar
+            DepaAcademicoDAOImpl dao = new DepaAcademicoDAOImpl();
+            LinkedList<DepartamentoAcademico> departamentoAcademicos = dao.listarDepartamentoAcademico();
+
+            for(DepartamentoAcademico d: departamentoAcademicos){
+                System.out.println(d.toString());
+            }
+
+            //eliminarle segun id por scanner
+            System.out.println("Digite id del departamento academico a eliminar: ");
+            int idDepaAcademico = scanner.nextInt();
+            scanner.nextLine();
+
+            dao.eliminarDepaAcademico(idDepaAcademico);
+        }
+
+        scanner.close();
+    }

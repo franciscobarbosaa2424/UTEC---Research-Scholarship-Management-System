@@ -4,12 +4,15 @@ public class DepartamentoAcademico {
 
     private String nombre;
     private int id_DepartamentoAcademico;
-    private String postulacion;
 
-    public DepartamentoAcademico(String nombre, int id_DepartamentoAcademico, String postulacion) {
+    public DepartamentoAcademico(String nombre, int id_DepartamentoAcademico) {
         this.nombre = nombre;
         this.id_DepartamentoAcademico = id_DepartamentoAcademico;
-        this.postulacion = postulacion;
+    }
+
+    public DepartamentoAcademico(String nombre) {
+        this.nombre = nombre;
+
     }
 
     public String getNombre() {
@@ -28,12 +31,11 @@ public class DepartamentoAcademico {
         this.id_DepartamentoAcademico = id_DepartamentoAcademico;
     }
 
-    public String getPostulacion() {
-        return postulacion;
+    @Override
+    public String toString() {
+        return "DepartamentoAcademico{" +
+                "nombre='" + nombre + '\'' +
+                ", id_DepartamentoAcademico=" + id_DepartamentoAcademico +
+                '}';
     }
-
-    public void setPostulacion(String postulacion) {
-        this.postulacion = postulacion;
-    }
-
 }

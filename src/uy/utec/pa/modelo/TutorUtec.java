@@ -1,10 +1,19 @@
 package uy.utec.pa.modelo;
 
 public class TutorUtec {
+    private int id_tutor;
     private String nombre;
     private String apellido;
     private  String departamento;
     private  String correo_utec;
+
+    public TutorUtec(int id_tutor,String nombre, String apellido, String departamento, String correo_utec) {
+        this.id_tutor = id_tutor;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.departamento = departamento;
+        this.correo_utec = correo_utec;
+    }
 
     public TutorUtec(String nombre, String apellido, String departamento, String correo_utec) {
         this.nombre = nombre;
@@ -43,5 +52,25 @@ public class TutorUtec {
 
     public void setCorreo_utec(String correo_utec) {
         this.correo_utec = correo_utec;
+    }
+
+    public int getId_tutor(){
+        return id_tutor;
+    }
+
+    public void setId_tutor(int id_tutor){
+        this.id_tutor=id_tutor;
+    }
+
+
+    @Override
+    public String toString() {
+        return "TutorUtec{" +
+                "id_tutor=" + id_tutor +
+                ", nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                ", departamento='" + departamento + '\'' +
+                ", correo_utec='" + correo_utec + '\'' +
+                '}';
     }
 }
