@@ -1,6 +1,7 @@
 package uy.utec.pa.dao;
 
 import uy.utec.pa.modelo.Postulante;
+import uy.utec.pa.modelo.Sede;
 import uy.utec.pa.util.ConexionBDSingleton;
 
 import java.sql.Connection;
@@ -83,6 +84,61 @@ public class PostulanteDAOImpl implements PostulanteDAO{
             }
 
         }
+    }
+
+    @Override
+    public LinkedList<Postulante> listarPostulantes(){
+
+        LinkedList<Postulante> postulantes = new LinkedList<>();
+        String sql = "SELECT * FROM proyecto.postulantes";
+
+        String sql3 = "SELECT * FROM proyecto.post_celulares WHERE id_postulante=?";
+
+        try {
+            Connection conexion = ConexionBDSingleton.getInstancia().conectar();
+            PreparedStatement sentencia = conexion.prepareStatement(sql);
+
+            ResultSet resultado = sentencia.executeQuery();
+
+            while (resultado.next()) {
+
+                int id_postulante = resultado.getInt("id_postulante");
+                String documento = resultado.getString("documento");
+                String nombre = resultado.getString("nombre");
+                String apellido = resultado.getString("apellido");
+                String correo = resultado.getString("correo");
+                String nacionalidad = resultado.getString("nacionalidad");
+                String act_laboral = resultado.getString("act_laboral");
+                boolean es_doc_utec = resultado.getBoolean("es_doc_utec");
+                String calle = resultado.getString("calle");
+                int numero = resultado.getInt("numero");
+                String apartamento = resultado.getString("apartamento");
+                String bis = resultado.getString("bis");
+                String loc_procedencia = resultado.getString("loc_procedencia");
+                String dep_procedencia = resultado.getString("dep_procedencia");
+                String pai_procedencia = resultado.getString("pai_procedencia");
+
+                LinkedList<String> celulares = new LinkedList<>();
+                try (PreparedStatement sentenciaCel = conexion.prepareStatement(sql3)) {
+                    sentenciaCel.setInt(1, id_postulante);
+                    try (ResultSet resultadoCel = sentenciaCel.executeQuery()) {
+                        while (resultadoCel.next()) {
+                            celulares.add(resultadoCel.getString("celular"));
+                        }
+                    }
+                }
+
+                Postulante postulante = new Postulante(documento, pai_procedencia, dep_procedencia, loc_procedencia, id_postulante, correo, nombre, apellido, es_doc_utec, nacionalidad, act_laboral, celulares, calle, apartamento, bis, numero);
+                postulantes.add(postulante);
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException(
+                    "Error al buscar postulantes.", e
+            );
+        }
+
+        return postulantes;
     }
 
 

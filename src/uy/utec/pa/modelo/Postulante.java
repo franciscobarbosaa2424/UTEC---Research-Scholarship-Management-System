@@ -57,6 +57,8 @@ public class Postulante {
         this.numeroCasa = numeroCasa;
     }
 
+
+
     public String getDocumento() {
         return documento;
     }
@@ -186,6 +188,25 @@ public class Postulante {
         this.numeroCasa = numeroCasa;
     }
 
-
-
+    @Override
+    public String toString() {
+        return "Postulante{" +
+                "documento='" + documento + '\'' +
+                ", pais_procedencia='" + pais_procedencia + '\'' +
+                ", departamento_procedencia='" + departamento_procedencia + '\'' +
+                ", localidad_procedencia='" + localidad_procedencia + '\'' +
+                ", id_Postulante=" + id_Postulante +
+                ", correo='" + correo + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", apellidos='" + apellidos + '\'' +
+                ", esDocenteUtec=" + esDocenteUtec +
+                ", nacionalidad='" + nacionalidad + '\'' +
+                ", actividad_laboral='" + actividad_laboral + '\'' +
+                ", celulares=" + celulares +
+                ", calle='" + calle + '\'' +
+                ", apartamento='" + apartamento + '\'' +
+                ", bis='" + bis + '\'' +
+                ", numeroCasa=" + numeroCasa +
+                '}';
+    }
 }

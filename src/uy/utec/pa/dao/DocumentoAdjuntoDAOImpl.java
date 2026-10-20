@@ -15,8 +15,8 @@ public class DocumentoAdjuntoDAOImpl implements DocumentoAdjuntoDAO{
     @Override
     public void crearDocumentoAjunto(DocumentoAdjunto documentoAdjunto){
         String sql = """
-        INSERT INTO proyecto.docu_adjuntos(nom_documento, ruta_archivo)
-        VALUES (?,?)
+        INSERT INTO proyecto.docu_adjuntos(nom_documento, ruta_archivo,id_postulacion,id_tipodocumento)
+        VALUES (?,?,?,?)
         """;
 
         Connection conexion = null;
@@ -28,6 +28,8 @@ public class DocumentoAdjuntoDAOImpl implements DocumentoAdjuntoDAO{
 
             sentencia.setString(1, documentoAdjunto.getNombre());
             sentencia.setString(2, documentoAdjunto.getRutaArchivo());
+            sentencia.setInt(3, documentoAdjunto.getPostulacion().getId_postulacion());
+            sentencia.setInt(4,documentoAdjunto.getTipoDocumento().getId_TipoDocumento());
 
             sentencia.executeUpdate();
 
@@ -50,7 +52,7 @@ public class DocumentoAdjuntoDAOImpl implements DocumentoAdjuntoDAO{
     }
 
 
-    //READ OSEA BUSCARLO
+    //READ
     @Override
     public int buscarDocumentoAdjuntoPorNombre(String nombre){
         String sql = """
@@ -76,7 +78,7 @@ public class DocumentoAdjuntoDAOImpl implements DocumentoAdjuntoDAO{
     }
 
 
-    //UPDATE, editar documento adjunto
+    //UPDATE
     @Override
     public void editarDocumentoAdjunto(DocumentoAdjunto documentoAdjunto){
             String sql = """
@@ -101,9 +103,7 @@ public class DocumentoAdjuntoDAOImpl implements DocumentoAdjuntoDAO{
             }
         }
 
-
-
-    //DELETE, eliminar el documento adjunto
+    //DELETE
     @Override
     public void eliminarDocumentoAdjunto(int id_documentoAdjunto){
         String sql = """

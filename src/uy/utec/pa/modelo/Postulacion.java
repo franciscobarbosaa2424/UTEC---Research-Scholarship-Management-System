@@ -14,13 +14,15 @@ public class Postulacion {
     private String orden_precalculado;
     private String linea_Investigacion;
     private String estado;
+    private String grupoInvestigacion;
+    private String otroGrupoInvestigacion;
     private LinkedList<DocumentoAdjunto> documentoAdjunto;
     private DepartamentoAcademico departamentoAcademico;
     private Sede sede;
     private Postulante postulante;
 
 
-    public Postulacion(int id_postulacion, String localidad_procedencia, int cantidad_meses, String nombre_postulacion, LocalDate fecha_solicitud, String observacion_CES, String orden_final, String orden_precalculado, String linea_Investigacion, String estado, LinkedList<DocumentoAdjunto> documentoAdjunto, DepartamentoAcademico departamentoAcademico, Sede sede, Postulante postulante) {
+    public Postulacion(int id_postulacion, String localidad_procedencia, int cantidad_meses, String nombre_postulacion, LocalDate fecha_solicitud, String observacion_CES, String orden_final, String orden_precalculado, String linea_Investigacion, String estado, LinkedList<DocumentoAdjunto> documentoAdjunto, DepartamentoAcademico departamentoAcademico, Sede sede, Postulante postulante,String grupoInvestigacion,String otroGrupoInvestigacion) {
         this.id_postulacion = id_postulacion;
         this.localidad_procedencia = localidad_procedencia;
         this.cantidad_meses = cantidad_meses;
@@ -35,6 +37,12 @@ public class Postulacion {
         this.departamentoAcademico = departamentoAcademico;
         this.sede = sede;
         this.postulante = postulante;
+        this.grupoInvestigacion=grupoInvestigacion;
+        this.otroGrupoInvestigacion=otroGrupoInvestigacion;
+    }
+
+    public Postulacion() {
+
     }
 
     public int getId_postulacion() {
@@ -147,5 +155,43 @@ public class Postulacion {
     }
     public void setPostulante(Postulante postulante) {
         this.postulante = postulante;
+    }
+
+    public String getGrupoInvestigacion() {
+        return grupoInvestigacion;
+    }
+
+    public void setGrupoInvestigacion(String grupoInvestigacion) {
+        this.grupoInvestigacion = grupoInvestigacion;
+    }
+
+    public String getOtroGrupoInvestigacion() {
+        return otroGrupoInvestigacion;
+    }
+
+    public void setOtroGrupoInvestigacion(String otroGrupoInvestigacion) {
+        this.otroGrupoInvestigacion = otroGrupoInvestigacion;
+    }
+
+    @Override
+    public String toString() {
+        return "Postulacion{" +
+                "id_postulacion=" + id_postulacion +
+                ", localidad_procedencia='" + localidad_procedencia + '\'' +
+                ", cantidad_meses=" + cantidad_meses +
+                ", nombre_postulacion='" + nombre_postulacion + '\'' +
+                ", fecha_solicitud=" + fecha_solicitud +
+                ", observacion_CES='" + observacion_CES + '\'' +
+                ", orden_final='" + orden_final + '\'' +
+                ", orden_precalculado='" + orden_precalculado + '\'' +
+                ", linea_Investigacion='" + linea_Investigacion + '\'' +
+                ", estado='" + estado + '\'' +
+                ", grupoInvestigacion='" + grupoInvestigacion + '\'' +
+                ", otroGrupoInvestigacion='" + otroGrupoInvestigacion + '\'' +
+                ", documentoAdjunto=" + documentoAdjunto +
+                ", departamentoAcademico=" + departamentoAcademico +
+                ", sede=" + sede +
+                ", postulante=" + postulante +
+                '}';
     }
 }

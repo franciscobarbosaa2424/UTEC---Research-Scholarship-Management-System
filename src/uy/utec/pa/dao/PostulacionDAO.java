@@ -7,8 +7,8 @@ import java.util.LinkedList;
 public interface PostulacionDAO {
 
     int crearPostulacion(Postulacion postulacion);
-    void editarPostulacion(Postulacion postulacion);
     void eliminarPostulacion(int id_postulacion);
     LinkedList<Postulacion> listarPostulaciones();
-    Postulacion buscarPostulacion(int id_postulacion);
+   // Postulacion buscarPostulacion();
+    void editarPostulacion(Postulacion postulacion);
 }

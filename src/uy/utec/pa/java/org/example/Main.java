@@ -21,6 +21,7 @@ import java.util.Scanner;
 
          if(opcionMenuPrincipal==1){
              MenuPostulante();
+
          }else if(opcionMenuPrincipal==2) {
                  //VALIDAR
                  UsuarioDAOImpl dao = new UsuarioDAOImpl();
@@ -70,12 +71,13 @@ import java.util.Scanner;
     public void MenuPrincipalAdmin() throws SQLException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Bienvenido. ¿Qué desea realizar?");
-        System.out.println("1. Menú de Usuarios");
+        System.out.println("1. Gestión de Usuarios");
         System.out.println("2. Gestión de Convocatorias");
         System.out.println("3. Gestión de Rúbricas");
         System.out.println("4. Gestión de Tutores");
         System.out.println("5. Gestión de Sedes");
         System.out.println("6. Gestión de Departamentos Academicos");
+        System.out.println("7. Gestión de Postulaciones");
         System.out.print("Ingrese la opción a realizar: ");
 
         int numero = scanner.nextInt();
@@ -93,6 +95,8 @@ import java.util.Scanner;
             MenuSede();
         } else if (numero==6) {
             MenuDepartamentoAcademico();
+        } else if (numero==7) {
+            MenuPostulaciones();
         }
 
 
@@ -1018,7 +1022,6 @@ public void MenuPostulante(){
         }
     }
 
-
     System.out.println("Calle:");
     String calle = scanner.nextLine();
 
@@ -1068,6 +1071,7 @@ public void MenuPostulante(){
     MenuFormacion(postulante);
 
     scanner.close();
+
 }
 
 
@@ -1464,6 +1468,228 @@ public void MenuFormacion(Postulante postulante){
             scanner.nextLine();
 
             dao.eliminarDepaAcademico(idDepaAcademico);
+        }
+
+        scanner.close();
+    }
+
+
+    public void MenuPostulaciones(){
+
+        System.out.println();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Gestión de Postulacion:");
+        System.out.println("1. Crear Postulacion");
+        System.out.println("2. Editar Postulacion");
+        System.out.println("3. Listar Postulacion");
+        System.out.println("4. Eliminar una Postulacion");
+        System.out.print("Ingrese la opción a realizar: ");
+        int numero = scanner.nextInt();
+        scanner.nextLine();
+
+        PostulacionDAOImpl dao = new PostulacionDAOImpl();
+
+
+        if (numero == 1){
+            // CREAR POSTULACIÓN
+            System.out.println("Ingrese nombre de la postulación:");
+            String nombre = scanner.nextLine();
+
+            PostulanteDAOImpl postulanteDao = new PostulanteDAOImpl();
+            LinkedList<Postulante> postulantes = postulanteDao.listarPostulantes();
+
+            System.out.println("Ingrese el ID del postulante que desea seleccionar:");
+            for(Postulante p: postulantes){
+                System.out.println(p.toString());
+            }
+
+            int idPostulante = scanner.nextInt();
+            scanner.nextLine();
+
+            Postulante postulanteAux = null;
+
+            for(Postulante p: postulantes){
+               if(p.getId_Postulante()==idPostulante){
+                   postulanteAux=p;
+                   break;
+               }
+            }
+
+
+            System.out.println("Ingrese cantidad de meses:");
+            int canMes = scanner.nextInt();
+            scanner.nextLine();
+
+            System.out.println("Ingrese línea de investigación:");
+            String lineaInvestigacion = scanner.nextLine();
+
+            System.out.println("Ingrese la observacion del CES:");
+            String cesObservacion = scanner.nextLine();
+
+            System.out.println("Ingrese el nombre del primer grupo de investigacion:");
+            String nomGrupo1 = scanner.nextLine();
+
+            System.out.println("Ingrese el nombre del segundo grupo de investigacion:");
+            String nomGrupo2 = scanner.nextLine();
+
+            System.out.println("Ingrese el orden final del CES:");
+            String ordenFinalCes = scanner.nextLine();
+
+            System.out.println("Ingrese el estado de la postulacion:");
+            String estado = scanner.nextLine();
+
+            DepaAcademicoDAOImpl daoDepaAcademico = new DepaAcademicoDAOImpl();
+            LinkedList<DepartamentoAcademico> departamentoAcademicos = daoDepaAcademico.listarDepartamentoAcademico();
+            System.out.println("Ingrese el ID del departamento Academico: ");
+
+            for(DepartamentoAcademico dep : departamentoAcademicos){
+                System.out.println(dep.toString());
+            }
+
+            int idDepaAcademico= scanner.nextInt();
+            scanner.nextLine();
+
+            DepartamentoAcademico depAux = null;
+
+            for(DepartamentoAcademico dep : departamentoAcademicos){
+                if(dep.getId_DepartamentoAcademico()==idDepaAcademico){
+                    depAux = dep;
+                    break;
+                }
+            }
+
+
+            SedeDAOImpl daoSede = new SedeDAOImpl();
+            LinkedList<Sede> sedes = daoSede.listarSede();
+            System.out.println("ingrese el id de la sede: ");
+
+            for(Sede s : sedes){
+                System.out.println(s.toString());
+            }
+
+            int idSede = scanner.nextInt();
+            scanner.nextLine();
+
+            Sede sedeAux = null;
+
+            for(Sede s : sedes){
+                if(s.getId_sede()==idSede){
+                    sedeAux=s;
+                    break;
+                }
+            }
+
+            Postulacion nuevaPostulacion = new Postulacion();
+            nuevaPostulacion.setNombre_postulacion(nombre);
+            nuevaPostulacion.setCantidad_meses(canMes);
+            nuevaPostulacion.setLinea_Investigacion(lineaInvestigacion);
+            nuevaPostulacion.setObservacion_CES(cesObservacion);
+            nuevaPostulacion.setGrupoInvestigacion(nomGrupo1);
+            nuevaPostulacion.setOtroGrupoInvestigacion(nomGrupo2);
+            nuevaPostulacion.setOrden_final(ordenFinalCes);
+            nuevaPostulacion.setFecha_solicitud(java.time.LocalDate.now());
+            nuevaPostulacion.setEstado(estado);
+            nuevaPostulacion.setDepartamentoAcademico(depAux);
+            nuevaPostulacion.setSede(sedeAux);
+            nuevaPostulacion.setPostulante(postulanteAux);
+
+
+            dao.crearPostulacion(nuevaPostulacion);
+
+        } else if (numero == 2) {
+
+            LinkedList<Postulacion> postulaciones = dao.listarPostulaciones();
+
+            for(Postulacion p : postulaciones){
+                System.out.println("ID: " + p.getId_postulacion() + " - Nombre: " + p.getNombre_postulacion());
+            }
+
+            System.out.println("Ingrese el ID de la postulación que desea editar:");
+            int idPost = scanner.nextInt();
+            scanner.nextLine();
+
+            Postulacion postAux = null;
+            for(Postulacion p : postulaciones){
+                if(p.getId_postulacion() == idPost){
+                    postAux = p;
+                    break;
+                }
+            }
+
+            if (postAux != null) {
+                System.out.println("Seleccione el campo que desea editar:");
+                System.out.println("1. Nombre: " + postAux.getNombre_postulacion());
+                System.out.println("2. Cantidad de meses: " + postAux.getCantidad_meses());
+                System.out.println("3. Línea de Investigación: " + postAux.getLinea_Investigacion());
+                System.out.println("4. Observación del CES: " + postAux.getObservacion_CES());
+                System.out.println("5. Grupo de investigación 1: " + postAux.getGrupoInvestigacion());
+                System.out.println("6. Grupo de investigación 2: " + postAux.getOtroGrupoInvestigacion());
+                System.out.println("7. Orden final del CES: " + postAux.getOrden_final());
+                System.out.println("8. Estado: " + postAux.getEstado());
+
+                int opcionEditar = scanner.nextInt();
+                scanner.nextLine();
+
+                if(opcionEditar == 1){
+                    System.out.println("Ingrese nuevo nombre:");
+                    postAux.setNombre_postulacion(scanner.nextLine());
+                } else if(opcionEditar == 2){
+                    System.out.println("Ingrese nueva cantidad de meses:");
+                    postAux.setCantidad_meses(scanner.nextInt());
+                    scanner.nextLine();
+                } else if(opcionEditar == 3){
+                    System.out.println("Ingrese nueva línea de investigación:");
+                    postAux.setLinea_Investigacion(scanner.nextLine());
+                } else if(opcionEditar == 4){
+                    System.out.println("Ingrese nueva observación del CES:");
+                    postAux.setObservacion_CES(scanner.nextLine());
+                } else if(opcionEditar == 5){
+                    System.out.println("Ingrese nuevo nombre del primer grupo de investigación:");
+                    postAux.setGrupoInvestigacion(scanner.nextLine());
+                } else if(opcionEditar == 6){
+                    System.out.println("Ingrese nuevo nombre del segundo grupo de investigación:");
+                    postAux.setOtroGrupoInvestigacion(scanner.nextLine());
+                } else if(opcionEditar == 7){
+                    System.out.println("Ingrese nuevo orden final del CES:");
+                    postAux.setOrden_final(scanner.nextLine());
+                } else if(opcionEditar == 8){
+                    System.out.println("Ingrese nuevo estado:");
+                    postAux.setEstado(scanner.nextLine());
+                } else {
+                    System.out.println("Opción inválida.");
+                    return;
+                }
+
+                dao.editarPostulacion(postAux);
+                System.out.println("¡Postulación actualizada con éxito!");
+            } else {
+                System.out.println("No se encontró una postulación con ese ID.");
+            }
+
+        } else if (numero == 3) {
+            LinkedList<Postulacion> postulaciones = dao.listarPostulaciones();
+
+            for(Postulacion p : postulaciones){
+                System.out.println("ID: " + p.getId_postulacion() +
+                        " | Nombre: " + p.getNombre_postulacion() +
+                        " | Estado: " + p.getEstado() +
+                        " | Línea: " + p.getLinea_Investigacion());
+            }
+
+        } else if (numero == 4) {
+            // listar
+            LinkedList<Postulacion> postulaciones = dao.listarPostulaciones();
+            for(Postulacion p : postulaciones){
+                System.out.println("ID: " + p.getId_postulacion() + " - Nombre: " + p.getNombre_postulacion());
+            }
+
+            //eliminar
+            System.out.println("Digite el ID de la postulación a eliminar: ");
+            int idPostulacion = scanner.nextInt();
+            scanner.nextLine();
+
+            dao.eliminarPostulacion(idPostulacion);
         }
 
         scanner.close();
