@@ -1493,8 +1493,6 @@ public void MenuFormacion(Postulante postulante){
 
         if (numero == 1){
             // CREAR POSTULACIÓN
-            System.out.println("Ingrese nombre de la postulación:");
-            String nombre = scanner.nextLine();
 
             PostulanteDAOImpl postulanteDao = new PostulanteDAOImpl();
             LinkedList<Postulante> postulantes = postulanteDao.listarPostulantes();
@@ -1536,8 +1534,51 @@ public void MenuFormacion(Postulante postulante){
             System.out.println("Ingrese el orden final del CES:");
             String ordenFinalCes = scanner.nextLine();
 
-            System.out.println("Ingrese el estado de la postulacion:");
-            String estado = scanner.nextLine();
+            System.out.println("=== Estados de la postulación ===");
+            System.out.println("1 - Registrada");
+            System.out.println("2 - En revisión");
+            System.out.println("3 - No elegible");
+            System.out.println("4 - En evaluación");
+            System.out.println("5 - Evaluada");
+            System.out.println("6 - Aprobada");
+            System.out.println("7 - Rechazada");
+            System.out.println("8 - Cancelada");
+
+            System.out.println("Ingrese estado:");
+            int opcionEstado = scanner.nextInt();
+            scanner.nextLine();
+
+            String estado = "";
+
+            switch (opcionEstado) {
+                case 1:
+                    estado = "Registrada";
+                    break;
+                case 2:
+                    estado = "En revisión";
+                    break;
+                case 3:
+                    estado = "No elegible";
+                    break;
+                case 4:
+                    estado = "En evaluación";
+                    break;
+                case 5:
+                    estado = "Evaluada";
+                    break;
+                case 6:
+                    estado = "Aprobada";
+                    break;
+                case 7:
+                    estado = "Rechazada";
+                    break;
+                case 8:
+                    estado = "Cancelada";
+                    break;
+                default:
+                    System.out.println("Opción inválida.");
+                    break;
+            }
 
             DepaAcademicoDAOImpl daoDepaAcademico = new DepaAcademicoDAOImpl();
             LinkedList<DepartamentoAcademico> departamentoAcademicos = daoDepaAcademico.listarDepartamentoAcademico();
@@ -1654,8 +1695,55 @@ public void MenuFormacion(Postulante postulante){
                     System.out.println("Ingrese nuevo orden final del CES:");
                     postAux.setOrden_final(scanner.nextLine());
                 } else if(opcionEditar == 8){
-                    System.out.println("Ingrese nuevo estado:");
-                    postAux.setEstado(scanner.nextLine());
+                    System.out.println("=== Nuevo estado ===");
+                    System.out.println("1 - Registrada");
+                    System.out.println("2 - En revisión");
+                    System.out.println("3 - No elegible");
+                    System.out.println("4 - En evaluación");
+                    System.out.println("5 - Evaluada");
+                    System.out.println("6 - Aprobada");
+                    System.out.println("7 - Rechazada");
+                    System.out.println("8 - Cancelada");
+
+                    System.out.println("Ingrese una opción:");
+                    int opcionEstado = scanner.nextInt();
+                    scanner.nextLine();
+
+                    String nuevoEstado = "";
+
+                    switch (opcionEstado) {
+                        case 1:
+                            nuevoEstado = "Registrada";
+                            break;
+                        case 2:
+                            nuevoEstado = "En revisión";
+                            break;
+                        case 3:
+                            nuevoEstado = "No elegible";
+                            break;
+                        case 4:
+                            nuevoEstado = "En evaluación";
+                            break;
+                        case 5:
+                            nuevoEstado = "Evaluada";
+                            break;
+                        case 6:
+                            nuevoEstado = "Aprobada";
+                            break;
+                        case 7:
+                            nuevoEstado = "Rechazada";
+                            break;
+                        case 8:
+                            nuevoEstado = "Cancelada";
+                            break;
+                        default:
+                            System.out.println("Opción inválida.");
+                            break;
+                    }
+
+                    if (!nuevoEstado.isEmpty()) {
+                        postAux.setEstado(nuevoEstado);
+                    }
                 } else {
                     System.out.println("Opción inválida.");
                     return;

@@ -75,7 +75,7 @@ public class PostulacionDAOImpl implements PostulacionDAO {
            d.nombre AS nombre_departamento,
            p.id_postulante,
            p.id_sede,
-           s.nombre AS nombre_sede
+           s.nom_sede AS nombre_sede
     FROM proyecto.postulaciones p
     INNER JOIN proyecto.depa_academicos d
         ON p.id_departamento = d.id_departamento
@@ -175,10 +175,12 @@ public class PostulacionDAOImpl implements PostulacionDAO {
         fecha_solicitud = ?, 
         observaciones_ces = ?, 
         grupo_investigacion = ?, 
+        otro_g_investigacion = ?,
         orden_final_ces = ?, 
         id_departamento = ?, 
         id_postulante = ?, 
-        id_sede = ?
+        id_sede = ?,
+        estado = ?
     WHERE id_postulacion = ?
     """;
 
@@ -190,12 +192,15 @@ public class PostulacionDAOImpl implements PostulacionDAO {
             sentencia.setString(3, postulacion.getLinea_Investigacion());
             sentencia.setDate(4, java.sql.Date.valueOf(postulacion.getFecha_solicitud()));
             sentencia.setString(5, postulacion.getObservacion_CES());
-            sentencia.setString(6, postulacion.getOrden_precalculado());
-            sentencia.setString(7, postulacion.getOrden_final());
-            sentencia.setInt(8, postulacion.getDepartamentoAcademico().getId_DepartamentoAcademico());
-            sentencia.setInt(9, postulacion.getPostulante().getId_Postulante());
-            sentencia.setInt(10, postulacion.getSede().getId_sede());
-            sentencia.setInt(11, postulacion.getId_postulacion());
+            sentencia.setString(6,postulacion.getGrupoInvestigacion());
+            sentencia.setString(7,postulacion.getOtroGrupoInvestigacion());
+            sentencia.setString(8, postulacion.getOrden_final());
+            sentencia.setInt(9, postulacion.getDepartamentoAcademico().getId_DepartamentoAcademico());
+            sentencia.setInt(10, postulacion.getPostulante().getId_Postulante());
+            sentencia.setInt(11, postulacion.getSede().getId_sede());
+            sentencia.setString(12, postulacion.getEstado());
+            sentencia.setInt(13, postulacion.getId_postulacion());
+
 
             sentencia.executeUpdate();
 
