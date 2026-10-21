@@ -16,7 +16,7 @@ import java.util.Scanner;
         System.out.println("=== Menú Principal ===");
         System.out.println("1. Realizar Postulación a una convocatoria");
         System.out.println("2. Loguearse como Administrador/Evaluador Externo");
-        System.out.println("3. Mandar correo prueba");
+        System.out.println("3. Olvidé mi contraseña");
         int opcionMenuPrincipal= scanner.nextInt();
         scanner.nextLine();
 
@@ -39,6 +39,7 @@ import java.util.Scanner;
                  String contrasena = scanner.nextLine();
 
                  boolean accede = proxy.autenticar(correo, contrasena);
+                 boolean esContraseñaGenerica = dao.esContraseñaGenerica(correo);
 
                  if (accede) {
                      System.out.println("Inicio de sesión correcto.");
@@ -49,6 +50,13 @@ import java.util.Scanner;
                              rol = u.getRol();
                          }
                      }
+
+                     if(esContraseñaGenerica){
+                         System.out.println("Ingrese contraseña nueva:");
+                         String nuevaContrasena = scanner.nextLine();
+                         dao.guardarContraseñaNueva(correo,nuevaContrasena);
+                     }
+
                      if (rol.equalsIgnoreCase("administrador")) {
                          System.out.println("Bienvenido Administrador");
                          MenuPrincipalAdmin();
@@ -63,12 +71,18 @@ import java.util.Scanner;
                      System.out.println("Correo o contraseña incorrectos.");
                  }
          } else if (opcionMenuPrincipal==3) {
+             System.out.println("Ingrese el correo para cambiar la contraseña:");
+             String correo = scanner.nextLine();
+
+             UsuarioDAOImpl dao = new UsuarioDAOImpl();
+             dao.guardarContraseñaNueva(correo,"secu1234");
+
              ServicioCorreo servicioCorreo = new ServicioCorreo();
 
              servicioCorreo.enviarCorreo(
-                     "f.barbosa.suarez5@gmail.com",
-                     "Postulación registrada",
-                     "Su postulación fue registrada correctamente."
+                     correo,
+                     "SECU: Cambio de Contraseña",
+                     "Ingrese esta contraseña temporal: \"secu1234\""
              );
          }
         System.out.println();
@@ -87,6 +101,7 @@ import java.util.Scanner;
         System.out.println("5. Gestión de Sedes");
         System.out.println("6. Gestión de Departamentos Academicos");
         System.out.println("7. Gestión de Postulaciones");
+        System.out.println("8. Gestión de Evaluaciones");
         System.out.print("Ingrese la opción a realizar: ");
 
         int numero = scanner.nextInt();
@@ -106,11 +121,11 @@ import java.util.Scanner;
             MenuDepartamentoAcademico();
         } else if (numero==7) {
             MenuPostulaciones();
+        } else if (numero==8) {
+            MenuEvaluacion();
         }
 
-
         scanner.close();
-
     }
 
     public void MenuRubricas() throws SQLException {
@@ -124,7 +139,6 @@ import java.util.Scanner;
         System.out.print("Ingrese la opción a realizar: ");
         int numero = scanner.nextInt();
         scanner.nextLine();
-
 
         if(numero==1){
             //Crear Rubrica
@@ -889,8 +903,8 @@ public void CrearUsuarioAdministrador() throws SQLException {
 
     servicioCorreo.enviarCorreo(
             correoAdmin,
-            "Postulación registrada",
-            "Su postulación fue registrada correctamente. Ingrese con \"secu1234\""
+            "Usuario SECU Ingresado",
+            "Su usuario fue registrado correctamente. Ingrese con contraseña \"secu1234\""
     );
 
 
@@ -978,8 +992,8 @@ public void CrearUsuarioEvaluadorExterno(){
 
     servicioCorreo.enviarCorreo(
             correoEvaluador,
-            "Postulación registrada",
-            "Su postulación fue registrada correctamente. Ingrese con \"secu1234\""
+            "Usuario SECU Ingresado",
+            "Su usuario fue registrado correctamente. Ingrese con contraseña \"secu1234\""
     );
 
     scanner.close();
@@ -1810,3 +1824,175 @@ public void MenuFormacion(Postulante postulante){
 
         scanner.close();
     }
+
+
+    public void MenuEvaluacion(){
+
+        System.out.println();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Gestión de Evaluación:");
+        System.out.println("1. Crear Evaluación y Asignar Evaluadores");
+        System.out.println("2. Editar Evaluación");
+        System.out.println("3. Listar Evaluaciones");
+        System.out.println("4. Eliminar una Evaluación");
+        System.out.print("Ingrese la opción a realizar: ");
+        int numero = scanner.nextInt();
+        scanner.nextLine();
+
+        EvaluacionDAOImpl dao = new EvaluacionDAOImpl();
+
+        if (numero == 1){
+
+            // NUEVO: Pedir el ID de la evaluación que corresponde a tu clave compuesta
+            System.out.print("Ingrese el ID de la evaluación: ");
+            int idEvaluacion = Integer.parseInt(scanner.nextLine());
+
+            System.out.print("Ingrese nombre de la evaluación: ");
+            String nombre = scanner.nextLine();
+
+            System.out.print("Ingrese puntaje total: ");
+            double punTotal = Double.parseDouble(scanner.nextLine());
+
+            System.out.print("Ingrese juicio global: ");
+            String juiGlobal = scanner.nextLine();
+
+            System.out.print("Ingrese comentario del evaluador: ");
+            String comEvaluador = scanner.nextLine();
+
+            System.out.print("Ingrese el ID de la postulación a evaluar: ");
+            int idPostulacion = Integer.parseInt(scanner.nextLine());
+
+            // 1. Listamos los evaluadores externos disponibles para que el Admin elija
+            UsuarioDAOImpl usuarioDao = new UsuarioDAOImpl();
+            LinkedList<EvaluadorExterno> evaluadoresDisponibles = usuarioDao.listarEvaluadoresExternos();
+
+            System.out.println("\n--- Lista de Evaluadores Externos Disponibles ---");
+            for(EvaluadorExterno ev : evaluadoresDisponibles) {
+                System.out.println("ID: " + ev.getId_usuario() +
+                        " | Nombre: " + ev.getNombre() + " " + ev.getApellido() +
+                        " | Institución: " + ev.getInstitucion());
+            }
+            System.out.println("-------------------------------------------------");
+
+            // 2. Pedimos los IDs obligatorios para los 2 evaluadores (CU08)
+            System.out.print("Ingrese el ID del Evaluador Externo 1: ");
+            int idEval1 = Integer.parseInt(scanner.nextLine());
+
+            System.out.print("Ingrese el ID del Evaluador Externo 2: ");
+            int idEval2 = Integer.parseInt(scanner.nextLine());
+
+            // 3. Buscamos los objetos evaluadores completos dentro de la lista disponible
+            EvaluadorExterno evaluador1 = null;
+            EvaluadorExterno evaluador2 = null;
+
+            for (EvaluadorExterno ev : evaluadoresDisponibles) {
+                if (ev.getId_usuario() == idEval1) {
+                    evaluador1 = ev;
+                    evaluador1.setId_usuario(idEval1);
+                }
+                if (ev.getId_usuario() == idEval2) {
+                    evaluador2 = ev;
+                    evaluador2.setId_usuario(idEval2);
+                }
+            }
+
+            if (evaluador1 == null || evaluador2 == null) {
+                System.out.println("Error: Uno o ambos IDs de evaluadores ingresados no son válidos.");
+                scanner.close();
+                return;
+            }
+
+            // 4. Instanciamos la evaluación pasándole el idEvaluacion real en lugar de 0
+            Evaluacion nuevaEvaluacion = new Evaluacion(
+                    idPostulacion, evaluador2, evaluador1, comEvaluador, punTotal, juiGlobal, "En evaluación", nombre, idEvaluacion
+            );
+
+            dao.crearEvaluacion(nuevaEvaluacion);
+
+
+        } else if (numero == 2) {
+
+            LinkedList<Evaluacion> evaluaciones = dao.listarEvaluacion();
+
+            for(Evaluacion e: evaluaciones){
+                System.out.println(e.toString());
+            }
+
+            System.out.print("Ingrese el ID de la evaluación que desea editar: ");
+            int idEvaluacion = scanner.nextInt();
+            scanner.nextLine();
+
+            Evaluacion evaluacionaux = null;
+            for(Evaluacion e: evaluaciones){
+                if(e.getId_Evaluacion() == idEvaluacion){
+                    evaluacionaux = e;
+                    break;
+                }
+            }
+
+            if (evaluacionaux != null) {
+                System.out.println("Seleccione el campo que desea editar:");
+                System.out.println("1. Nombre: " + evaluacionaux.getNombre());
+                System.out.println("2. Puntaje Total: " + evaluacionaux.getPuntaje_total());
+                System.out.println("3. Juicio Global: " + evaluacionaux.getJuicio_global());
+                System.out.println("4. Comentario: " + evaluacionaux.getComentario_evaluador());
+                System.out.println("5. Estado: " + evaluacionaux.getEstado());
+
+                int opcionEditar = scanner.nextInt();
+                scanner.nextLine();
+
+                if (opcionEditar == 1) {
+                    System.out.print("Ingrese nuevo nombre: ");
+                    evaluacionaux.setNombre(scanner.nextLine());
+                } else if (opcionEditar == 2) {
+                    System.out.print("Ingrese nuevo puntaje total: ");
+                    evaluacionaux.setPuntaje_total(Double.parseDouble(scanner.nextLine()));
+                } else if (opcionEditar == 3) {
+                    System.out.print("Ingrese nuevo juicio global: ");
+                    evaluacionaux.setJuicio_global(scanner.nextLine());
+                } else if (opcionEditar == 4) {
+                    System.out.print("Ingrese nuevo comentario: ");
+                    evaluacionaux.setComentario_evaluador(scanner.nextLine());
+                } else if (opcionEditar == 5) {
+                    System.out.print("Ingrese nuevo estado: ");
+                    evaluacionaux.setEstado(scanner.nextLine());
+                }
+
+                dao.editarEvaluacion(evaluacionaux);
+                System.out.println("¡Evaluación actualizada con éxito!");
+            } else {
+                System.out.println("No se encontró ninguna evaluación con ese ID.");
+            }
+
+        } else if (numero == 3) {
+
+            LinkedList<Evaluacion> evaluaciones = dao.listarEvaluacion();
+            for(Evaluacion e: evaluaciones){
+                System.out.println(e.toString());
+
+                // Mostramos detallados los 2 evaluadores de esta evaluación
+                LinkedList<EvaluadorExterno> evalsAsignados = dao.obtenerEvaluadoresPorEvaluacion(e.getId_Evaluacion());
+                System.out.println("   └─ Evaluadores asignados a esta evaluación:");
+                for(EvaluadorExterno ev : evalsAsignados) {
+                    System.out.println("      * " + ev.getNombre() + " " + ev.getApellido() + " (" + ev.getInstitucion() + ")");
+                }
+            }
+
+        } else if (numero == 4) {
+
+            LinkedList<Evaluacion> evaluaciones = dao.listarEvaluacion();
+            for(Evaluacion e: evaluaciones){
+                System.out.println("ID: " + e.getId_Evaluacion() + " - Nombre: " + e.getNombre());
+            }
+
+            System.out.print("Digite ID de la Evaluación a eliminar: ");
+            int id_evaluacion = scanner.nextInt();
+            scanner.nextLine();
+
+            dao.eliminarEvaluacion(id_evaluacion);
+        }
+
+        scanner.close();
+    }
+

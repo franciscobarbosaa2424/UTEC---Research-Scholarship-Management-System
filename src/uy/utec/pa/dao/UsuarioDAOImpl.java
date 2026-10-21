@@ -355,4 +355,115 @@ public class UsuarioDAOImpl implements UsuarioDAO{
     }
 
     @Override
+    public boolean esContraseñaGenerica(String correo){
+        String sql = "SELECT contrasena FROM proyecto.usuarios WHERE correo = ?";
+        boolean esGenerica = false;
+        try  {
+            Connection conexion = ConexionBDSingleton.getInstancia().conectar();
+            PreparedStatement sentencia = conexion.prepareStatement(sql);
+
+            sentencia.setString(1, correo);
+
+            try (ResultSet resultado = sentencia.executeQuery()) {
+                if (resultado.next()) {
+                    String contraseña =  resultado.getString("contrasena");
+                    if(contraseña.equalsIgnoreCase("secu1234")){
+                        esGenerica = true;
+                    }
+                }
+
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException(
+                    "Error al buscar el usuario.", e
+            );
+        }
+        return esGenerica;
+    }
+
+    @Override
+    public void guardarContraseñaNueva(String correo, String nuevaContrasena){
+        String sql = """
+        UPDATE proyecto.usuarios
+        SET contrasena = ?
+        WHERE correo = ?
+        """;
+
+        Connection conexion = null;
+        PreparedStatement sentencia = null;
+
+        try {
+            conexion = ConexionBDSingleton.getInstancia().conectar();
+            sentencia = conexion.prepareStatement(sql);
+
+            sentencia.setString(1, nuevaContrasena);
+            sentencia.setString(2, correo);
+
+            sentencia.executeUpdate();
+
+
+            System.out.println("Contraseña cambiada correctamente.");
+
+        } catch (SQLException e) {
+            System.out.println("Error al crear evaluador externo: " + e.getMessage());
+
+        } finally {
+            try {
+                if (sentencia != null) {
+                    sentencia.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Error al cerrar sentencia: " + e.getMessage());
+            }
+        }
+    }
+
+    @Override
+    public LinkedList<EvaluadorExterno> listarEvaluadoresExternos() {
+        LinkedList<EvaluadorExterno> evaluadores = new LinkedList<>();
+
+        String sql = """
+        SELECT u.id_usuario, u.correo, u.nombre, u.apellido, u.calle, u.numero,
+               u.nacionalidad, u.ci, u.contrasena, u.estado, u.rol, e.institucion
+        FROM proyecto.usuarios u
+        INNER JOIN proyecto.eva_externos e ON u.id_usuario = e.id_usuario
+    """;
+
+        try (Connection conexion = ConexionBDSingleton.getInstancia().conectar();
+             PreparedStatement sentencia = conexion.prepareStatement(sql);
+             ResultSet resultado = sentencia.executeQuery()) {
+
+            while (resultado.next()) {
+                EvaluadorExterno evaluador = new EvaluadorExterno(
+                        resultado.getInt("id_usuario"),
+                        resultado.getString("ci"),
+                        resultado.getString("nacionalidad"),
+                        resultado.getString("contrasena"),
+                        resultado.getString("nombre"),
+                        resultado.getString("apellido"),
+                        resultado.getString("calle"),
+                        resultado.getInt("numero"),
+                        resultado.getString("estado"),
+                        resultado.getString("correo"),
+                        resultado.getString("rol"),
+                        resultado.getString("institucion"));
+
+
+                        evaluadores.add(evaluador);
+
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException("Error al listar evaluadores externos.", e);
+        }
+
+        return evaluadores;
+    }
+
+
+
+
+
+
 }

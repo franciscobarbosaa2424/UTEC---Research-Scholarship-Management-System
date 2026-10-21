@@ -10,9 +10,8 @@ import java.util.Properties;
 
 public class ServicioCorreo {
 
-    private final String correoEmisor = "bytech40@gmail.com";
-    //private final String password = "pruebautec2026";
-    private final String password = "bipgovuwumwjlixa";
+    private final String correoEmisor = "secu0576@gmail.com";
+    private final String password = "pkvcsoqiitcxuzll";
 
 
     public void enviarCorreo(String destinatario, String asunto, String contenido) {

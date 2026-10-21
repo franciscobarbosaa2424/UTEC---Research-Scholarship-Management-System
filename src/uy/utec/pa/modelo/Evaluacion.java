@@ -5,18 +5,40 @@ public class Evaluacion {
     private String nombre;
     private String estado;
     private String juicio_global;
-    private int puntaje_total;
+    private double puntaje_total;
     private String comentario_evaluador;
-    private int puntaje;
+    private EvaluadorExterno evaluadorExterno;
+    private EvaluadorExterno evaluadorExterno2;
+    private int id_Postulacion;
 
-    public Evaluacion(int id_Evaluacion, String nombre, String estado, String juicio_global, int puntaje_total, String comentario_evaluador, int puntaje) {
+
+    public Evaluacion(int id_Evaluacion, String nombre, String estado, String juicio_global, double puntaje_total, String comentario_evaluador) {
         this.id_Evaluacion = id_Evaluacion;
         this.nombre = nombre;
         this.estado = estado;
         this.juicio_global = juicio_global;
         this.puntaje_total = puntaje_total;
         this.comentario_evaluador = comentario_evaluador;
-        this.puntaje = puntaje;
+    }
+
+    public Evaluacion(String nombre, String estado, String juicio_global, double puntaje_total, String comentario_evaluador) {
+        this.nombre = nombre;
+        this.estado = estado;
+        this.juicio_global = juicio_global;
+        this.puntaje_total = puntaje_total;
+        this.comentario_evaluador = comentario_evaluador;
+    }
+
+    public Evaluacion(int id_Postulacion, EvaluadorExterno evaluadorExterno2, EvaluadorExterno evaluadorExterno, String comentario_evaluador, double puntaje_total, String juicio_global, String estado, String nombre, int id_Evaluacion) {
+        this.id_Postulacion = id_Postulacion;
+        this.evaluadorExterno2 = evaluadorExterno2;
+        this.evaluadorExterno = evaluadorExterno;
+        this.comentario_evaluador = comentario_evaluador;
+        this.puntaje_total = puntaje_total;
+        this.juicio_global = juicio_global;
+        this.estado = estado;
+        this.nombre = nombre;
+        this.id_Evaluacion = id_Evaluacion;
     }
 
     public int getId_Evaluacion() {
@@ -51,11 +73,11 @@ public class Evaluacion {
         this.juicio_global = juicio_global;
     }
 
-    public int getPuntaje_total() {
+    public double getPuntaje_total() {
         return puntaje_total;
     }
 
-    public void setPuntaje_total(int puntaje_total) {
+    public void setPuntaje_total(double puntaje_total) {
         this.puntaje_total = puntaje_total;
     }
 
@@ -67,12 +89,43 @@ public class Evaluacion {
         this.comentario_evaluador = comentario_evaluador;
     }
 
-    public int getPuntaje() {
-        return puntaje;
+    public EvaluadorExterno getEvaluadorExterno() {
+        return evaluadorExterno;
     }
 
-    public void setPuntaje(int puntaje) {
-        this.puntaje = puntaje;
+    public void setEvaluadorExterno(EvaluadorExterno evaluadorExterno) {
+        this.evaluadorExterno = evaluadorExterno;
     }
 
+    public EvaluadorExterno getEvaluadorExterno2() {
+        return evaluadorExterno2;
+    }
+
+    public void setEvaluadorExterno2(EvaluadorExterno evaluadorExterno2) {
+        this.evaluadorExterno2 = evaluadorExterno2;
+    }
+
+    public int getId_Postulacion() {
+        return id_Postulacion;
+    }
+
+    public void setId_Postulacion(int id_Postulacion) {
+        this.id_Postulacion = id_Postulacion;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Evaluacion{" +
+                "id_Evaluacion=" + id_Evaluacion +
+                ", nombre='" + nombre + '\'' +
+                ", estado='" + estado + '\'' +
+                ", juicio_global='" + juicio_global + '\'' +
+                ", puntaje_total=" + puntaje_total +
+                ", comentario_evaluador='" + comentario_evaluador + '\'' +
+                ", evaluadorExterno=" + evaluadorExterno +
+                ", evaluadorExterno2=" + evaluadorExterno2 +
+                ", id_Postulacion=" + id_Postulacion +
+                '}';
+    }
 }
