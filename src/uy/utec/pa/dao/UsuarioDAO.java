@@ -15,5 +15,6 @@ public interface UsuarioDAO {
     void editarAdministrador(Administrador administrador);
     void crearUsuarioEvaluador(EvaluadorExterno evaluador);
     void darDeBajaUsuario (int id_usuario);
+   // String buscarContraseña(int id_usuario);
 
 }

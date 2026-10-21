@@ -16,6 +16,7 @@ import java.util.Scanner;
         System.out.println("=== Menú Principal ===");
         System.out.println("1. Realizar Postulación a una convocatoria");
         System.out.println("2. Loguearse como Administrador/Evaluador Externo");
+        System.out.println("3. Mandar correo prueba");
         int opcionMenuPrincipal= scanner.nextInt();
         scanner.nextLine();
 
@@ -61,8 +62,16 @@ import java.util.Scanner;
                  } else {
                      System.out.println("Correo o contraseña incorrectos.");
                  }
+         } else if (opcionMenuPrincipal==3) {
+             ServicioCorreo servicioCorreo = new ServicioCorreo();
+
+             servicioCorreo.enviarCorreo(
+                     "f.barbosa.suarez5@gmail.com",
+                     "Postulación registrada",
+                     "Su postulación fue registrada correctamente."
+             );
          }
-            System.out.println();
+        System.out.println();
             System.out.println();
 
         scanner.close();
@@ -673,10 +682,9 @@ public void CrearUsuario() throws SQLException {
     if (numero == 1){
         CrearUsuarioAdministrador();
     }//x lista
-        if (numero == 2){
-            CrearUsuarioEvaluadorExterno();
-        }//x lista
-          else {}//por defecto
+    if (numero == 2){
+        CrearUsuarioEvaluadorExterno();
+    }//x lista
 
     scanner.close();
 }
@@ -812,8 +820,8 @@ public void CrearUsuarioAdministrador() throws SQLException {
     System.out.println("Nacionalidad: ");
     String nacionalidad = scanner.nextLine();
 
-    System.out.println("Contraseña: ");
-    String contrasena = scanner.nextLine();
+    //System.out.println("Contraseña: ");
+    String contrasena = "secu1234";
 
     System.out.println("Nombre: ");
     String nombre = scanner.nextLine();
@@ -876,6 +884,16 @@ public void CrearUsuarioAdministrador() throws SQLException {
     UsuarioDAOImpl dao = new UsuarioDAOImpl();
     dao.crearUsuarioAdministrador(usuarioAdmin);
 
+
+    ServicioCorreo servicioCorreo = new ServicioCorreo();
+
+    servicioCorreo.enviarCorreo(
+            correoAdmin,
+            "Postulación registrada",
+            "Su postulación fue registrada correctamente. Ingrese con \"secu1234\""
+    );
+
+
     scanner.close();
 }
 
@@ -891,8 +909,8 @@ public void CrearUsuarioEvaluadorExterno(){
     System.out.println("Nacionalidad: ");
     String nacionalidad = scanner.nextLine();
 
-    System.out.println("Contraseña: ");
-    String contrasena = scanner.nextLine();
+  //  System.out.println("Contraseña: ");
+    String contrasena = "secu1234";//scanner.nextLine();
 
     System.out.println("Nombre: ");
     String nombre = scanner.nextLine();
@@ -934,7 +952,7 @@ public void CrearUsuarioEvaluadorExterno(){
 // El formulario continúa acá, solo después de elegir 1 o 2.
 
     System.out.println("Correo: ");
-    String correoAdmin = scanner.nextLine();
+    String correoEvaluador = scanner.nextLine();
 
     System.out.println("Institucion: ");
     String institucion = scanner.nextLine();
@@ -946,7 +964,7 @@ public void CrearUsuarioEvaluadorExterno(){
     EvaluadorExterno usuarioEvaluador = creadorEvaluador.crearUsuario(
             cedula,
             nacionalidad,
-            contrasena,nombre, apellido, calle, numeroPuerta, estado, correoAdmin, rol);
+            contrasena,nombre, apellido, calle, numeroPuerta, estado, correoEvaluador, rol);
 
 
     System.out.println("Usuario Evaluador Externo creado éxitosamente!");
@@ -956,6 +974,13 @@ public void CrearUsuarioEvaluadorExterno(){
     UsuarioDAOImpl dao = new UsuarioDAOImpl();
     dao.crearUsuarioEvaluador(usuarioEvaluador);
 
+    ServicioCorreo servicioCorreo = new ServicioCorreo();
+
+    servicioCorreo.enviarCorreo(
+            correoEvaluador,
+            "Postulación registrada",
+            "Su postulación fue registrada correctamente. Ingrese con \"secu1234\""
+    );
 
     scanner.close();
 }
@@ -1514,6 +1539,9 @@ public void MenuFormacion(Postulante postulante){
                }
             }
 
+
+            System.out.println("Ingrese el nombre:");
+            String nombre = scanner.nextLine();
 
             System.out.println("Ingrese cantidad de meses:");
             int canMes = scanner.nextInt();
