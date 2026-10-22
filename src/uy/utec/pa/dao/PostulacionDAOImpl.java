@@ -229,9 +229,34 @@ public class PostulacionDAOImpl implements PostulacionDAO {
             throw new IllegalStateException("Error al eliminar postulación.", e);
         }
     }
-/*
-    @Override
-    public Postulacion buscarPostulacion(){
 
-    }*/
+    @Override
+    public void actualizarEstadoPostulacion(int idPostulacion, String nuevoEstado) {
+        String sql = """
+    UPDATE proyecto.postulaciones
+    SET estado = ?
+    WHERE id_postulacion = ?
+    """;
+
+        try (Connection conexion = ConexionBDSingleton.getInstancia().conectar();
+             PreparedStatement sentencia = conexion.prepareStatement(sql)) {
+
+            sentencia.setString(1, nuevoEstado);
+            sentencia.setInt(2, idPostulacion);
+
+            int filasActualizadas = sentencia.executeUpdate();
+
+            if (filasActualizadas == 0) {
+                throw new IllegalStateException("No se encontró la postulación con ID: " + idPostulacion);
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException("Error al actualizar el estado de la postulación.", e);
+        }
+    }
+
+
+
+
+
 }

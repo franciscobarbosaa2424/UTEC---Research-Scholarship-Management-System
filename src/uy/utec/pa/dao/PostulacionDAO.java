@@ -11,4 +11,5 @@ public interface PostulacionDAO {
     LinkedList<Postulacion> listarPostulaciones();
    // Postulacion buscarPostulacion();
     void editarPostulacion(Postulacion postulacion);
+    void actualizarEstadoPostulacion(int idPostulacion, String nuevoEstado);
 }

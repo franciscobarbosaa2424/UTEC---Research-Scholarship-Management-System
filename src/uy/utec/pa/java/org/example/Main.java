@@ -336,7 +336,7 @@ public void MenuUsuario() throws SQLException {
         darDeBajaUsuario();
     }
 
-    scanner.close();
+    //scanner.close();
 }
 
 public void GestionConvocatorias() throws SQLException {
@@ -1838,15 +1838,11 @@ public void MenuFormacion(Postulante postulante){
         System.out.println("4. Eliminar una Evaluación");
         System.out.print("Ingrese la opción a realizar: ");
         int numero = scanner.nextInt();
-        scanner.nextLine();
+        scanner.nextLine(); // Limpiar buffer
 
         EvaluacionDAOImpl dao = new EvaluacionDAOImpl();
 
         if (numero == 1){
-
-            // NUEVO: Pedir el ID de la evaluación que corresponde a tu clave compuesta
-            System.out.print("Ingrese el ID de la evaluación: ");
-            int idEvaluacion = Integer.parseInt(scanner.nextLine());
 
             System.out.print("Ingrese nombre de la evaluación: ");
             String nombre = scanner.nextLine();
@@ -1903,13 +1899,20 @@ public void MenuFormacion(Postulante postulante){
                 return;
             }
 
-            // 4. Instanciamos la evaluación pasándole el idEvaluacion real en lugar de 0
+            // 4. Instanciamos pasando 0 en el ID porque el DAO lo calculará automáticamente en la BDD
             Evaluacion nuevaEvaluacion = new Evaluacion(
-                    idPostulacion, evaluador2, evaluador1, comEvaluador, punTotal, juiGlobal, "En evaluación", nombre, idEvaluacion
+                    idPostulacion, evaluador2, evaluador1, comEvaluador, punTotal, juiGlobal, "En evaluación", nombre, 0
             );
 
             dao.crearEvaluacion(nuevaEvaluacion);
 
+
+            String nuevoEstadoAux = "En evaluación";
+
+            //aca le mandamo la actualizacion  del estado de la POSTULACION lo pedia el CU08
+            PostulacionDAOImpl postulacionDao = new PostulacionDAOImpl();
+            postulacionDao.actualizarEstadoPostulacion(idPostulacion, nuevoEstadoAux);
+            System.out.println("¡Evaluación creada con exito, y Postulación " + idPostulacion + " actualizada a 'En evaluación' con éxito!");
 
         } else if (numero == 2) {
 
