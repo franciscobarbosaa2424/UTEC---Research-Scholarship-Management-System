@@ -11,6 +11,16 @@ public class Criterio {
         this.seccionRubrica = seccionRubrica;
     }
 
+    public Criterio(String nombre, SeccionRubrica seccionRubrica) {
+        this.nombre = nombre;
+        this.seccionRubrica = seccionRubrica;
+    }
+
+    public Criterio(int idCriterio, String nombre) {
+        this.idCriterio = idCriterio;
+        this.nombre = nombre;
+    }
+
     public int getIdCriterio() {
         return idCriterio;
     }

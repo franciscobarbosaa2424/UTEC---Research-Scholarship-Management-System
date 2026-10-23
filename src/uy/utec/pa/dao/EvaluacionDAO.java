@@ -12,4 +12,7 @@ public interface EvaluacionDAO {
     LinkedList<Evaluacion> listarEvaluacion();
    void eliminarEvaluacion(int id_Evaluacion);
     LinkedList<EvaluadorExterno> obtenerEvaluadoresPorEvaluacion(int idEvaluacion);
+    int obtenerIdEvaluacionPorPostulacion(int idPostulacion);
+    int verificarEvaluadores(int idPostulacion);
+    int verificarEvaluadoresEvaluaron(int idPostulacion);
 }

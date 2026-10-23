@@ -16,9 +16,14 @@ public class EvaluacionDAOImpl implements EvaluacionDAO {
 
         // 2. Sentencia INSERT usando los nombres exactos de tus columnas (id_usuario e id_usuario2)
         String sqlInsert = """
-        INSERT INTO proyecto.evaluaciones(id_evaluacion, nombre, pun_total, jui_global, com_evaluador, estado, id_usuario, id_postulacion, id_usuario2)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO proyecto.evaluaciones(id_evaluacion, nombre, pun_total, jui_global, com_evaluador, estado, id_usuario, id_postulacion)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     """;
+
+        String sqlInsert2 = """
+        INSERT INTO proyecto.son_asignadas(id_postulacion, id_usuario )
+        VALUES (?, ?)
+        """;
 
         try (Connection conexion = ConexionBDSingleton.getInstancia().conectar()) {
 
@@ -32,6 +37,14 @@ public class EvaluacionDAOImpl implements EvaluacionDAO {
             }
 
             // Paso B: Insertamos la evaluación usando ese ID calculado
+            try (PreparedStatement sentencia2 = conexion.prepareStatement(sqlInsert2)) {
+                sentencia2.setInt(1, evaluacion.getId_Postulacion());
+                sentencia2.setInt(2,evaluacion.getEvaluadorExterno().getId_usuario());
+
+                sentencia2.executeUpdate();
+                System.out.println("Evaluador asignado con éxito a postulacion.");
+            }
+
             try (PreparedStatement sentencia = conexion.prepareStatement(sqlInsert)) {
                 sentencia.setInt(1, siguienteId); // ID calculado automáticamente
                 sentencia.setString(2, evaluacion.getNombre());
@@ -41,7 +54,7 @@ public class EvaluacionDAOImpl implements EvaluacionDAO {
                 sentencia.setString(6, "En evaluación"); // Cumpliendo con el CU08
                 sentencia.setInt(7, evaluacion.getEvaluadorExterno().getId_usuario());   // id_usuario (Evaluador 1)
                 sentencia.setInt(8, evaluacion.getId_Postulacion());                     // id_postulacion
-                sentencia.setInt(9, evaluacion.getEvaluadorExterno2().getId_usuario());  // id_usuario2 (Evaluador 2)
+               // id_usuario2 (Evaluador 2)
 
                 sentencia.executeUpdate();
                 System.out.println("Evaluación creada con éxito. ID asignado automáticamente: " + siguienteId);
@@ -61,8 +74,7 @@ public class EvaluacionDAOImpl implements EvaluacionDAO {
             jui_global = ?,
             com_evaluador = ?,
             estado = ?,
-            id_usuario = ?,
-            id_usuario2 = ?
+            id_usuario = ?
         WHERE id_evaluacion = ?
         """;
 
@@ -75,8 +87,7 @@ public class EvaluacionDAOImpl implements EvaluacionDAO {
                 sentencia.setString(4, evaluacion.getComentario_evaluador());
                 sentencia.setString(5, evaluacion.getEstado());
                 sentencia.setInt(6, evaluacion.getEvaluadorExterno().getId_usuario());
-                sentencia.setInt(7, evaluacion.getEvaluadorExterno2().getId_usuario());
-                sentencia.setInt(8, evaluacion.getId_Evaluacion());
+                sentencia.setInt(7, evaluacion.getId_Evaluacion());
 
                 int filasActualizadas = sentencia.executeUpdate();
 
@@ -112,7 +123,7 @@ public class EvaluacionDAOImpl implements EvaluacionDAO {
     public LinkedList<Evaluacion> listarEvaluacion() {
         LinkedList<Evaluacion> evaluaciones = new LinkedList();
 
-        String sql = "SELECT id_evaluacion, nombre, pun_total, jui_global, com_evaluador, estado, id_usuario, id_usuario2, id_postulacion FROM proyecto.evaluaciones";
+        String sql = "SELECT id_evaluacion, nombre, pun_total, jui_global, com_evaluador, estado, id_usuario, id_postulacion FROM proyecto.evaluaciones";
 
         String sqlEvaluador = """
         SELECT u.id_usuario, u.correo, u.nombre, u.apellido, u.calle, u.nacionalidad, 
@@ -136,7 +147,6 @@ public class EvaluacionDAOImpl implements EvaluacionDAO {
 
                 // Nombres exactos de las columnas de tu script SQL
                 int idUsuario1 = resultado.getInt("id_usuario");
-                int idUsuario2 = resultado.getInt("id_usuario2");
                 int idPostulacion = resultado.getInt("id_postulacion");
 
                 // 1. Cargar Evaluador 1
@@ -158,27 +168,10 @@ public class EvaluacionDAOImpl implements EvaluacionDAO {
                     }
                 }
 
-                // 2. Cargar Evaluador 2
-                EvaluadorExterno evaluador2 = null;
-                if (idUsuario2 > 0) {
-                    try (PreparedStatement sentenciaEval2 = conexion.prepareStatement(sqlEvaluador)) {
-                        sentenciaEval2.setInt(1, idUsuario2);
-                        try (ResultSet rs2 = sentenciaEval2.executeQuery()) {
-                            if (rs2.next()) {
-                                evaluador2 = new EvaluadorExterno(
-                                        rs2.getString("correo"), rs2.getString("nombre"), rs2.getString("apellido"),
-                                        rs2.getString("calle"), rs2.getString("nacionalidad"), rs2.getString("ci"),
-                                        rs2.getString("contrasena"), rs2.getString("estado"), rs2.getString("rol"),
-                                        rs2.getString("institucion")
-                                );
-                                evaluador2.setId_usuario(rs2.getInt("id_usuario"));
-                            }
-                        }
-                    }
-                }
+
 
                 Evaluacion evaluacion = new Evaluacion(
-                        idPostulacion, evaluador2, evaluador1, comentario_evaluador, puntaje_total, juiGlobal, estado, nombre, idEvaluacion
+                        idPostulacion, evaluador1, comentario_evaluador, puntaje_total, juiGlobal, estado, nombre, idEvaluacion
                 );
 
                 evaluaciones.add(evaluacion);
@@ -239,6 +232,102 @@ public class EvaluacionDAOImpl implements EvaluacionDAO {
         return evaluadores;
     }
 
+
+    @Override
+    public int obtenerIdEvaluacionPorPostulacion(int idPostulacion) {
+
+        String sql = """
+        SELECT id_evaluacion
+        FROM proyecto.evaluaciones
+        WHERE id_postulacion = ?
+        """;
+
+        try (Connection conexion = ConexionBDSingleton.getInstancia().conectar();
+             PreparedStatement sentencia = conexion.prepareStatement(sql)) {
+
+            sentencia.setInt(1, idPostulacion);
+
+            try (ResultSet resultado = sentencia.executeQuery()) {
+
+                if (resultado.next()) {
+                    return resultado.getInt("id_evaluacion");
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException(
+                    "Error al obtener la evaluación de la postulación.", e
+            );
+        }
+
+        return -1; // No existe evaluación para esa postulación
+    }
+
+
+    @Override
+    public int verificarEvaluadores(int idPostulacion) {
+
+        String sql = """
+        SELECT COUNT(*) AS cantidad
+        FROM proyecto.son_asignadas
+        WHERE id_postulacion = ?
+        """;
+
+        try {
+            Connection conexion = ConexionBDSingleton.getInstancia().conectar();
+             PreparedStatement sentencia = conexion.prepareStatement(sql);
+             sentencia.setInt(1,idPostulacion);
+             ResultSet resultado = sentencia.executeQuery();
+
+            if (resultado.next()) {
+                int cantidad = resultado.getInt("cantidad");
+                return cantidad;
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException(
+                    "Error al verificar evaluadores asignados.", e
+            );
+        }
+
+        return 0;
+    }
+
+    @Override
+    public int verificarEvaluadoresEvaluaron(int idPostulacion) {
+
+        String sql = """
+        SELECT COUNT(DISTINCT v.id_usuario) AS cantidad
+        FROM proyecto.evaluaciones e
+        INNER JOIN proyecto.valoraciones v
+            ON v.id_evaluacion = e.id_evaluacion
+        WHERE e.id_postulacion = ?
+        """;
+
+        try {
+            Connection conexion =
+                    ConexionBDSingleton.getInstancia().conectar();
+
+            PreparedStatement sentencia =
+                    conexion.prepareStatement(sql);
+
+            sentencia.setInt(1, idPostulacion);
+
+            ResultSet resultado = sentencia.executeQuery();
+
+            if (resultado.next()) {
+                return resultado.getInt("cantidad");
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException(
+                    "Error al verificar evaluadores que realizaron la evaluación.",
+                    e
+            );
+        }
+
+        return 0;
+    }
 
 
 

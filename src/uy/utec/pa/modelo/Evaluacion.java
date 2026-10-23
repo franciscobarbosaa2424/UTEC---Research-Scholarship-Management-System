@@ -8,7 +8,6 @@ public class Evaluacion {
     private double puntaje_total;
     private String comentario_evaluador;
     private EvaluadorExterno evaluadorExterno;
-    private EvaluadorExterno evaluadorExterno2;
     private int id_Postulacion;
 
 
@@ -29,9 +28,8 @@ public class Evaluacion {
         this.comentario_evaluador = comentario_evaluador;
     }
 
-    public Evaluacion(int id_Postulacion, EvaluadorExterno evaluadorExterno2, EvaluadorExterno evaluadorExterno, String comentario_evaluador, double puntaje_total, String juicio_global, String estado, String nombre, int id_Evaluacion) {
+    public Evaluacion(int id_Postulacion, EvaluadorExterno evaluadorExterno, String comentario_evaluador, double puntaje_total, String juicio_global, String estado, String nombre, int id_Evaluacion) {
         this.id_Postulacion = id_Postulacion;
-        this.evaluadorExterno2 = evaluadorExterno2;
         this.evaluadorExterno = evaluadorExterno;
         this.comentario_evaluador = comentario_evaluador;
         this.puntaje_total = puntaje_total;
@@ -40,6 +38,8 @@ public class Evaluacion {
         this.nombre = nombre;
         this.id_Evaluacion = id_Evaluacion;
     }
+
+    public Evaluacion(){}
 
     public int getId_Evaluacion() {
         return id_Evaluacion;
@@ -97,13 +97,7 @@ public class Evaluacion {
         this.evaluadorExterno = evaluadorExterno;
     }
 
-    public EvaluadorExterno getEvaluadorExterno2() {
-        return evaluadorExterno2;
-    }
 
-    public void setEvaluadorExterno2(EvaluadorExterno evaluadorExterno2) {
-        this.evaluadorExterno2 = evaluadorExterno2;
-    }
 
     public int getId_Postulacion() {
         return id_Postulacion;
@@ -124,7 +118,6 @@ public class Evaluacion {
                 ", puntaje_total=" + puntaje_total +
                 ", comentario_evaluador='" + comentario_evaluador + '\'' +
                 ", evaluadorExterno=" + evaluadorExterno +
-                ", evaluadorExterno2=" + evaluadorExterno2 +
                 ", id_Postulacion=" + id_Postulacion +
                 '}';
     }

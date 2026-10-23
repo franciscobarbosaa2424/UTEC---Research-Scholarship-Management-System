@@ -8,7 +8,19 @@ import java.sql.SQLException;
 import java.sql.SQLOutput;
 import java.util.Scanner;
 
+public class Main {
 
+    private static int idUsuarioLogueado;
+
+    public static int getIdUsuarioLogueado() {
+        return idUsuarioLogueado;
+    }
+
+    public static void setIdUsuarioLogueado(int idUsuarioLogueado) {
+        Main.idUsuarioLogueado = idUsuarioLogueado;
+    }
+}
+//ACA PUSE
     public void main(String[] args) throws SQLException {
 
         Scanner scanner = new Scanner(System.in);
@@ -17,79 +29,84 @@ import java.util.Scanner;
         System.out.println("1. Realizar Postulación a una convocatoria");
         System.out.println("2. Loguearse como Administrador/Evaluador Externo");
         System.out.println("3. Olvidé mi contraseña");
-        int opcionMenuPrincipal= scanner.nextInt();
+        int opcionMenuPrincipal = scanner.nextInt();
         scanner.nextLine();
 
-         if(opcionMenuPrincipal==1){
-             MenuPostulante();
 
-         }else if(opcionMenuPrincipal==2) {
-                 //VALIDAR
-                 UsuarioDAOImpl dao = new UsuarioDAOImpl();
-                 LinkedList<Usuario> usuarios = dao.obtenerTodosLosUsuarios();
-                 ServicioAutenticacion servicioReal = new AutenticacionReal(usuarios);
-                 ServicioAutenticacion proxy = new AutenticacionProxy(servicioReal);
+        if (opcionMenuPrincipal == 1) {
+            MenuPostulante();
 
-                 System.out.println("=== INICIAR SESIÓN ===");
+        } else if (opcionMenuPrincipal == 2) {
+            //VALIDAR
+            UsuarioDAOImpl dao = new UsuarioDAOImpl();
+            LinkedList<Usuario> usuarios = dao.obtenerTodosLosUsuarios();
+            ServicioAutenticacion servicioReal = new AutenticacionReal(usuarios);
+            ServicioAutenticacion proxy = new AutenticacionProxy(servicioReal);
 
-                 System.out.print("Ingrese su correo: ");
-                 String correo = scanner.nextLine();
+            System.out.println("=== INICIAR SESIÓN ===");
 
-                 System.out.print("Ingrese la contraseña: ");
-                 String contrasena = scanner.nextLine();
+            System.out.print("Ingrese su correo: ");
+            String correo = scanner.nextLine();
 
-                 boolean accede = proxy.autenticar(correo, contrasena);
-                 boolean esContraseñaGenerica = dao.esContraseñaGenerica(correo);
+            System.out.print("Ingrese la contraseña: ");
+            String contrasena = scanner.nextLine();
 
-                 if (accede) {
-                     System.out.println("Inicio de sesión correcto.");
-                     //MENU
-                     String rol = "";
-                     for (Usuario u : usuarios) {
-                         if (u.getCorreo().equalsIgnoreCase(correo)) {
-                             rol = u.getRol();
-                         }
-                     }
+            boolean accede = proxy.autenticar(correo, contrasena);
+            boolean esContraseñaGenerica = dao.esContraseñaGenerica(correo);
 
-                     if(esContraseñaGenerica){
-                         System.out.println("Ingrese contraseña nueva:");
-                         String nuevaContrasena = scanner.nextLine();
-                         dao.guardarContraseñaNueva(correo,nuevaContrasena);
-                     }
+            if (accede) {
+                System.out.println("Inicio de sesión correcto.");
+                //MENU
+                String rol = "";
+                for (Usuario u : usuarios) {
+                    if (u.getCorreo().equalsIgnoreCase(correo)) {
+                        rol = u.getRol();
+                        Main.setIdUsuarioLogueado(u.getId_usuario());
+                    }
+                }
 
-                     if (rol.equalsIgnoreCase("administrador")) {
-                         System.out.println("Bienvenido Administrador");
-                         MenuPrincipalAdmin();
+                if (esContraseñaGenerica) {
+                    System.out.println("Ingrese contraseña nueva:");
+                    String nuevaContrasena = scanner.nextLine();
+                    dao.guardarContraseñaNueva(correo, nuevaContrasena);
+                }
 
-                     } else {
-                         if (rol.equalsIgnoreCase("evaluador")) {
-                             //aca iria el menu cuando el acceso es correcto pero no es administrador
-                         }
-                     }
+                if (rol.equalsIgnoreCase("administrador")) {
+                    System.out.println("Bienvenido Administrador");
+                    MenuPrincipalAdmin();
 
-                 } else {
-                     System.out.println("Correo o contraseña incorrectos.");
-                 }
-         } else if (opcionMenuPrincipal==3) {
-             System.out.println("Ingrese el correo para cambiar la contraseña:");
-             String correo = scanner.nextLine();
+                } else {
+                    if (rol.equalsIgnoreCase("evaluador")) {
+                        //aca iria el menu cuando el acceso es correcto pero no es administrador
+                    }
+                }
 
-             UsuarioDAOImpl dao = new UsuarioDAOImpl();
-             dao.guardarContraseñaNueva(correo,"secu1234");
+            } else {
+                System.out.println("Correo o contraseña incorrectos.");
+            }
+        } else if (opcionMenuPrincipal == 3) {
+            System.out.println("Ingrese el correo para cambiar la contraseña:");
+            String correo = scanner.nextLine();
 
-             ServicioCorreo servicioCorreo = new ServicioCorreo();
+            UsuarioDAOImpl dao = new UsuarioDAOImpl();
+            dao.guardarContraseñaNueva(correo, "secu1234");
 
-             servicioCorreo.enviarCorreo(
-                     correo,
-                     "SECU: Cambio de Contraseña",
-                     "Ingrese esta contraseña temporal: \"secu1234\""
-             );
-         }
+            ServicioCorreo servicioCorreo = new ServicioCorreo();
+
+            servicioCorreo.enviarCorreo(
+                    correo,
+                    "SECU: Cambio de Contraseña",
+                    "Ingrese esta contraseña temporal: \"secu1234\""
+            );
+        }
         System.out.println();
-            System.out.println();
+        System.out.println();
+
 
         scanner.close();
     }
+
+
 
     public void MenuPrincipalAdmin() throws SQLException {
         Scanner scanner = new Scanner(System.in);
@@ -122,7 +139,7 @@ import java.util.Scanner;
         } else if (numero==7) {
             MenuPostulaciones();
         } else if (numero==8) {
-            MenuEvaluacion();
+            MenuEvaluacionAdmin();
         }
 
         scanner.close();
@@ -130,7 +147,6 @@ import java.util.Scanner;
 
     public void MenuRubricas() throws SQLException {
         Scanner scanner = new Scanner(System.in);
-
         System.out.println("Gestión de Rúbricas:");
         System.out.println("1. Crear Rúbrica");
         System.out.println("2. Editar Rúbrica");
@@ -146,43 +162,248 @@ import java.util.Scanner;
             String nombreRubrica = scanner.nextLine();
 
 
-
             boolean valido = true;
             System.out.println("Secciones de la Rúbrica:");
-            System.out.println("(Ingrese 0 en nombre para dejar de agregar secciones)");
 
 
             LinkedList<SeccionRubrica> seccionesRubrica = new LinkedList<>();
 
-            while(valido==true){
-                System.out.println("Ingrese el nombre de la seccion:");
-                String nombreSeccion = scanner.nextLine();
 
-                if(nombreSeccion.equalsIgnoreCase("0")){
-                    valido=false;
-                    break;
-                }
-
+            double sumaGlobal;
+                
+            boolean whileAux2 = true;
+            boolean whileAux = true;
+            while(whileAux==true) {
+                sumaGlobal = 0.00;
+                //seccion 1
+                System.out.println("Seccion : Antecedentes del postulante");
                 System.out.println("Ingrese el peso de la seccion:");
-                double pesoSeccion = scanner.nextDouble();
+                double pesoSeccion1 = scanner.nextDouble();
                 scanner.nextLine();
+                sumaGlobal += pesoSeccion1;
 
-                System.out.println();
-
-                if(pesoSeccion>0 && nombreSeccion!=null && nombreSeccion!=""){
-                    SeccionRubrica seccion = new SeccionRubrica(nombreSeccion,pesoSeccion);
+                if (pesoSeccion1 > 0 && sumaGlobal <= 100) {
+                    SeccionRubrica seccion = new SeccionRubrica("Antecedentes del postulante", pesoSeccion1);
                     seccionesRubrica.add(seccion);
 
-                }else{
-                    System.out.println("El peso debe ser mayor a 0 y el nombre no debe estar vacio.");
+                    while(whileAux2){
+                    CriterioDAOImpl dao = new CriterioDAOImpl();
+                    LinkedList<Criterio> criterios = new LinkedList<>();
+
+                    System.out.println("Ingrese nombre de criterio(0. Para Salir):");
+                    String criterioAux = scanner.nextLine();
+
+                    if(criterioAux.equalsIgnoreCase("0")){
+                        whileAux2=false;
+                        break;
+                    }
+
+                    Criterio criterio = new Criterio(criterioAux,seccion);
+                    criterios.add(criterio);
+                    dao.crearCriterios(criterios);
+                    }
+
+                } else {
+                    seccionesRubrica.clear();
+                    System.out.println("El peso debe ser mayor a 0 y la suma de las secciones tiene que ser 100.");
+                    continue;
+                }
+
+                //seccion 2
+                System.out.println("Seccion : Antecedentes del tutor y grupo receptor");
+                System.out.println("Ingrese el peso de la seccion:");
+                double pesoSeccion2 = scanner.nextDouble();
+                scanner.nextLine();
+                sumaGlobal += pesoSeccion2;
+
+                if (pesoSeccion2 > 0 && sumaGlobal <= 100) {
+                    SeccionRubrica seccion = new SeccionRubrica("Antecedentes del tutor y grupo receptor", pesoSeccion2);
+                    seccionesRubrica.add(seccion);
+
+                    while(whileAux2){
+                        CriterioDAOImpl dao = new CriterioDAOImpl();
+                        LinkedList<Criterio> criterios = new LinkedList<>();
+
+                        System.out.println("Ingrese nombre de criterio(0. Para Salir):");
+                        String criterioAux = scanner.nextLine();
+
+                        if(criterioAux.equalsIgnoreCase("0")){
+                            whileAux2=false;
+                            break;
+                        }
+
+                        Criterio criterio = new Criterio(criterioAux,seccion);
+                        criterios.add(criterio);
+                        dao.crearCriterios(criterios);
+                    }
+
+                } else {
+                    seccionesRubrica.clear();
+                    System.out.println("El peso debe ser mayor a 0 y la suma de las secciones tiene que ser 100.");
+                    continue;
+                }
+
+                //seccion 3
+                System.out.println("Seccion : Descripción del plan de trabajo");
+                System.out.println("Ingrese el peso de la seccion:");
+                double pesoSeccion3 = scanner.nextDouble();
+                scanner.nextLine();
+                sumaGlobal += pesoSeccion3;
+
+                if (pesoSeccion3 > 0 && sumaGlobal <= 100) {
+                    SeccionRubrica seccion = new SeccionRubrica("Descripción del plan de trabajo", pesoSeccion3);
+                    seccionesRubrica.add(seccion);
+
+                    while(whileAux2){
+                        CriterioDAOImpl dao = new CriterioDAOImpl();
+                        LinkedList<Criterio> criterios = new LinkedList<>();
+
+                        System.out.println("Ingrese nombre de criterio(0. Para Salir):");
+                        String criterioAux = scanner.nextLine();
+
+                        if(criterioAux.equalsIgnoreCase("0")){
+                            whileAux2=false;
+                            break;
+                        }
+
+                        Criterio criterio = new Criterio(criterioAux,seccion);
+                        criterios.add(criterio);
+                        dao.crearCriterios(criterios);
+                    }
+                    whileAux2=true;
+
+                } else {
+                    seccionesRubrica.clear();
+                    System.out.println("El peso debe ser mayor a 0 y la suma de las secciones tiene que ser 100.");
+                    continue;
+                }
+
+                //seccion 4
+                System.out.println("Seccion : Cronograma de actividades");
+                System.out.println("Ingrese el peso de la seccion:");
+                double pesoSeccion4 = scanner.nextDouble();
+                scanner.nextLine();
+                sumaGlobal += pesoSeccion4;
+
+                if (pesoSeccion4 > 0 && sumaGlobal <= 100) {
+                    SeccionRubrica seccion = new SeccionRubrica("Cronograma de actividades", pesoSeccion4);
+                    seccionesRubrica.add(seccion);
+
+                    while(whileAux2){
+                        CriterioDAOImpl dao = new CriterioDAOImpl();
+                        LinkedList<Criterio> criterios = new LinkedList<>();
+
+                        System.out.println("Ingrese nombre de criterio(0. Para Salir):");
+                        String criterioAux = scanner.nextLine();
+
+                        if(criterioAux.equalsIgnoreCase("0")){
+                            whileAux2=false;
+                            break;
+                        }
+
+                        Criterio criterio = new Criterio(criterioAux,seccion);
+                        criterios.add(criterio);
+                        dao.crearCriterios(criterios);
+                    }
+                    whileAux2=true;
+
+                } else {
+                    seccionesRubrica.clear();
+                    System.out.println("El peso debe ser mayor a 0 y la suma de las secciones tiene que ser 100.");
+                    continue;
+                }
+
+
+                //seccion 5
+                System.out.println("Seccion : Aporte al desarrollo del postulante");
+                System.out.println("Ingrese el peso de la seccion:");
+                double pesoSeccion5 = scanner.nextDouble();
+                scanner.nextLine();
+                sumaGlobal += pesoSeccion5;
+
+                if (pesoSeccion5 > 0 && sumaGlobal <= 100) {
+                    SeccionRubrica seccion = new SeccionRubrica("Aporte al desarrollo del postulante", pesoSeccion5);
+                    seccionesRubrica.add(seccion);
+
+                    while(whileAux2){
+                        CriterioDAOImpl dao = new CriterioDAOImpl();
+                        LinkedList<Criterio> criterios = new LinkedList<>();
+
+                        System.out.println("Ingrese nombre de criterio(0. Para Salir):");
+                        String criterioAux = scanner.nextLine();
+
+                        if(criterioAux.equalsIgnoreCase("0")){
+                            whileAux2=false;
+                            break;
+                        }
+
+                        Criterio criterio = new Criterio(criterioAux,seccion);
+                        criterios.add(criterio);
+                        dao.crearCriterios(criterios);
+                    }
+                    whileAux2=true;
+
+                } else {
+                    seccionesRubrica.clear();
+                    System.out.println("El peso debe ser mayor a 0 y la suma de las secciones tiene que ser 100.");
+                    continue;
+                }
+
+
+                //seccion 6
+                System.out.println("Seccion : Aporte al grupo receptor");
+                System.out.println("Ingrese el peso de la seccion:");
+                double pesoSeccion6 = scanner.nextDouble();
+                scanner.nextLine();
+                sumaGlobal += pesoSeccion6;
+
+                if (pesoSeccion6 > 0 && sumaGlobal <= 100) {
+                    SeccionRubrica seccion = new SeccionRubrica("Aporte al grupo receptor", pesoSeccion6);
+                    seccionesRubrica.add(seccion);
+
+                    while(whileAux2){
+                        CriterioDAOImpl dao = new CriterioDAOImpl();
+                        LinkedList<Criterio> criterios = new LinkedList<>();
+
+                        System.out.println("Ingrese nombre de criterio(0. Para Salir):");
+                        String criterioAux = scanner.nextLine();
+
+                        if(criterioAux.equalsIgnoreCase("0")){
+                            whileAux2=false;
+                            break;
+                        }
+
+                        Criterio criterio = new Criterio(criterioAux,seccion);
+                        criterios.add(criterio);
+                        dao.crearCriterios(criterios);
+                    }
+                    whileAux2=true;
+
+
+                } else {
+                    seccionesRubrica.clear();
+                    System.out.println("El peso debe ser mayor a 0 y la suma de las secciones tiene que ser 100.");
+                    continue;
+                }
+
+                //validacion final
+                double aux = 0.00;
+                for(SeccionRubrica seccion:seccionesRubrica){
+                    aux+= seccion.getPeso();
+                }
+                if (aux==100.00){
+                    whileAux= false;
+                    break;
+                }else {
+                    System.out.println("El total de la suma del peso de las secciones tiene que ser igual a 100");
+                    continue;
                 }
 
             }
 
-            Rubrica rubrica = new Rubrica(nombreRubrica,seccionesRubrica);
-            System.out.println("Rubrica creada con exito!:");
-            System.out.println(rubrica.toString());
 
+
+            Rubrica rubrica = new Rubrica(nombreRubrica,seccionesRubrica);
             RubricaDAOImpl dao = new RubricaDAOImpl();
             dao.crearRubrica(rubrica);
 
@@ -1826,7 +2047,7 @@ public void MenuFormacion(Postulante postulante){
     }
 
 
-    public void MenuEvaluacion(){
+    public void MenuEvaluacionAdmin(){
 
         System.out.println();
         Scanner scanner = new Scanner(System.in);
@@ -1875,25 +2096,19 @@ public void MenuFormacion(Postulante postulante){
             System.out.print("Ingrese el ID del Evaluador Externo 1: ");
             int idEval1 = Integer.parseInt(scanner.nextLine());
 
-            System.out.print("Ingrese el ID del Evaluador Externo 2: ");
-            int idEval2 = Integer.parseInt(scanner.nextLine());
 
             // 3. Buscamos los objetos evaluadores completos dentro de la lista disponible
             EvaluadorExterno evaluador1 = null;
-            EvaluadorExterno evaluador2 = null;
+
 
             for (EvaluadorExterno ev : evaluadoresDisponibles) {
                 if (ev.getId_usuario() == idEval1) {
                     evaluador1 = ev;
                     evaluador1.setId_usuario(idEval1);
                 }
-                if (ev.getId_usuario() == idEval2) {
-                    evaluador2 = ev;
-                    evaluador2.setId_usuario(idEval2);
-                }
             }
 
-            if (evaluador1 == null || evaluador2 == null) {
+            if (evaluador1 == null) {
                 System.out.println("Error: Uno o ambos IDs de evaluadores ingresados no son válidos.");
                 scanner.close();
                 return;
@@ -1901,18 +2116,23 @@ public void MenuFormacion(Postulante postulante){
 
             // 4. Instanciamos pasando 0 en el ID porque el DAO lo calculará automáticamente en la BDD
             Evaluacion nuevaEvaluacion = new Evaluacion(
-                    idPostulacion, evaluador2, evaluador1, comEvaluador, punTotal, juiGlobal, "En evaluación", nombre, 0
+                    idPostulacion, evaluador1, comEvaluador, punTotal, juiGlobal, "En evaluación", nombre, 0
             );
+            int cantidad = dao.verificarEvaluadores(idPostulacion);
 
-            dao.crearEvaluacion(nuevaEvaluacion);
+            if(cantidad >= 2){
+                System.out.println("Ya no se pueden asignar mas de dos evaluadores a la postulacion");
+            }else {
+                dao.crearEvaluacion(nuevaEvaluacion);
 
 
-            String nuevoEstadoAux = "En evaluación";
+                String nuevoEstadoAux = "En evaluación";
 
-            //aca le mandamo la actualizacion  del estado de la POSTULACION lo pedia el CU08
-            PostulacionDAOImpl postulacionDao = new PostulacionDAOImpl();
-            postulacionDao.actualizarEstadoPostulacion(idPostulacion, nuevoEstadoAux);
-            System.out.println("¡Evaluación creada con exito, y Postulación " + idPostulacion + " actualizada a 'En evaluación' con éxito!");
+                //aca le mandamo la actualizacion  del estado de la POSTULACION lo pedia el CU08
+                PostulacionDAOImpl postulacionDao = new PostulacionDAOImpl();
+                postulacionDao.actualizarEstadoPostulacion(idPostulacion, nuevoEstadoAux);
+                System.out.println("Evaluación creada con exito, y Postulación " + idPostulacion + " actualizada a 'En evaluación' con éxito!");
+            }
 
         } else if (numero == 2) {
 
@@ -1998,4 +2218,244 @@ public void MenuFormacion(Postulante postulante){
 
         scanner.close();
     }
+
+
+    public void MenuEvaluacionEvaluador(){
+        System.out.println();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Gestión de Evaluaciones:");
+        System.out.println("1. Realizar Evaluación");
+        System.out.println("2. Editar Evaluación");
+        System.out.println("3. Listar Evaluaciones");
+        System.out.println("4. Eliminar una Evaluación");
+        System.out.print("Ingrese la opción a realizar: ");
+        int opcion = scanner.nextInt();
+        scanner.nextLine();
+
+        if (opcion == 1) {
+            PostulacionDAOImpl daoPostulacion = new PostulacionDAOImpl();
+            int idUsuario = Main.getIdUsuarioLogueado();
+
+            // 1. Listamos las postulaciones asignadas a este evaluador
+            daoPostulacion.listarPostulacionesAsignadas(idUsuario);
+
+            System.out.print("Ingrese el ID de la postulación que desea evaluar: ");
+            int idPostulacionSeleccionada = scanner.nextInt();
+            scanner.nextLine();
+
+            // 2. Traemos las secciones de la rúbrica activa
+            RubricaDAOImpl rubricaDao = new RubricaDAOImpl();
+            // (Asumiendo que traemos las secciones de la rúbrica principal, por ejemplo ID 1 o listando las secciones)
+            LinkedList<SeccionRubrica> secciones = rubricaDao.listarSecciones(1); // Ajustar ID según corresponda
+
+            double puntajeTotalPonderado = 0.0;
+
+            System.out.println("\n--- Evaluación por Secciones (Escala 1 a 5) ---");
+            for (SeccionRubrica seccion : secciones) {
+                System.out.println("Sección: " + seccion.getNombre() + " (Peso: " + seccion.getPeso() + "%)");
+
+                int puntajeSeccion = 0;
+                while (true) {
+                    System.out.print("Ingrese puntaje (1 al 5): ");
+                    puntajeSeccion = scanner.nextInt();
+                    scanner.nextLine();
+                    if (puntajeSeccion >= 1 && puntajeSeccion <= 5) {
+                        break;
+                    }
+                    System.out.println("Error: El puntaje debe ser un valor entre 1 y 5.");
+                }
+
+                System.out.print("Ingrese comentario para esta sección: ");
+                String comentarioSeccion = scanner.nextLine();
+
+                // 3. Cálculo parcial ponderado: (puntaje * (peso / 100))
+                double ponderacionParcial = puntajeSeccion * (seccion.getPeso() / 100.0);
+                puntajeTotalPonderado += ponderacionParcial;
+            }
+
+            System.out.println("\n¡Puntaje total ponderado calculado con éxito: " + puntajeTotalPonderado + "!");
+
+            // Aquí puedes instanciar o actualizar la evaluación con el puntaje total y cambiar el estado a "Completada"
+
+
+            //seccion antecedentes : 20%
+            //dentro secciones
+            //criterio: del 1 al 5
+            //100% --- 20% nota global
+            //calcular porcentaje para el 100%
+            //5 * (
+        }
+
+
+
+
+        scanner.close();
+    }
+
+
+
+
+public void MenuEvaluacionEvaluador2(){
+    System.out.println();
+    Scanner scanner = new Scanner(System.in);
+
+    System.out.println("Gestión de Evaluaciones:");
+    System.out.println("1. Realizar Evaluación");
+    System.out.println("2. Editar Evaluación");
+    System.out.println("3. Listar Evaluaciones");
+    System.out.println("4. Eliminar una Evaluación");
+    System.out.print("Ingrese la opción a realizar: ");
+    int opcion = scanner.nextInt();
+    scanner.nextLine();
+
+    if (opcion == 1) {
+        PostulacionDAOImpl daoPostulacion = new PostulacionDAOImpl();
+        int idUsuario = Main.getIdUsuarioLogueado();
+
+        // 1. Listamos las postulaciones asignadas a este evaluador
+        daoPostulacion.listarPostulacionesAsignadas(idUsuario);
+
+        System.out.print("Ingrese el ID de la postulación que desea evaluar: ");
+        int idPostulacionSeleccionada = scanner.nextInt();
+        scanner.nextLine();
+
+        //que acepte las fechas
+        //editar las fechas
+
+        EvaluacionDAOImpl evaluacionDAO = new EvaluacionDAOImpl();
+        int idEvaluacion = evaluacionDAO.obtenerIdEvaluacionPorPostulacion(idPostulacionSeleccionada);
+
+        if (idEvaluacion == -1) {
+            System.out.println("No existe una evaluación asociada a esa postulación.");
+            return;
+        }
+
+        // 2. Traemos las secciones de la rúbrica activa
+        RubricaDAOImpl rubricaDao = new RubricaDAOImpl();
+        // (Asumiendo que traemos las secciones de la rúbrica principal, por ejemplo ID 1 o listando las secciones)
+        LinkedList<SeccionRubrica> secciones = rubricaDao.listarSecciones(1); // Ajustar ID según corresponda
+
+        double puntajeTotalPonderado = 0.0;
+
+        System.out.println("\n--- Evaluación por Secciones (Escala 1 a 5) ---");
+
+
+        CriterioDAOImpl criterioDao = new CriterioDAOImpl();
+
+        for (SeccionRubrica seccion : secciones) {
+
+            System.out.println();
+            System.out.println("====================================");
+            System.out.println("Sección: " + seccion.getNombre());
+            System.out.println("Peso: " + seccion.getPeso() + "%");
+            System.out.println("====================================");
+
+
+            // Traer criterios pertenecientes a esta sección
+            LinkedList<Criterio> criterios = criterioDao.listarCriterios(seccion.getId_secRubrica());
+
+            double sumaPuntajesCriterios = 0.0;
+
+            for (Criterio criterio : criterios) {
+
+                System.out.println();
+                System.out.println("Criterio: " + criterio.getNombre());
+
+                double puntajeCriterio;
+                while (true) {
+
+                    System.out.print("Ingrese puntaje (1 al 5): ");
+                    puntajeCriterio = scanner.nextDouble();
+                    scanner.nextLine();
+
+                    if (puntajeCriterio >= 1 && puntajeCriterio <= 5) {
+                        break;
+                    }
+
+                    System.out.println(
+                            "Error: El puntaje debe ser un valor entre 1 y 5."
+                    );
+                }
+
+                sumaPuntajesCriterios += puntajeCriterio;
+
+                // se guarda en valoraciones:
+                Valoracion valoracion = new Valoracion(puntajeCriterio,criterio,idPostulacionSeleccionada, idEvaluacion, idUsuario);
+
+                ValoracionDAOImpl dao = new ValoracionDAOImpl();
+                dao.crearValoracion(valoracion);
+            }
+
+            // Promedio de los criterios de esta sección
+            double promedioSeccion =
+                    sumaPuntajesCriterios / criterios.size();
+
+            // Aplicamos el peso porcentual de la sección
+            double aporteSeccion =
+                    promedioSeccion * (seccion.getPeso() / 100.0);
+
+            puntajeTotalPonderado += aporteSeccion;
+
+            System.out.printf(
+                    "Promedio de la sección: %.2f%n",
+                    promedioSeccion
+            );
+
+            System.out.printf(
+                    "Aporte ponderado: %.2f%n",
+                    aporteSeccion
+            );
+        }
+
+        System.out.println("\n¡Puntaje total ponderado calculado con éxito: " + puntajeTotalPonderado + "!");
+
+
+        System.out.println("\n¡Puntaje total ponderado calculado con éxito: " + puntajeTotalPonderado + "!");
+
+        System.out.print("Ingrese un comentario general de la evaluación: ");
+        String comentarioGeneral = scanner.nextLine();
+
+        System.out.print("Ingrese el juicio global / recomendación de la propuesta: ");
+        String juicioGlobal = scanner.nextLine();
+
+        // 6. Selección de estado según el CU09 (En proceso / borrador o Completada)
+        System.out.println("Seleccione el estado de la evaluación:");
+        System.out.println("1. En proceso (Borrador)");
+        System.out.println("2. Completada");
+        System.out.print("Ingrese opción: ");
+        int opcionEstado = scanner.nextInt();
+        scanner.nextLine();
+
+        String estadoEvaluacion = (opcionEstado == 2) ? "Completada" : "En proceso";
+
+        // 7. Actualizar la evaluación en la base de datos con los datos calculados
+        Evaluacion evaluacionActualizada = new Evaluacion();
+        evaluacionActualizada.setId_Evaluacion(idEvaluacion);
+        evaluacionActualizada.setNombre("Evaluación de Postulación");
+        evaluacionActualizada.setPuntaje_total(puntajeTotalPonderado);
+        evaluacionActualizada.setComentario_evaluador(comentarioGeneral);
+        evaluacionActualizada.setJuicio_global(juicioGlobal);
+        evaluacionActualizada.setEstado(estadoEvaluacion);
+
+        evaluacionDAO.editarEvaluacion(evaluacionActualizada);
+        System.out.println("¡Evaluación guardada con éxito! Estado actual: " + estadoEvaluacion);
+
+        if (estadoEvaluacion.equals("Completada")) {
+
+
+            int cantidadEvaluadores = evaluacionDAO.verificarEvaluadoresEvaluaron(idPostulacionSeleccionada);
+
+            if(cantidadEvaluadores >= 2){
+                PostulacionDAOImpl daopos = new PostulacionDAOImpl();
+                daopos.actualizarEstadoPostulacion(idPostulacionSeleccionada,"Completada");
+            }
+        }
+
+
+    }
+
+    scanner.close();
+}
+
 
