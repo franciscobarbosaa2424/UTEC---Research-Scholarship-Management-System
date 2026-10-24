@@ -78,6 +78,7 @@ public class Main {
                 } else {
                     if (rol.equalsIgnoreCase("evaluador")) {
                         //aca iria el menu cuando el acceso es correcto pero no es administrador
+                        MenuEvaluacionEvaluador2();
                     }
                 }
 
@@ -2219,79 +2220,6 @@ public void MenuFormacion(Postulante postulante){
         scanner.close();
     }
 
-
-    public void MenuEvaluacionEvaluador(){
-        System.out.println();
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Gestión de Evaluaciones:");
-        System.out.println("1. Realizar Evaluación");
-        System.out.println("2. Editar Evaluación");
-        System.out.println("3. Listar Evaluaciones");
-        System.out.println("4. Eliminar una Evaluación");
-        System.out.print("Ingrese la opción a realizar: ");
-        int opcion = scanner.nextInt();
-        scanner.nextLine();
-
-        if (opcion == 1) {
-            PostulacionDAOImpl daoPostulacion = new PostulacionDAOImpl();
-            int idUsuario = Main.getIdUsuarioLogueado();
-
-            // 1. Listamos las postulaciones asignadas a este evaluador
-            daoPostulacion.listarPostulacionesAsignadas(idUsuario);
-
-            System.out.print("Ingrese el ID de la postulación que desea evaluar: ");
-            int idPostulacionSeleccionada = scanner.nextInt();
-            scanner.nextLine();
-
-            // 2. Traemos las secciones de la rúbrica activa
-            RubricaDAOImpl rubricaDao = new RubricaDAOImpl();
-            // (Asumiendo que traemos las secciones de la rúbrica principal, por ejemplo ID 1 o listando las secciones)
-            LinkedList<SeccionRubrica> secciones = rubricaDao.listarSecciones(1); // Ajustar ID según corresponda
-
-            double puntajeTotalPonderado = 0.0;
-
-            System.out.println("\n--- Evaluación por Secciones (Escala 1 a 5) ---");
-            for (SeccionRubrica seccion : secciones) {
-                System.out.println("Sección: " + seccion.getNombre() + " (Peso: " + seccion.getPeso() + "%)");
-
-                int puntajeSeccion = 0;
-                while (true) {
-                    System.out.print("Ingrese puntaje (1 al 5): ");
-                    puntajeSeccion = scanner.nextInt();
-                    scanner.nextLine();
-                    if (puntajeSeccion >= 1 && puntajeSeccion <= 5) {
-                        break;
-                    }
-                    System.out.println("Error: El puntaje debe ser un valor entre 1 y 5.");
-                }
-
-                System.out.print("Ingrese comentario para esta sección: ");
-                String comentarioSeccion = scanner.nextLine();
-
-                // 3. Cálculo parcial ponderado: (puntaje * (peso / 100))
-                double ponderacionParcial = puntajeSeccion * (seccion.getPeso() / 100.0);
-                puntajeTotalPonderado += ponderacionParcial;
-            }
-
-            System.out.println("\n¡Puntaje total ponderado calculado con éxito: " + puntajeTotalPonderado + "!");
-
-            // Aquí puedes instanciar o actualizar la evaluación con el puntaje total y cambiar el estado a "Completada"
-
-
-            //seccion antecedentes : 20%
-            //dentro secciones
-            //criterio: del 1 al 5
-            //100% --- 20% nota global
-            //calcular porcentaje para el 100%
-            //5 * (
-        }
-
-
-
-
-        scanner.close();
-    }
 
 
 
