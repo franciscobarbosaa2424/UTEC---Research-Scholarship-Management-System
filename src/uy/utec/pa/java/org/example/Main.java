@@ -655,11 +655,25 @@ public void GestionConvocatorias() throws SQLException {
             }
         }
 
-        System.out.print("Ingrese fecha de apertura (YYYY-MM-DD): ");
-        java.sql.Date fechaApertura = java.sql.Date.valueOf(scanner.nextLine());
+        java.sql.Date fechaApertura;
+        while (true) {
+            System.out.print("Ingrese fecha de apertura (YYYY-MM-DD): ");
+            fechaApertura = java.sql.Date.valueOf(scanner.nextLine());
+            if (!fechaApertura.toLocalDate().isBefore(java.time.LocalDate.now())) {
+                break;
+            }
+            System.out.println("La fecha no puede ser anterior a la fecha actual. Intente nuevamente.");
+        }
 
-        System.out.print("Ingrese fecha de cierre (YYYY-MM-DD): ");
-        java.sql.Date fechaCierre = java.sql.Date.valueOf(scanner.nextLine());
+        java.sql.Date fechaCierre;
+        while (true) {
+            System.out.print("Ingrese fecha de cierre (YYYY-MM-DD): ");
+            fechaCierre = java.sql.Date.valueOf(scanner.nextLine());
+            if (!fechaCierre.toLocalDate().isBefore(java.time.LocalDate.now())) {
+                break;
+            }
+            System.out.println("La fecha no puede ser anterior a la fecha actual. Intente nuevamente.");
+        }
 
             RubricaDAOImpl dao = new RubricaDAOImpl();
             LinkedList<Rubrica> rubricas = dao.listarRubricas();
@@ -814,20 +828,37 @@ public void GestionConvocatorias() throws SQLException {
                                     System.out.println("Opción inválida, vuelva a seleccionar.");
                                 }
                             }
+
                             convocatoriaAux.setEstado(estadoNuevo);
                             dao.editarConvocatoria(convocatoriaAux);
                             auxWhile1 = false;
 
                         } else if (opcionEditar == 7) {
-                            System.out.print("Ingrese nueva fecha de apertura (YYYY-MM-DD): ");
-                            java.sql.Date fechaAperturaNueva = java.sql.Date.valueOf(scanner.nextLine());
+                            java.sql.Date fechaAperturaNueva;
+                            while (true) {
+                                System.out.print("Ingrese nueva fecha de apertura (YYYY-MM-DD): ");
+                                fechaAperturaNueva = java.sql.Date.valueOf(scanner.nextLine());
+                                if (!fechaAperturaNueva.toLocalDate().isBefore(java.time.LocalDate.now())) {
+                                    break;
+                                }
+                                System.out.println("La fecha no puede ser anterior a la fecha actual. Intente nuevamente.");
+                            }
+
                             convocatoriaAux.setFecha_apertura(fechaAperturaNueva);
                             dao.editarConvocatoria(convocatoriaAux);
                             auxWhile1 = false;
 
                         } else if (opcionEditar == 8) {
-                            System.out.print("Ingrese nueva fecha de cierre (YYYY-MM-DD): ");
-                            java.sql.Date fechaCierreNueva = java.sql.Date.valueOf(scanner.nextLine());
+                            java.sql.Date fechaCierreNueva;
+                            while (true) {
+                                System.out.print("Ingrese nueva fecha de cierre (YYYY-MM-DD): ");
+                                fechaCierreNueva = java.sql.Date.valueOf(scanner.nextLine());
+                                if (!fechaCierreNueva.toLocalDate().isBefore(java.time.LocalDate.now())) {
+                                    break;
+                                }
+                                System.out.println("La fecha no puede ser anterior a la fecha actual. Intente nuevamente.");
+                            }
+
                             convocatoriaAux.setFecha_cierre(fechaCierreNueva);
                             dao.editarConvocatoria(convocatoriaAux);
                             auxWhile1 = false;
