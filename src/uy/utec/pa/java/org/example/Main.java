@@ -1,3 +1,4 @@
+package uy.utec.pa.java.org.example;
 import uy.utec.pa.dao.*;
 import uy.utec.pa.modelo.*;
 import uy.utec.pa.servicio.*;
@@ -7,10 +8,17 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.SQLOutput;
 import java.util.Scanner;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Main {
 
     private static int idUsuarioLogueado;
+    private final Scanner entrada = new Scanner(System.in);
+
+    public static void main(String[] args) throws SQLException {
+        new Main().ejecutar();
+    }
 
     public static int getIdUsuarioLogueado() {
         return idUsuarioLogueado;
@@ -19,18 +27,21 @@ public class Main {
     public static void setIdUsuarioLogueado(int idUsuarioLogueado) {
         Main.idUsuarioLogueado = idUsuarioLogueado;
     }
-}
 //ACA PUSE
-    public void main(String[] args) throws SQLException {
+    public void ejecutar() throws SQLException {
+        while (true) {
 
-        Scanner scanner = new Scanner(System.in);
+
+        Scanner scanner = entrada;
 
         System.out.println("=== Menú Principal ===");
         System.out.println("1. Realizar Postulación a una convocatoria");
         System.out.println("2. Loguearse como Administrador/Evaluador Externo");
         System.out.println("3. Olvidé mi contraseña");
+        System.out.println("0. Salir");
         int opcionMenuPrincipal = scanner.nextInt();
         scanner.nextLine();
+        if (opcionMenuPrincipal == 0) return;
 
 
         if (opcionMenuPrincipal == 1) {
@@ -110,13 +121,17 @@ public class Main {
         System.out.println();
 
 
-        scanner.close();
+
+        }
     }
 
 
 
+
     public void MenuPrincipalAdmin() throws SQLException {
-        Scanner scanner = new Scanner(System.in);
+        while (true) {
+
+        Scanner scanner = entrada;
         System.out.println("Bienvenido. ¿Qué desea realizar?");
         System.out.println("1. Gestión de Usuarios");
         System.out.println("2. Gestión de Convocatorias");
@@ -129,7 +144,10 @@ public class Main {
         System.out.println("9. Cambiar Contraseña");
         System.out.print("Ingrese la opción a realizar: ");
 
+        System.out.println("0. Volver atrás");
         int numero = scanner.nextInt();
+        scanner.nextLine();
+        if (numero == 0) return;
 
 
         if(numero==1){
@@ -152,19 +170,25 @@ public class Main {
             cambiarContrasena();
         }
 
-        scanner.close();
+
+        }
     }
 
+
     public void MenuRubricas() throws SQLException {
-        Scanner scanner = new Scanner(System.in);
+        while (true) {
+
+        Scanner scanner = entrada;
         System.out.println("Gestión de Rúbricas:");
         System.out.println("1. Crear Rúbrica");
         System.out.println("2. Editar Rúbrica");
         System.out.println("3. Listar Rúbricas");
         System.out.println("4. Dar de Baja una Rúbrica");
         System.out.print("Ingrese la opción a realizar: ");
+        System.out.println("0. Volver atrás");
         int numero = scanner.nextInt();
         scanner.nextLine();
+        if (numero == 0) return;
 
         if(numero==1){
             //Crear Rubrica
@@ -180,7 +204,7 @@ public class Main {
 
 
             double sumaGlobal;
-                
+
             boolean whileAux2 = true;
             boolean whileAux = true;
             while(whileAux==true) {
@@ -537,11 +561,15 @@ public class Main {
             dao.eliminarRubrica(idRubrica);
         }
 
-        scanner.close();
+
+        }
     }
 
+
 public void MenuUsuario() throws SQLException {
-    Scanner scanner = new Scanner(System.in);
+        while (true) {
+
+    Scanner scanner = entrada;
 
     System.out.println("Bienvenido. ¿Qué desea realizar?");
     System.out.println("1. Crear Usuario");
@@ -549,8 +577,10 @@ public void MenuUsuario() throws SQLException {
     System.out.println("3. Listar Usuarios");
     System.out.println("4. Dar de Baja un Usuario");
     System.out.print("Ingrese la opción a realizar: ");
-    int numero = scanner.nextInt();
+    System.out.println("0. Volver atrás");
+        int numero = scanner.nextInt();
     scanner.nextLine();
+        if (numero == 0) return;
 
     if(numero==1){
         CrearUsuario();
@@ -567,11 +597,15 @@ public void MenuUsuario() throws SQLException {
         darDeBajaUsuario();
     }
 
-    //scanner.close();
-}
+
+        }
+    }
+
 
 public void GestionConvocatorias() throws SQLException {
-    Scanner scanner = new Scanner(System.in);
+        while (true) {
+
+    Scanner scanner = entrada;
 
     System.out.println("Gestión de Convocatorias:");
     System.out.println("1. Crear Convocatoria");
@@ -579,8 +613,10 @@ public void GestionConvocatorias() throws SQLException {
     System.out.println("3. Listar Convocatorias");
     System.out.println("4. Dar de Baja una Convocatoria");
     System.out.print("Ingrese la opción a realizar: ");
-    int numero = scanner.nextInt();
+    System.out.println("0. Volver atrás");
+        int numero = scanner.nextInt();
     scanner.nextLine();
+        if (numero == 0) return;
 
     if(numero==1){
         //Crear convocatorias
@@ -689,8 +725,10 @@ public void GestionConvocatorias() throws SQLException {
         for(Convocatoria c: listaConvocatorias){
             System.out.println(c.toString());
         }
-        int idConvocatoria = scanner.nextInt();
+        System.out.println("0. Volver atrás");
+    int idConvocatoria = scanner.nextInt();
         scanner.nextLine();
+    if (idConvocatoria == 0) return;
 
         //elegir convocatorias y poder editarla
                 Convocatoria convocatoriaAux = null;
@@ -910,19 +948,25 @@ public void GestionConvocatorias() throws SQLException {
         dao.darDeBajaConvocatoria(auxid);
     }
 
-    scanner.close();
-}
+
+        }
+    }
+
 
 
 public void CrearUsuario() throws SQLException {
-    Scanner scanner = new Scanner(System.in);
+        while (true) {
+
+    Scanner scanner = entrada;
     System.out.println("CREACION DE USUARIO:");
     System.out.println("Seleccione modalidad de Usuario: ");
     System.out.println("1.Administrador");
     System.out.println("2.Evaluador Externo");
 
-    int numero = scanner.nextInt();
+    System.out.println("0. Volver atrás");
+        int numero = scanner.nextInt();
     scanner.nextLine();
+        if (numero == 0) return;
 
     if (numero == 1){
         CrearUsuarioAdministrador();
@@ -931,11 +975,13 @@ public void CrearUsuario() throws SQLException {
         CrearUsuarioEvaluadorExterno();
     }//x lista
 
-    scanner.close();
-}
+
+        }
+    }
+
 
 public void editarUsuario(LinkedList<Usuario> usuarios,int id){
-    Scanner scanner = new Scanner(System.in);
+    Scanner scanner = entrada;
 
     Usuario auxiliar = null;
     for(Usuario u: usuarios){
@@ -1055,7 +1101,7 @@ public LinkedList<Usuario> listarUsuarios(){
 
 
 public void CrearUsuarioAdministrador() throws SQLException {
-    Scanner scanner = new Scanner(System.in);
+    Scanner scanner = entrada;
 
     System.out.println("=== Crear usuario ===");
 
@@ -1139,12 +1185,11 @@ public void CrearUsuarioAdministrador() throws SQLException {
     );
 
 
-    scanner.close();
 }
 
 public void CrearUsuarioEvaluadorExterno(){
 
-    Scanner scanner = new Scanner(System.in);
+    Scanner scanner = entrada;
 
     System.out.println("=== Crear usuario ===");
 
@@ -1227,11 +1272,10 @@ public void CrearUsuarioEvaluadorExterno(){
             "Su usuario fue registrado correctamente. Ingrese con contraseña \"secu1234\""
     );
 
-    scanner.close();
 }
 
 public void darDeBajaUsuario(){
-    Scanner scanner = new Scanner(System.in);
+    Scanner scanner = entrada;
     listarUsuarios();
     int id = scanner.nextInt();{}
     scanner.nextLine();
@@ -1242,7 +1286,7 @@ public void darDeBajaUsuario(){
 
 
 public void MenuPostulante(){
-    Scanner scanner = new Scanner(System.in);
+    Scanner scanner = entrada;
     System.out.println("=== Menú Postulante ===");
     System.out.println();
     System.out.println("Ingrese el ID de la Convocatoria que desea postularse:");
@@ -1253,8 +1297,10 @@ public void MenuPostulante(){
         System.out.println(c.toString());
     }
 
+    System.out.println("0. Volver atrás");
     int idConvocatoria = scanner.nextInt();
     scanner.nextLine();
+    if (idConvocatoria == 0) return;
 
     //aca
     System.out.println("Documento:");
@@ -1340,13 +1386,12 @@ public void MenuPostulante(){
 
     MenuFormacion(postulante);
 
-    scanner.close();
 
 }
 
 
 public void MenuFormacion(Postulante postulante){
-    Scanner scanner = new Scanner(System.in);
+    Scanner scanner = entrada;
     System.out.println();
     System.out.println("Ingrese nombre de su formacion:");
     String nombreFormacion = scanner.nextLine();
@@ -1458,8 +1503,10 @@ public void MenuFormacion(Postulante postulante){
 
 
     public void MenuTutores(){
+        while (true) {
+
         System.out.println();
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = entrada;
 
         System.out.println("Gestión de Tutores:");
         System.out.println("1. Crear Tutor");
@@ -1467,8 +1514,10 @@ public void MenuFormacion(Postulante postulante){
         System.out.println("3. Listar Tutores");
         System.out.println("4. Eliminar un Tutor");
         System.out.print("Ingrese la opción a realizar: ");
+        System.out.println("0. Volver atrás");
         int numero = scanner.nextInt();
         scanner.nextLine();
+        if (numero == 0) return;
 
         if (numero == 1){
 
@@ -1565,13 +1614,17 @@ public void MenuFormacion(Postulante postulante){
         }
 
 
-        scanner.close();
+
+        }
     }
 
 
+
     public void MenuSede(){
+        while (true) {
+
         System.out.println();
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = entrada;
 
         System.out.println("Gestión de Sedes:");
         System.out.println("1. Crear Sede");
@@ -1579,8 +1632,10 @@ public void MenuFormacion(Postulante postulante){
         System.out.println("3. Listar Sede");
         System.out.println("4. Eliminar una Sede");
         System.out.print("Ingrese la opción a realizar: ");
+        System.out.println("0. Volver atrás");
         int numero = scanner.nextInt();
         scanner.nextLine();
+        if (numero == 0) return;
 
         if (numero == 1){
 
@@ -1653,13 +1708,17 @@ public void MenuFormacion(Postulante postulante){
             dao.eliminarSede(idSedeAux);
         }
 
-        scanner.close();
+
+        }
     }
 
 
+
     public void MenuDepartamentoAcademico(){
+        while (true) {
+
         System.out.println();
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = entrada;
 
         System.out.println("Gestión de Sedes:");
         System.out.println("1. Crear Departamento Academico");
@@ -1667,8 +1726,10 @@ public void MenuFormacion(Postulante postulante){
         System.out.println("3. Listar Departamento Academico");
         System.out.println("4. Eliminar un Departamento Academico");
         System.out.print("Ingrese la opción a realizar: ");
+        System.out.println("0. Volver atrás");
         int numero = scanner.nextInt();
         scanner.nextLine();
+        if (numero == 0) return;
 
         if (numero == 1){
             System.out.println("Ingrese nombre:");
@@ -1740,14 +1801,18 @@ public void MenuFormacion(Postulante postulante){
             dao.eliminarDepaAcademico(idDepaAcademico);
         }
 
-        scanner.close();
+
+        }
     }
 
 
+
     public void MenuPostulaciones(){
+        while (true) {
+
 
         System.out.println();
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = entrada;
 
         System.out.println("Gestión de Postulacion:");
         System.out.println("1. Crear Postulacion");
@@ -1755,8 +1820,10 @@ public void MenuFormacion(Postulante postulante){
         System.out.println("3. Listar Postulacion");
         System.out.println("4. Eliminar una Postulacion");
         System.out.print("Ingrese la opción a realizar: ");
+        System.out.println("0. Volver atrás");
         int numero = scanner.nextInt();
         scanner.nextLine();
+        if (numero == 0) return;
 
         PostulacionDAOImpl dao = new PostulacionDAOImpl();
 
@@ -2053,14 +2120,18 @@ public void MenuFormacion(Postulante postulante){
             dao.eliminarPostulacion(idPostulacion);
         }
 
-        scanner.close();
+
+        }
     }
 
 
+
     public void MenuEvaluacionAdmin(){
+        while (true) {
+
 
         System.out.println();
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = entrada;
 
         System.out.println("Gestión de Evaluación:");
         System.out.println("1. Crear Evaluación y Asignar Evaluadores");
@@ -2068,10 +2139,13 @@ public void MenuFormacion(Postulante postulante){
         System.out.println("3. Listar Evaluaciones");
         System.out.println("4. Eliminar una Evaluación");
         System.out.print("Ingrese la opción a realizar: ");
+        System.out.println("0. Volver atrás");
         int numero = scanner.nextInt();
-        scanner.nextLine(); // Limpiar buffer
+        scanner.nextLine();
+        if (numero == 0) return; // Limpiar buffer
 
         EvaluacionDAOImpl dao = new EvaluacionDAOImpl();
+        PostulacionDAOImpl daoPostulacion = new PostulacionDAOImpl();
 
         if (numero == 1){
 
@@ -2086,6 +2160,11 @@ public void MenuFormacion(Postulante postulante){
 
             System.out.print("Ingrese comentario del evaluador: ");
             String comEvaluador = scanner.nextLine();
+
+           LinkedList<Postulacion> postulaciones = daoPostulacion.listarPostulaciones();
+            for(Postulacion p : postulaciones){
+                System.out.println(p.toString());
+            }
 
             System.out.print("Ingrese el ID de la postulación a evaluar: ");
             int idPostulacion = Integer.parseInt(scanner.nextLine());
@@ -2120,7 +2199,6 @@ public void MenuFormacion(Postulante postulante){
 
             if (evaluador1 == null) {
                 System.out.println("Error: Uno o ambos IDs de evaluadores ingresados no son válidos.");
-                scanner.close();
                 return;
             }
 
@@ -2226,16 +2304,20 @@ public void MenuFormacion(Postulante postulante){
             dao.eliminarEvaluacion(id_evaluacion);
         }
 
-        scanner.close();
+
+        }
     }
 
 
 
 
 
+
 public void MenuEvaluacionEvaluador2(){
+        while (true) {
+
     System.out.println();
-    Scanner scanner = new Scanner(System.in);
+    Scanner scanner = entrada;
 
     System.out.println("Gestión de Evaluaciones:");
     System.out.println("1. Realizar Evaluación");
@@ -2244,8 +2326,10 @@ public void MenuEvaluacionEvaluador2(){
     System.out.println("4. Eliminar una Evaluación");
     System.out.println("5. Cambiar Contraseña");
     System.out.print("Ingrese la opción a realizar: ");
-    int opcion = scanner.nextInt();
+    System.out.println("0. Volver atrás");
+        int opcion = scanner.nextInt();
     scanner.nextLine();
+        if (opcion == 0) return;
 
     if (opcion == 1) {
         PostulacionDAOImpl daoPostulacion = new PostulacionDAOImpl();
@@ -2262,7 +2346,16 @@ public void MenuEvaluacionEvaluador2(){
         //editar las fechas
 
         EvaluacionDAOImpl evaluacionDAO = new EvaluacionDAOImpl();
-        int idEvaluacion = evaluacionDAO.obtenerIdEvaluacionPorPostulacion(idPostulacionSeleccionada);
+        Evaluacion asignada = null;
+        for (Evaluacion e : evaluacionDAO.listarEvaluacion()) {
+            if (e.getId_Postulacion() == idPostulacionSeleccionada
+                    && e.getEvaluadorExterno() != null
+                    && e.getEvaluadorExterno().getId_usuario() == idUsuario) {
+                asignada = e;
+                break;
+            }
+        }
+        int idEvaluacion = asignada == null ? -1 : asignada.getId_Evaluacion();
 
         if (idEvaluacion == -1) {
             System.out.println("No existe una evaluación asociada a esa postulación.");
@@ -2368,7 +2461,7 @@ public void MenuEvaluacionEvaluador2(){
         String estadoEvaluacion = (opcionEstado == 2) ? "Completada" : "En proceso";
 
         // 7. Actualizar la evaluación en la base de datos con los datos calculados
-        Evaluacion evaluacionActualizada = new Evaluacion();
+        Evaluacion evaluacionActualizada = asignada;
         evaluacionActualizada.setId_Evaluacion(idEvaluacion);
         evaluacionActualizada.setNombre("Evaluación de Postulación");
         evaluacionActualizada.setPuntaje_total(puntajeTotalPonderado);
@@ -2391,19 +2484,23 @@ public void MenuEvaluacionEvaluador2(){
         }
 
 
+    } else if (opcion == 2 || opcion == 3 || opcion == 4) {
+        gestionarEvaluacionesPropias(opcion);
     } else if (opcion == 5) {
         cambiarContrasena();
     }
 
-    scanner.close();
-}
+
+        }
+    }
+
 
 
 
 
 
     public void cambiarContrasena(){
-    Scanner scanner = new Scanner(System.in);
+    Scanner scanner = entrada;
     int idUsuario = Main.idUsuarioLogueado;
 
     UsuarioDAOImpl dao = new UsuarioDAOImpl();
@@ -2438,7 +2535,93 @@ public void MenuEvaluacionEvaluador2(){
         System.out.println("Contraseña actual no coincide con la ingresada");
     }
 
-    scanner.close();
 }
 
 
+
+
+    private void gestionarEvaluacionesPropias(int opcion) {
+        EvaluacionDAOImpl dao = new EvaluacionDAOImpl();
+        LinkedList<Evaluacion> propias = new LinkedList<>();
+        for (Evaluacion e : dao.listarEvaluacion()) {
+            if (e.getEvaluadorExterno() != null
+                    && e.getEvaluadorExterno().getId_usuario() == Main.getIdUsuarioLogueado()) {
+                propias.add(e);
+                System.out.println("ID: " + e.getId_Evaluacion() + " | Nombre: " + e.getNombre()
+                        + " | Postulación: " + e.getId_Postulacion() + " | Puntaje: " + e.getPuntaje_total()
+                        + " | Estado: " + e.getEstado() + " | Juicio: " + e.getJuicio_global()
+                        + " | Comentario: " + e.getComentario_evaluador());
+            }
+        }
+        if (propias.isEmpty()) {
+            System.out.println("No tiene evaluaciones asignadas.");
+            return;
+        }
+        if (opcion == 3) return;
+        System.out.println("Ingrese el ID de la evaluación (0. Volver atrás):");
+        int id = entrada.nextInt();
+        entrada.nextLine();
+        if (id == 0) return;
+        Evaluacion seleccionada = null;
+        for (Evaluacion e : propias) {
+            if (e.getId_Evaluacion() == id) seleccionada = e;
+        }
+        if (seleccionada == null) {
+            System.out.println("La evaluación no existe o no le pertenece.");
+            return;
+        }
+        if (opcion == 4) {
+            System.out.println("¿Confirma eliminar la evaluación? (S/N):");
+            if (entrada.nextLine().equalsIgnoreCase("S")) dao.eliminarEvaluacion(id);
+            return;
+        }
+        System.out.println("0. Volver atrás");
+        System.out.println("1. Nombre");
+        System.out.println("2. Juicio global");
+        System.out.println("3. Comentario");
+        System.out.println("4. Estado");
+        System.out.println("5. Puntaje total");
+        int campo = entrada.nextInt();
+        entrada.nextLine();
+        switch (campo) {
+            case 0: return;
+            case 1:
+                System.out.println("Ingrese nuevo nombre:");
+                seleccionada.setNombre(entrada.nextLine());
+                break;
+            case 2:
+                System.out.println("Ingrese nuevo juicio global:");
+                seleccionada.setJuicio_global(entrada.nextLine());
+                break;
+            case 3:
+                System.out.println("Ingrese nuevo comentario:");
+                seleccionada.setComentario_evaluador(entrada.nextLine());
+                break;
+            case 4:
+                System.out.println("1. En proceso (Borrador)");
+                System.out.println("2. Completada");
+                int estado = entrada.nextInt();
+                entrada.nextLine();
+                if (estado != 1 && estado != 2) {
+                    System.out.println("Opción inválida.");
+                    return;
+                }
+                seleccionada.setEstado(estado == 1 ? "En proceso" : "Completada");
+                break;
+            case 5:
+                System.out.println("Ingrese nuevo puntaje total (1 al 5):");
+                double puntaje = entrada.nextDouble();
+                entrada.nextLine();
+                if (!Double.isFinite(puntaje) || puntaje < 1 || puntaje > 5) {
+                    System.out.println("El puntaje debe estar entre 1 y 5.");
+                    return;
+                }
+                seleccionada.setPuntaje_total(puntaje);
+                break;
+            default:
+                System.out.println("Opción inválida.");
+                return;
+        }
+        dao.editarEvaluacion(seleccionada);
+        System.out.println("Evaluación actualizada con éxito.");
+    }}

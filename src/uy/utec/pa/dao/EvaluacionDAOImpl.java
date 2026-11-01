@@ -14,7 +14,6 @@ public class EvaluacionDAOImpl implements EvaluacionDAO {
         // 1. Consulta para averiguar cuál es el ID de evaluación más alto actual y sumarle 1
         String sqlMaxId = "SELECT COALESCE(MAX(id_evaluacion), 0) + 1 FROM proyecto.evaluaciones";
 
-        // 2. Sentencia INSERT usando los nombres exactos de tus columnas (id_usuario e id_usuario2)
         String sqlInsert = """
         INSERT INTO proyecto.evaluaciones(id_evaluacion, nombre, pun_total, jui_global, com_evaluador, estado, id_usuario, id_postulacion)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -193,7 +192,7 @@ public class EvaluacionDAOImpl implements EvaluacionDAO {
                u.nacionalidad, u.ci, u.contrasena, u.estado, u.rol, e.institucion
         FROM proyecto.evaluaciones ev
         INNER JOIN proyecto.usuarios u 
-            ON u.id_usuario = ev.id_usuario OR u.id_usuario = ev.id_usuario2
+            ON u.id_usuario = ev.id_usuario
         INNER JOIN proyecto.eva_externos e 
             ON u.id_usuario = e.id_usuario
         WHERE ev.id_evaluacion = ?
