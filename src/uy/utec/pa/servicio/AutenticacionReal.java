@@ -20,6 +20,7 @@ public class AutenticacionReal implements ServicioAutenticacion{
             if(u.getCorreo().equalsIgnoreCase(correo) && u.getEstado().equalsIgnoreCase("activo")){
                 contrasenaGuardada = u.getContrasena();
             }
+
         }
 
         boolean autentica;
@@ -31,6 +32,17 @@ public class AutenticacionReal implements ServicioAutenticacion{
         }
 
         return autentica;
+    }
+
+    @Override
+    public boolean usuarioInactivo(String correo){
+        boolean aux = false;
+        for(Usuario u : usuarios){
+            if(u.getEstado().equalsIgnoreCase("inactivo")){
+                aux=true;
+            }
+        }
+        return aux;
     }
 }
 

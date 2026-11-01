@@ -83,7 +83,13 @@ public class Main {
                 }
 
             } else {
+
+                boolean auxInactivo = proxy.usuarioInactivo(correo);
+                if(auxInactivo==true){
+                  System.out.println("El usuario esta inactivo.");  }
+                else{
                 System.out.println("Correo o contraseña incorrectos.");
+                }
             }
         } else if (opcionMenuPrincipal == 3) {
             System.out.println("Ingrese el correo para cambiar la contraseña:");
@@ -120,6 +126,7 @@ public class Main {
         System.out.println("6. Gestión de Departamentos Academicos");
         System.out.println("7. Gestión de Postulaciones");
         System.out.println("8. Gestión de Evaluaciones");
+        System.out.println("9. Cambiar Contraseña");
         System.out.print("Ingrese la opción a realizar: ");
 
         int numero = scanner.nextInt();
@@ -141,6 +148,8 @@ public class Main {
             MenuPostulaciones();
         } else if (numero==8) {
             MenuEvaluacionAdmin();
+        }else if (numero==9) {
+            cambiarContrasena();
         }
 
         scanner.close();
@@ -2233,6 +2242,7 @@ public void MenuEvaluacionEvaluador2(){
     System.out.println("2. Editar Evaluación");
     System.out.println("3. Listar Evaluaciones");
     System.out.println("4. Eliminar una Evaluación");
+    System.out.println("5. Cambiar Contraseña");
     System.out.print("Ingrese la opción a realizar: ");
     int opcion = scanner.nextInt();
     scanner.nextLine();
@@ -2381,6 +2391,51 @@ public void MenuEvaluacionEvaluador2(){
         }
 
 
+    } else if (opcion == 5) {
+        cambiarContrasena();
+    }
+
+    scanner.close();
+}
+
+
+
+
+
+    public void cambiarContrasena(){
+    Scanner scanner = new Scanner(System.in);
+    int idUsuario = Main.idUsuarioLogueado;
+
+    UsuarioDAOImpl dao = new UsuarioDAOImpl();
+    LinkedList<Usuario> usuarios = dao.obtenerTodosLosUsuarios();
+
+    Usuario usuarioAuxiliar = null;
+    for (Usuario u : usuarios) {
+        if (u.getId_usuario()==idUsuario) {
+           usuarioAuxiliar = u;
+        }
+    }
+
+    System.out.println("Ingrese Contraseña actual:");
+    String contrasenaActual= scanner.nextLine();
+
+    if(contrasenaActual.equals(usuarioAuxiliar.getContrasena())){
+
+        System.out.println("Ingrese su nueva contraseña");
+        String constrasena = scanner.nextLine();
+
+        System.out.println("Ingrese nuevamente su contraseña para su confirmacion");
+        String contrasenaConfirmacion = scanner.nextLine();
+
+            if(constrasena.equalsIgnoreCase(contrasenaConfirmacion)){
+                dao.guardarContraseñaNueva(usuarioAuxiliar.getCorreo(), constrasena);
+            }
+            else {
+                System.out.println("La nueva contraseña no coincide con la confirmacion.");
+            }
+
+    }else{
+        System.out.println("Contraseña actual no coincide con la ingresada");
     }
 
     scanner.close();

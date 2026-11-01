@@ -16,4 +16,8 @@ public class AutenticacionProxy implements ServicioAutenticacion{
 
         return servicioReal.autenticar(correo, contrasena);
     }
+
+    public boolean usuarioInactivo(String correo){
+        return servicioReal.usuarioInactivo(correo);
+    }
 }
