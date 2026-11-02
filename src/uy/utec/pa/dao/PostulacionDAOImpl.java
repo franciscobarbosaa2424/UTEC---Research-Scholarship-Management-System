@@ -15,8 +15,8 @@ public class PostulacionDAOImpl implements PostulacionDAO {
         INSERT INTO proyecto.postulaciones (
             nombre, can_mes, linea_investigacion, fecha_solicitud, 
             observaciones_ces, grupo_investigacion,otro_g_investigacion, orden_final_ces, estado, 
-            id_departamento, id_postulante, id_sede
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)
+            id_departamento, id_postulante, id_sede, id_convocatoria
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)
         """;
 
         int idGenerado = 0;
@@ -36,7 +36,7 @@ public class PostulacionDAOImpl implements PostulacionDAO {
             sentencia.setInt(10, postulacion.getDepartamentoAcademico().getId_DepartamentoAcademico());
             sentencia.setInt(11, postulacion.getPostulante().getId_Postulante());
             sentencia.setInt(12, postulacion.getSede().getId_sede());
-
+            sentencia.setInt(13, postulacion.getConvocatoria().getIdConvocatoria());
             sentencia.executeUpdate();
 
             try (ResultSet resultado = sentencia.getGeneratedKeys()) {

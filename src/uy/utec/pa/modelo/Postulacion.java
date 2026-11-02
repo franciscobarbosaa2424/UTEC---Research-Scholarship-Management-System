@@ -20,9 +20,10 @@ public class Postulacion {
     private DepartamentoAcademico departamentoAcademico;
     private Sede sede;
     private Postulante postulante;
+    private Convocatoria convocatoria;
 
 
-    public Postulacion(int id_postulacion, String localidad_procedencia, int cantidad_meses, String nombre_postulacion, LocalDate fecha_solicitud, String observacion_CES, String orden_final, String orden_precalculado, String linea_Investigacion, String estado, LinkedList<DocumentoAdjunto> documentoAdjunto, DepartamentoAcademico departamentoAcademico, Sede sede, Postulante postulante,String grupoInvestigacion,String otroGrupoInvestigacion) {
+    public Postulacion(int id_postulacion, String localidad_procedencia, int cantidad_meses, String nombre_postulacion, LocalDate fecha_solicitud, String observacion_CES, String orden_final, String orden_precalculado, String linea_Investigacion, String estado, LinkedList<DocumentoAdjunto> documentoAdjunto, DepartamentoAcademico departamentoAcademico, Sede sede, Postulante postulante,String grupoInvestigacion,String otroGrupoInvestigacion,Convocatoria convocatoria) {
         this.id_postulacion = id_postulacion;
         this.localidad_procedencia = localidad_procedencia;
         this.cantidad_meses = cantidad_meses;
@@ -39,6 +40,7 @@ public class Postulacion {
         this.postulante = postulante;
         this.grupoInvestigacion=grupoInvestigacion;
         this.otroGrupoInvestigacion=otroGrupoInvestigacion;
+        this.convocatoria=convocatoria;
     }
 
     public Postulacion() {
@@ -171,6 +173,14 @@ public class Postulacion {
 
     public void setOtroGrupoInvestigacion(String otroGrupoInvestigacion) {
         this.otroGrupoInvestigacion = otroGrupoInvestigacion;
+    }
+
+    public Convocatoria getConvocatoria(){
+        return convocatoria;
+    }
+
+    public void setConvocatoria(Convocatoria convocatoria){
+        this.convocatoria=convocatoria;
     }
 
     @Override

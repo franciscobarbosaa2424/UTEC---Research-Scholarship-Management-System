@@ -104,6 +104,52 @@ public class ConvocatoriaDAOImpl implements ConvocatoriaDAO {
     }
 
     @Override
+    public LinkedList<Convocatoria> listarConvocatoriaNoCompletadas(){
+        LinkedList<Convocatoria> convocatorias = new LinkedList<>();
+        String sql = "SELECT * FROM proyecto.convocatorias WHERE NOT estado = 'completada'";
+        String sql2 = "SELECT nombre FROM proyecto.rubricas WHERE id_rubrica = ?";
+
+        try  {
+            Connection conexion = ConexionBDSingleton.getInstancia().conectar();
+            PreparedStatement sentencia = conexion.prepareStatement(sql);
+
+            ResultSet resultado = sentencia.executeQuery();
+
+            while (resultado.next()) {
+                int idConvocatoria = resultado.getInt("id_convocatoria");
+                String nombre = resultado.getString("nombre");
+                String descripcion = resultado.getString("descripcion");
+                int anioConvocatoria = resultado.getInt("anio_convocatoria");
+                int cantidadBecas = resultado.getInt("cantidad_becas");
+                String tipoBeca = resultado.getString("tipo_beca");
+                String estado = resultado.getString("estado");
+                java.sql.Date fechaCierre = resultado.getDate("fecha_cierre");
+                java.sql.Date fechaApertura = resultado.getDate("fecha_apertura");
+                int idRubrica = resultado.getInt("id_rubrica");
+
+                PreparedStatement sentencia2 = conexion.prepareStatement(sql2);
+                sentencia2.setInt(1, idRubrica);
+                ResultSet resultado2 = sentencia2.executeQuery();
+
+                Rubrica rubrica = null;
+                while (resultado2.next()) {
+                    String nombreRubrica = resultado.getString("nombre");
+                    rubrica = new Rubrica(idRubrica,nombreRubrica);
+                }
+
+                Convocatoria convocatoria = new Convocatoria(idConvocatoria,nombre, anioConvocatoria,descripcion, cantidadBecas, tipoBeca, estado, fechaApertura, fechaCierre,rubrica);
+                convocatorias.add(convocatoria);
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException(
+                    "Error al buscar la convocatoria.", e
+            );
+        }
+        return convocatorias;
+    }
+
+    @Override
     public int buscarConvocatoriaPorNombre(String nombreConvocatoria){
         String sql = """
         SELECT id_convocatoria FROM proyecto.convocatorias
@@ -200,7 +246,7 @@ public class ConvocatoriaDAOImpl implements ConvocatoriaDAO {
     public void darDeBajaConvocatoria(int idConvocatoria){
             String sql = """
                 UPDATE proyecto.convocatorias
-                        SET estado = 'inactivo'
+                        SET estado = 'completada'
                         WHERE id_convocatoria = ?
         """;
 
