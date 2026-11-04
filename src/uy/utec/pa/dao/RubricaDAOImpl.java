@@ -13,84 +13,95 @@ import java.util.LinkedList;
 
 public class RubricaDAOImpl implements RubricaDAO{
     @Override
-    public void crearRubrica(Rubrica rubrica){
-        String sql = """
-    INSERT INTO proyecto.rubricas
-        (nombre)
-    VALUES (?)
-    """;
+    public void crearRubrica(Rubrica rubrica) {
 
+        String sql = """
+        INSERT INTO proyecto.rubricas (nombre)
+        VALUES (?)
+        RETURNING id_rubrica
+        """;
 
         String sql2 = """
-    INSERT INTO proyecto.secciones_rubricas
-        (nombre,peso,id_rubrica)
-    VALUES (?, ?, ?)
-    """;
-
+        INSERT INTO proyecto.secciones_rubricas
+        (nombre, peso, id_rubrica)
+        VALUES (?, ?, ?)
+        RETURNING id_secrubrica
+        """;
 
         Connection conexion = null;
-        PreparedStatement sentencia = null;
-        PreparedStatement sentenciaSeccion = null;
+
         try {
             conexion = ConexionBDSingleton.getInstancia().conectar();
-            sentencia = conexion.prepareStatement(sql);
+            conexion.setAutoCommit(false);
 
-            sentencia.setString(1, rubrica.getNombre());
+            int idRubrica;
 
-            sentencia.executeUpdate();
+            // Crear rúbrica y obtener su ID
+            try (PreparedStatement sentencia = conexion.prepareStatement(sql)) {
 
-            boolean transaccionIniciada = false;
+                sentencia.setString(1, rubrica.getNombre());
 
-                        try {
-                            // Inicia la transacción
-                            conexion.setAutoCommit(false);
-                            transaccionIniciada = true;
+                try (ResultSet resultado = sentencia.executeQuery()) {
 
-                            int idRubrica = buscarRubricaPorNombre(rubrica.getNombre());
+                    if (!resultado.next()) {
+                        throw new SQLException("No se pudo obtener el ID de la rúbrica.");
+                    }
 
-                            for (SeccionRubrica s : rubrica.getSeccionesRubrica()) {
-                                sentenciaSeccion = conexion.prepareStatement(sql2);
-                                sentenciaSeccion.setString(1, s.getNombre());
-                                sentenciaSeccion.setDouble(2, s.getPeso());
-                                sentenciaSeccion.setInt(3, idRubrica);
-
-                                // Cargar parámetros y ejecutar el INSERT del usuario
-                                sentenciaSeccion.executeUpdate();
-
-                            }
-
-                            // Confirma ambos INSERT
-                            conexion.commit();
-                        }catch (SQLException e) {
-                            if (transaccionIniciada) {
-                                try {
-                                    conexion.rollback();
-                                } catch (SQLException errorRollback) {
-                                    System.out.println("Error al deshacer los cambios: "
-                                            + errorRollback.getMessage());
-                                }
-                            }
-
-                            System.out.println("Error al crear la rúbrica: " + e.getMessage());
-                        }
-
-            System.out.println("Rubrica creada correctamente.");
-
-        } catch (SQLException e) {
-            System.out.println("Error al crear rubrica: " + e.getMessage());
-
-        } finally {
-            try {
-                if (sentencia != null) {
-                    sentencia.close();
+                    idRubrica = resultado.getInt("id_rubrica");
                 }
-                if(sentenciaSeccion != null){
-                    sentenciaSeccion.close();
-                }
-            } catch (SQLException e) {
-                System.out.println("Error al cerrar sentencia: " + e.getMessage());
             }
 
+            // Actualizar el ID del objeto rúbrica
+            rubrica.setId_rubrica(idRubrica);
+
+            // Crear secciones y recuperar sus IDs
+            try (PreparedStatement sentenciaSeccion = conexion.prepareStatement(sql2)) {
+
+                for (SeccionRubrica s : rubrica.getSeccionesRubrica()) {
+
+                    sentenciaSeccion.setString(1, s.getNombre());
+                    sentenciaSeccion.setDouble(2, s.getPeso());
+                    sentenciaSeccion.setInt(3, idRubrica);
+
+                    try (ResultSet resultado = sentenciaSeccion.executeQuery()) {
+
+                        if (!resultado.next()) {
+                            throw new SQLException("No se pudo obtener el ID de la sección.");
+                        }
+
+                        int idSeccion = resultado.getInt("id_secrubrica");
+
+                        // IMPORTANTE: actualizar el objeto Java
+                        s.setId_secRubrica(idSeccion);
+                    }
+                }
+            }
+
+            conexion.commit();
+
+            System.out.println("Rúbrica creada correctamente.");
+
+        } catch (SQLException e) {
+
+            if (conexion != null) {
+                try {
+                    conexion.rollback();
+                } catch (SQLException ex) {
+                    System.out.println("Error al hacer rollback: " + ex.getMessage());
+                }
+            }
+
+            throw new IllegalStateException("Error al crear la rúbrica.", e);
+
+        } finally {
+
+            if (conexion != null) {
+                try {
+                    conexion.setAutoCommit(true);
+                } catch (SQLException e) {
+                    System.out.println("Error al restaurar autocommit: " + e.getMessage());
+                }
+            }
         }
     }
 

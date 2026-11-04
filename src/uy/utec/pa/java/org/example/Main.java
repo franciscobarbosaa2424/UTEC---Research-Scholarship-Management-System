@@ -199,7 +199,7 @@ public class Main {
 
 
                 LinkedList<SeccionRubrica> seccionesRubrica = new LinkedList<>();
-
+                LinkedList<Criterio> criterios = new LinkedList<>();
 
                 double sumaGlobal;
 
@@ -219,8 +219,6 @@ public class Main {
                         seccionesRubrica.add(seccion);
 
                         while (whileAux2) {
-                            CriterioDAOImpl dao = new CriterioDAOImpl();
-                            LinkedList<Criterio> criterios = new LinkedList<>();
 
                             System.out.println("Ingrese nombre de criterio(0. Para Salir):");
                             String criterioAux = scanner.nextLine();
@@ -232,7 +230,7 @@ public class Main {
 
                             Criterio criterio = new Criterio(criterioAux, seccion);
                             criterios.add(criterio);
-                            dao.crearCriterios(criterios);
+
                         }
 
                     } else {
@@ -253,8 +251,8 @@ public class Main {
                         seccionesRubrica.add(seccion);
 
                         while (whileAux2) {
-                            CriterioDAOImpl dao = new CriterioDAOImpl();
-                            LinkedList<Criterio> criterios = new LinkedList<>();
+
+
 
                             System.out.println("Ingrese nombre de criterio(0. Para Salir):");
                             String criterioAux = scanner.nextLine();
@@ -266,7 +264,6 @@ public class Main {
 
                             Criterio criterio = new Criterio(criterioAux, seccion);
                             criterios.add(criterio);
-                            dao.crearCriterios(criterios);
                         }
 
                     } else {
@@ -287,8 +284,7 @@ public class Main {
                         seccionesRubrica.add(seccion);
 
                         while (whileAux2) {
-                            CriterioDAOImpl dao = new CriterioDAOImpl();
-                            LinkedList<Criterio> criterios = new LinkedList<>();
+
 
                             System.out.println("Ingrese nombre de criterio(0. Para Salir):");
                             String criterioAux = scanner.nextLine();
@@ -300,7 +296,7 @@ public class Main {
 
                             Criterio criterio = new Criterio(criterioAux, seccion);
                             criterios.add(criterio);
-                            dao.crearCriterios(criterios);
+
                         }
                         whileAux2 = true;
 
@@ -322,8 +318,7 @@ public class Main {
                         seccionesRubrica.add(seccion);
 
                         while (whileAux2) {
-                            CriterioDAOImpl dao = new CriterioDAOImpl();
-                            LinkedList<Criterio> criterios = new LinkedList<>();
+
 
                             System.out.println("Ingrese nombre de criterio(0. Para Salir):");
                             String criterioAux = scanner.nextLine();
@@ -335,7 +330,6 @@ public class Main {
 
                             Criterio criterio = new Criterio(criterioAux, seccion);
                             criterios.add(criterio);
-                            dao.crearCriterios(criterios);
                         }
                         whileAux2 = true;
 
@@ -358,8 +352,6 @@ public class Main {
                         seccionesRubrica.add(seccion);
 
                         while (whileAux2) {
-                            CriterioDAOImpl dao = new CriterioDAOImpl();
-                            LinkedList<Criterio> criterios = new LinkedList<>();
 
                             System.out.println("Ingrese nombre de criterio(0. Para Salir):");
                             String criterioAux = scanner.nextLine();
@@ -371,7 +363,6 @@ public class Main {
 
                             Criterio criterio = new Criterio(criterioAux, seccion);
                             criterios.add(criterio);
-                            dao.crearCriterios(criterios);
                         }
                         whileAux2 = true;
 
@@ -394,8 +385,6 @@ public class Main {
                         seccionesRubrica.add(seccion);
 
                         while (whileAux2) {
-                            CriterioDAOImpl dao = new CriterioDAOImpl();
-                            LinkedList<Criterio> criterios = new LinkedList<>();
 
                             System.out.println("Ingrese nombre de criterio(0. Para Salir):");
                             String criterioAux = scanner.nextLine();
@@ -407,7 +396,6 @@ public class Main {
 
                             Criterio criterio = new Criterio(criterioAux, seccion);
                             criterios.add(criterio);
-                            dao.crearCriterios(criterios);
                         }
                         whileAux2 = true;
 
@@ -436,7 +424,9 @@ public class Main {
 
                 Rubrica rubrica = new Rubrica(nombreRubrica, seccionesRubrica);
                 RubricaDAOImpl dao = new RubricaDAOImpl();
+                CriterioDAOImpl daoCriterio = new CriterioDAOImpl();
                 dao.crearRubrica(rubrica);
+                daoCriterio.crearCriterios(criterios);
 
             } else if (numero == 2) {
                 RubricaDAOImpl dao = new RubricaDAOImpl();
