@@ -18,5 +18,7 @@ public interface UsuarioDAO {
     boolean esContraseñaGenerica(String correo);
     void guardarContraseñaNueva(String correo,String nuevaContrasena);
     LinkedList<EvaluadorExterno> listarEvaluadoresExternos();
+    boolean verificarCedulaExistente(String cedula);
+    boolean verificarCorreoExistente(String correo);
 
 }

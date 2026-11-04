@@ -53,7 +53,7 @@ public class EvaluacionDAOImpl implements EvaluacionDAO {
                 sentencia.setString(6, "En evaluación"); // Cumpliendo con el CU08
                 sentencia.setInt(7, evaluacion.getEvaluadorExterno().getId_usuario());   // id_usuario (Evaluador 1)
                 sentencia.setInt(8, evaluacion.getId_Postulacion());                     // id_postulacion
-               // id_usuario2 (Evaluador 2)
+                // id_usuario2 (Evaluador 2)
 
                 sentencia.executeUpdate();
                 System.out.println("Evaluación creada con éxito. ID asignado automáticamente: " + siguienteId);
@@ -64,7 +64,10 @@ public class EvaluacionDAOImpl implements EvaluacionDAO {
         }
     }
 
-        @Override
+
+
+
+    @Override
         public void editarEvaluacion(Evaluacion evaluacion) {
             String sql = """
         UPDATE proyecto.evaluaciones

@@ -461,7 +461,45 @@ public class UsuarioDAOImpl implements UsuarioDAO{
         return evaluadores;
     }
 
+    @Override
+    public boolean verificarCedulaExistente(String cedula) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM proyecto.usuarios WHERE ci = ?)";
 
+        try (Connection conexion = ConexionBDSingleton.getInstancia().conectar();
+             PreparedStatement ps = conexion.prepareStatement(sql);) {
+            ps.setString(1, cedula);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getBoolean(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean verificarCorreoExistente(String correo) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM proyecto.usuarios WHERE LOWER(correo) = LOWER(?))";
+
+        try (Connection conexion = ConexionBDSingleton.getInstancia().conectar();
+             PreparedStatement ps = conexion.prepareStatement(sql);) {
+            ps.setString(1, correo);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getBoolean(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 
 
 

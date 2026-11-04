@@ -1166,11 +1166,24 @@ public class Main {
 
     public void CrearUsuarioAdministrador() throws SQLException {
         Scanner scanner = entrada;
+        UsuarioDAOImpl dao = new UsuarioDAOImpl();
 
         System.out.println("=== Crear usuario ===");
 
-        System.out.println("Cédula: ");
-        String cedula = scanner.nextLine();
+        String cedula;
+        boolean cedulaExiste;
+
+        do {
+            System.out.println("Cédula: ");
+            cedula = scanner.nextLine().trim();
+
+            cedulaExiste = dao.verificarCedulaExistente(cedula);
+
+            if (cedulaExiste) {
+                System.out.println("Error: La cédula ya está registrada. Ingrese otra.");
+            }
+
+        } while (cedulaExiste);
 
         System.out.println("Nacionalidad: ");
         String nacionalidad = scanner.nextLine();
@@ -1178,12 +1191,30 @@ public class Main {
         //System.out.println("Contraseña: ");
         String contrasena = "secu1234";
 
-        System.out.println("Nombre: ");
-        String nombre = scanner.nextLine();
+        String regex = "^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ' -]{2,50}$";
+
+        String nombre;
+        do {
+            System.out.println("Nombre: ");
+            nombre = scanner.nextLine().trim();
+
+            if (!nombre.matches(regex)) {
+                System.out.println("Error: El nombre debe tener entre 2 y 50 caracteres.");
+                System.out.println("Solo se permiten letras, espacios, tildes, apóstrofes y guiones.");
+            }
+        } while (!nombre.matches(regex));
 
 
-        System.out.println("Apellido: ");
-        String apellido = scanner.nextLine();
+        String apellido;
+        do {
+            System.out.println("Apellido: ");
+            apellido = scanner.nextLine().trim();
+
+            if (!apellido.matches(regex)) {
+                System.out.println("Error: El apellido debe tener entre 2 y 50 caracteres.");
+                System.out.println("Solo se permiten letras, espacios, tildes, apóstrofes y guiones.");
+            }
+        } while (!apellido.matches(regex));
 
 
         System.out.println("Calle: ");
@@ -1217,8 +1248,25 @@ public class Main {
 
 // El formulario continúa acá, solo después de elegir 1 o 2.
 
-        System.out.println("Correo: ");
-        String correoAdmin = scanner.nextLine();
+        String correoAdmin;
+        boolean correoValido;
+
+        do {
+            System.out.println("Correo: ");
+            correoAdmin = scanner.nextLine().trim();
+
+            correoValido = correoAdmin.matches(
+                    "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+            );
+
+            if (!correoValido) {
+                System.out.println("Error: Ingrese un correo válido.");
+            } else if (dao.verificarCorreoExistente(correoAdmin)) {
+                System.out.println("Error: El correo ya está registrado. Ingrese otro.");
+                correoValido = false;
+            }
+
+        } while (!correoValido);
 
         System.out.println("Ingrese Puesto: ");
         String puesto = scanner.nextLine();
@@ -1232,11 +1280,11 @@ public class Main {
                 contrasena, nombre, apellido, calle, numeroPuerta, estado, correoAdmin, rol);
 
 
-        System.out.println("Usuario Administrador creado éxitosamente!");
+
 
         System.out.println(usuarioAdmin.toString());
 
-        UsuarioDAOImpl dao = new UsuarioDAOImpl();
+
         dao.crearUsuarioAdministrador(usuarioAdmin);
 
 
@@ -1254,11 +1302,24 @@ public class Main {
     public void CrearUsuarioEvaluadorExterno() {
 
         Scanner scanner = entrada;
+        UsuarioDAOImpl dao = new UsuarioDAOImpl();
 
         System.out.println("=== Crear usuario ===");
 
-        System.out.println("Cédula: ");
-        String cedula = scanner.nextLine();
+        String cedula;
+        boolean cedulaExiste;
+
+        do {
+            System.out.println("Cédula: ");
+            cedula = scanner.nextLine().trim();
+
+            cedulaExiste = dao.verificarCedulaExistente(cedula);
+
+            if (cedulaExiste) {
+                System.out.println("Error: La cédula ya está registrada. Ingrese otra.");
+            }
+
+        } while (cedulaExiste);
 
         System.out.println("Nacionalidad: ");
         String nacionalidad = scanner.nextLine();
@@ -1266,12 +1327,30 @@ public class Main {
         //  System.out.println("Contraseña: ");
         String contrasena = "secu1234";//scanner.nextLine();
 
-        System.out.println("Nombre: ");
-        String nombre = scanner.nextLine();
+        String regex = "^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ' -]{2,50}$";
+
+        String nombre;
+        do {
+            System.out.println("Nombre: ");
+            nombre = scanner.nextLine().trim();
+
+            if (!nombre.matches(regex)) {
+                System.out.println("Error: El nombre debe tener entre 2 y 50 caracteres.");
+                System.out.println("Solo se permiten letras, espacios, tildes, apóstrofes y guiones.");
+            }
+        } while (!nombre.matches(regex));
 
 
-        System.out.println("Apellido: ");
-        String apellido = scanner.nextLine();
+        String apellido;
+        do {
+            System.out.println("Apellido: ");
+            apellido = scanner.nextLine().trim();
+
+            if (!apellido.matches(regex)) {
+                System.out.println("Error: El apellido debe tener entre 2 y 50 caracteres.");
+                System.out.println("Solo se permiten letras, espacios, tildes, apóstrofes y guiones.");
+            }
+        } while (!apellido.matches(regex));
 
 
         System.out.println("Calle: ");
@@ -1305,8 +1384,25 @@ public class Main {
 
 // El formulario continúa acá, solo después de elegir 1 o 2.
 
-        System.out.println("Correo: ");
-        String correoEvaluador = scanner.nextLine();
+        String correoEvaluador;
+        boolean correoValido;
+
+        do {
+            System.out.println("Correo: ");
+            correoEvaluador = scanner.nextLine().trim();
+
+            correoValido = correoEvaluador.matches(
+                    "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+            );
+
+            if (!correoValido) {
+                System.out.println("Error: Ingrese un correo válido.");
+            } else if (dao.verificarCorreoExistente(correoEvaluador)) {
+                System.out.println("Error: El correo ya está registrado. Ingrese otro.");
+                correoValido = false;
+            }
+
+        } while (!correoValido);
 
         System.out.println("Institucion: ");
         String institucion = scanner.nextLine();
@@ -1321,11 +1417,9 @@ public class Main {
                 contrasena, nombre, apellido, calle, numeroPuerta, estado, correoEvaluador, rol);
 
 
-        System.out.println("Usuario Evaluador Externo creado éxitosamente!");
-
         System.out.println(usuarioEvaluador.toString());
 
-        UsuarioDAOImpl dao = new UsuarioDAOImpl();
+
         dao.crearUsuarioEvaluador(usuarioEvaluador);
 
         ServicioCorreo servicioCorreo = new ServicioCorreo();
@@ -2180,7 +2274,8 @@ public class Main {
                     System.out.println("ID: " + p.getId_postulacion() +
                             " | Nombre: " + p.getNombre_postulacion() +
                             " | Estado: " + p.getEstado() +
-                            " | Línea: " + p.getLinea_Investigacion());
+                            " | Línea: " + p.getLinea_Investigacion() +
+                            " | Fecha: " + p.getFecha_solicitud());
                 }
 
             } else if (numero == 4) {
@@ -2205,7 +2300,6 @@ public class Main {
 
     public void MenuEvaluacionAdmin() {
         while (true) {
-
 
             System.out.println();
             Scanner scanner = entrada;
@@ -2394,10 +2488,8 @@ public class Main {
 
             System.out.println("Gestión de Evaluaciones:");
             System.out.println("1. Realizar Evaluación");
-            System.out.println("2. Editar Evaluación");
-            System.out.println("3. Listar Evaluaciones");
-            System.out.println("4. Eliminar una Evaluación");
-            System.out.println("5. Cambiar Contraseña");
+            System.out.println("2. Listar Evaluaciones");
+            System.out.println("3. Cambiar Contraseña");
             System.out.print("Ingrese la opción a realizar: ");
             System.out.println("0. Volver atrás");
             int opcion = scanner.nextInt();
@@ -2552,14 +2644,14 @@ public class Main {
 
                     if (cantidadEvaluadores >= 2) {
                         PostulacionDAOImpl daopos = new PostulacionDAOImpl();
-                        daopos.actualizarEstadoPostulacion(idPostulacionSeleccionada, "Completada");
+                        daopos.actualizarEstadoPostulacion(idPostulacionSeleccionada, "Evaluada");
                     }
                 }
 
 
-            } else if (opcion == 2 || opcion == 3 || opcion == 4) {
-                gestionarEvaluacionesPropias(opcion);
-            } else if (opcion == 5) {
+            } else if (opcion == 2) {
+
+            } else if (opcion == 3) {
                 cambiarContrasena();
             }
 
@@ -2604,95 +2696,6 @@ public class Main {
         }
 
     }
-
-
-    private void gestionarEvaluacionesPropias(int opcion) {
-        EvaluacionDAOImpl dao = new EvaluacionDAOImpl();
-        LinkedList<Evaluacion> propias = new LinkedList<>();
-        for (Evaluacion e : dao.listarEvaluacion()) {
-            if (e.getEvaluadorExterno() != null
-                    && e.getEvaluadorExterno().getId_usuario() == Main.getIdUsuarioLogueado()) {
-                propias.add(e);
-                System.out.println("ID: " + e.getId_Evaluacion() + " | Nombre: " + e.getNombre()
-                        + " | Postulación: " + e.getId_Postulacion() + " | Puntaje: " + e.getPuntaje_total()
-                        + " | Estado: " + e.getEstado() + " | Juicio: " + e.getJuicio_global()
-                        + " | Comentario: " + e.getComentario_evaluador());
-            }
-        }
-        if (propias.isEmpty()) {
-            System.out.println("No tiene evaluaciones asignadas.");
-            return;
-        }
-        if (opcion == 3) return;
-        System.out.println("Ingrese el ID de la evaluación (0. Volver atrás):");
-        int id = entrada.nextInt();
-        entrada.nextLine();
-        if (id == 0) return;
-        Evaluacion seleccionada = null;
-        for (Evaluacion e : propias) {
-            if (e.getId_Evaluacion() == id) seleccionada = e;
-        }
-        if (seleccionada == null) {
-            System.out.println("La evaluación no existe o no le pertenece.");
-            return;
-        }
-        if (opcion == 4) {
-            System.out.println("¿Confirma eliminar la evaluación? (S/N):");
-            if (entrada.nextLine().equalsIgnoreCase("S")) dao.eliminarEvaluacion(id);
-            return;
-        }
-        System.out.println("0. Volver atrás");
-        System.out.println("1. Nombre");
-        System.out.println("2. Juicio global");
-        System.out.println("3. Comentario");
-        System.out.println("4. Estado");
-        System.out.println("5. Puntaje total");
-        int campo = entrada.nextInt();
-        entrada.nextLine();
-        switch (campo) {
-            case 0:
-                return;
-            case 1:
-                System.out.println("Ingrese nuevo nombre:");
-                seleccionada.setNombre(entrada.nextLine());
-                break;
-            case 2:
-                System.out.println("Ingrese nuevo juicio global:");
-                seleccionada.setJuicio_global(entrada.nextLine());
-                break;
-            case 3:
-                System.out.println("Ingrese nuevo comentario:");
-                seleccionada.setComentario_evaluador(entrada.nextLine());
-                break;
-            case 4:
-                System.out.println("1. En proceso (Borrador)");
-                System.out.println("2. Completada");
-                int estado = entrada.nextInt();
-                entrada.nextLine();
-                if (estado != 1 && estado != 2) {
-                    System.out.println("Opción inválida.");
-                    return;
-                }
-                seleccionada.setEstado(estado == 1 ? "En proceso" : "Completada");
-                break;
-            case 5:
-                System.out.println("Ingrese nuevo puntaje total (1 al 5):");
-                double puntaje = entrada.nextDouble();
-                entrada.nextLine();
-                if (!Double.isFinite(puntaje) || puntaje < 1 || puntaje > 5) {
-                    System.out.println("El puntaje debe estar entre 1 y 5.");
-                    return;
-                }
-                seleccionada.setPuntaje_total(puntaje);
-                break;
-            default:
-                System.out.println("Opción inválida.");
-                return;
-        }
-        dao.editarEvaluacion(seleccionada);
-        System.out.println("Evaluación actualizada con éxito.");
-    }
-
 
     public void cerrarConvocatoriasVencidas() {
 
