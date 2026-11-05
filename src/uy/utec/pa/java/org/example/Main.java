@@ -1463,22 +1463,58 @@ public class Main {
 
         //aca
         System.out.println("Documento:");
-        String documento = scanner.nextLine();
+        String documento = scanner.nextLine().strip();
+        while (documento.isBlank()) {
+            System.out.println("El campo es obligatorio. Vuelva a ingresarlo:");
+            documento = scanner.nextLine().strip();
+        }
 
         System.out.println("Nombre:");
-        String nombre = scanner.nextLine();
+        String nombre = scanner.nextLine().strip();
+        while (nombre.codePointCount(0, nombre.length()) < 2 || nombre.codePointCount(0, nombre.length()) > 50 || nombre.isBlank() || !nombre.matches("[\\p{L}\\p{M} '\u2019-]+") || !nombre.matches(".*\\p{L}.*")) {
+            System.out.println("Ingrese nombre válido: solo letras, espacios, apóstrofes o guiones y entre 2 y 50 caracteres.");
+            nombre = scanner.nextLine().strip();
+        }
 
         System.out.println("Apellido:");
-        String apellido = scanner.nextLine();
+        String apellido = scanner.nextLine().strip();
+        while (apellido.isBlank() || !apellido.matches("[\\p{L}\\p{M} '\u2019-]+") || !apellido.matches(".*\\p{L}.*")) {
+            System.out.println("Ingrese apellido válido: solo letras, espacios, apóstrofes o guiones.");
+            apellido = scanner.nextLine().strip();
+        }
 
-        System.out.println("Correo:");
-        String correo = scanner.nextLine();
+        String correo;
+        boolean correoValido;
+
+        do {
+            System.out.println("Correo:");
+            correo = scanner.nextLine().strip();
+
+            correoValido = correo.matches(
+                    "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+            );
+
+            if (correo.isBlank()) {
+                System.out.println("El campo es obligatorio. Vuelva a ingresarlo:");
+            } else if (!correoValido) {
+                System.out.println("Error: Ingrese un correo válido.");
+            }
+
+        } while (!correoValido);
 
         System.out.println("Nacionalidad:");
-        String nacionalidad = scanner.nextLine();
+        String nacionalidad = scanner.nextLine().strip();
+        while (nacionalidad.isBlank()) {
+            System.out.println("El campo es obligatorio. Vuelva a ingresarlo:");
+            nacionalidad = scanner.nextLine().strip();
+        }
 
         System.out.println("Actividad laboral:");
-        String actLaboral = scanner.nextLine();
+        String actLaboral = scanner.nextLine().strip();
+        while (actLaboral.isBlank()) {
+            System.out.println("El campo es obligatorio. Vuelva a ingresarlo:");
+            actLaboral = scanner.nextLine().strip();
+        }
 
         boolean esDocUtec;
         while (true) {
@@ -1498,11 +1534,23 @@ public class Main {
         }
 
         System.out.println("Calle:");
-        String calle = scanner.nextLine();
+        String calle = scanner.nextLine().strip();
+        while (calle.isBlank()) {
+            System.out.println("El campo es obligatorio. Vuelva a ingresarlo:");
+            calle = scanner.nextLine().strip();
+        }
 
         System.out.println("Número:");
-        int numero = scanner.nextInt();
-        scanner.nextLine();
+        int numero;
+        while (true) {
+            try {
+                numero = Integer.parseInt(scanner.nextLine().strip());
+                if (numero > 0) break;
+            } catch (NumberFormatException e) {
+                // Volver a pedir el dato vacío o inválido.
+            }
+            System.out.println("Ingrese un número entero mayor a cero:");
+        }
 
         System.out.println("Apartamento:");
         String apartamento = scanner.nextLine();
@@ -1511,13 +1559,25 @@ public class Main {
         String bis = scanner.nextLine();
 
         System.out.println("Localidad de procedencia:");
-        String locProcedencia = scanner.nextLine();
+        String locProcedencia = scanner.nextLine().strip();
+        while (locProcedencia.isBlank()) {
+            System.out.println("El campo es obligatorio. Vuelva a ingresarlo:");
+            locProcedencia = scanner.nextLine().strip();
+        }
 
         System.out.println("Departamento de procedencia:");
-        String depProcedencia = scanner.nextLine();
+        String depProcedencia = scanner.nextLine().strip();
+        while (depProcedencia.isBlank()) {
+            System.out.println("El campo es obligatorio. Vuelva a ingresarlo:");
+            depProcedencia = scanner.nextLine().strip();
+        }
 
         System.out.println("País de procedencia:");
-        String paiProcedencia = scanner.nextLine();
+        String paiProcedencia = scanner.nextLine().strip();
+        while (paiProcedencia.isBlank()) {
+            System.out.println("El campo es obligatorio. Vuelva a ingresarlo:");
+            paiProcedencia = scanner.nextLine().strip();
+        }
 
 //BUCLE PARA CELULARES
         boolean auxWhile = true;
@@ -1527,12 +1587,18 @@ public class Main {
             System.out.println("Ingresar celular (ingrese solamente 0 para salir):");
             String celular = scanner.nextLine();
 
-            if (celular.equalsIgnoreCase("0")) {
+            if (celular.equals("0") && !celulares.isEmpty()) {
                 auxWhile = false;
                 break;
             }
 
-            celulares.add(celular);
+            if (celular.equals("0")) {
+                System.out.println("Debe ingresar al menos un celular.");
+            } else if (!celular.matches("[0-9]+")) {
+                System.out.println("El celular es obligatorio y debe contener solamente números.");
+            } else {
+                celulares.add(celular);
+            }
 
         }
 
@@ -2024,26 +2090,54 @@ public class Main {
 
 
                 System.out.println("Ingrese el nombre de la postulacion:");
-                String nombre = scanner.nextLine();
+                String nombre = scanner.nextLine().strip();
+                while (nombre.isBlank()) {
+                    System.out.println("El campo es obligatorio. Vuelva a ingresarlo:");
+                    nombre = scanner.nextLine().strip();
+                }
 
                 System.out.println("Ingrese cantidad de meses:");
-                int canMes = scanner.nextInt();
-                scanner.nextLine();
+                int canMes;
+                while (true) {
+                    try {
+                        canMes = Integer.parseInt(scanner.nextLine().strip());
+                        if (canMes > 0) break;
+                    } catch (NumberFormatException e) {
+                        // Volver a pedir el dato vacío o inválido.
+                    }
+                    System.out.println("Ingrese un número entero mayor a cero:");
+                }
 
                 System.out.println("Ingrese línea de investigación:");
-                String lineaInvestigacion = scanner.nextLine();
+                String lineaInvestigacion = scanner.nextLine().strip();
+                while (lineaInvestigacion.isBlank()) {
+                    System.out.println("El campo es obligatorio. Vuelva a ingresarlo:");
+                    lineaInvestigacion = scanner.nextLine().strip();
+                }
 
                 System.out.println("Ingrese la observacion del CES:");
-                String cesObservacion = scanner.nextLine();
+                String cesObservacion = scanner.nextLine().strip();
+                while (cesObservacion.isBlank()) {
+                    System.out.println("El campo es obligatorio. Vuelva a ingresarlo:");
+                    cesObservacion = scanner.nextLine().strip();
+                }
 
                 System.out.println("Ingrese el nombre del primer grupo de investigacion:");
-                String nomGrupo1 = scanner.nextLine();
+                String nomGrupo1 = scanner.nextLine().strip();
+                while (nomGrupo1.isBlank()) {
+                    System.out.println("El campo es obligatorio. Vuelva a ingresarlo:");
+                    nomGrupo1 = scanner.nextLine().strip();
+                }
 
                 System.out.println("Ingrese el nombre del segundo grupo de investigacion:");
                 String nomGrupo2 = scanner.nextLine();
 
                 System.out.println("Ingrese el orden final del CES:");
-                String ordenFinalCes = scanner.nextLine();
+                String ordenFinalCes = scanner.nextLine().strip();
+                while (ordenFinalCes.isBlank()) {
+                    System.out.println("El campo es obligatorio. Vuelva a ingresarlo:");
+                    ordenFinalCes = scanner.nextLine().strip();
+                }
 
                 System.out.println("=== Estados de la postulación ===");
                 System.out.println("1 - Registrada");
@@ -2148,7 +2242,20 @@ public class Main {
                 nuevaPostulacion.setConvocatoria(convocatoriaAux);
 
 
-                dao.crearPostulacion(nuevaPostulacion);
+                if (nuevaPostulacion.getNombre_postulacion() == null || nuevaPostulacion.getNombre_postulacion().isBlank()
+                        || nuevaPostulacion.getCantidad_meses() <= 0
+                        || nuevaPostulacion.getLinea_Investigacion() == null || nuevaPostulacion.getLinea_Investigacion().isBlank()
+                        || nuevaPostulacion.getFecha_solicitud() == null
+                        || nuevaPostulacion.getGrupoInvestigacion() == null || nuevaPostulacion.getGrupoInvestigacion().isBlank()
+                        || estado.isBlank() || postulanteAux == null || convocatoriaAux == null || depAux == null || sedeAux == null) {
+                    System.out.println("No se puede enviar la postulación: faltan campos obligatorios o selecciones válidas.");
+                    continue;
+                }
+                try {
+                    dao.crearPostulacion(nuevaPostulacion);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("No se pudo enviar la postulación: " + e.getMessage());
+                }
 
             } else if (numero == 2) {
 
@@ -2186,20 +2293,44 @@ public class Main {
 
                     if (opcionEditar == 1) {
                         System.out.println("Ingrese nuevo nombre:");
-                        postAux.setNombre_postulacion(scanner.nextLine());
+                        String nuevoValor = scanner.nextLine().strip();
+                        while (nuevoValor.isBlank()) {
+                            System.out.println("El campo es obligatorio. Vuelva a ingresarlo:");
+                            nuevoValor = scanner.nextLine().strip();
+                        }
+                        postAux.setNombre_postulacion(nuevoValor);
                     } else if (opcionEditar == 2) {
                         System.out.println("Ingrese nueva cantidad de meses:");
-                        postAux.setCantidad_meses(scanner.nextInt());
-                        scanner.nextLine();
+                        int nuevosMeses;
+                        while (true) {
+                            try {
+                                nuevosMeses = Integer.parseInt(scanner.nextLine().strip());
+                                if (nuevosMeses > 0) break;
+                            } catch (NumberFormatException e) {
+                                // Volver a pedir el dato.
+                            }
+                            System.out.println("Ingrese una cantidad de meses entera mayor a cero:");
+                        }
+                        postAux.setCantidad_meses(nuevosMeses);
                     } else if (opcionEditar == 3) {
                         System.out.println("Ingrese nueva línea de investigación:");
-                        postAux.setLinea_Investigacion(scanner.nextLine());
+                        String nuevoValor = scanner.nextLine().strip();
+                        while (nuevoValor.isBlank()) {
+                            System.out.println("El campo es obligatorio. Vuelva a ingresarlo:");
+                            nuevoValor = scanner.nextLine().strip();
+                        }
+                        postAux.setLinea_Investigacion(nuevoValor);
                     } else if (opcionEditar == 4) {
                         System.out.println("Ingrese nueva observación del CES:");
                         postAux.setObservacion_CES(scanner.nextLine());
                     } else if (opcionEditar == 5) {
                         System.out.println("Ingrese nuevo nombre del primer grupo de investigación:");
-                        postAux.setGrupoInvestigacion(scanner.nextLine());
+                        String nuevoValor = scanner.nextLine().strip();
+                        while (nuevoValor.isBlank()) {
+                            System.out.println("El campo es obligatorio. Vuelva a ingresarlo:");
+                            nuevoValor = scanner.nextLine().strip();
+                        }
+                        postAux.setGrupoInvestigacion(nuevoValor);
                     } else if (opcionEditar == 6) {
                         System.out.println("Ingrese nuevo nombre del segundo grupo de investigación:");
                         postAux.setOtroGrupoInvestigacion(scanner.nextLine());
@@ -2261,8 +2392,12 @@ public class Main {
                         return;
                     }
 
-                    dao.editarPostulacion(postAux);
-                    System.out.println("¡Postulación actualizada con éxito!");
+                    try {
+                        dao.editarPostulacion(postAux);
+                        System.out.println("¡Postulación actualizada con éxito!");
+                    } catch (IllegalArgumentException e) {
+                        System.out.println(e.getMessage());
+                    }
                 } else {
                     System.out.println("No se encontró una postulación con ese ID.");
                 }
@@ -2689,6 +2824,14 @@ public class Main {
 
 
             } else if (opcion == 2) {
+            EvaluacionDAOImpl daoEv = new EvaluacionDAOImpl();
+            LinkedList<Evaluacion> evaluaciones = new LinkedList<>();
+
+            evaluaciones= daoEv.listarEvaluacion();
+
+            for(Evaluacion e : evaluaciones){
+                System.out.println(e.toString());
+            }
 
             } else if (opcion == 3) {
                 cambiarContrasena();
