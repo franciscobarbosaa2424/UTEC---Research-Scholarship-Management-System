@@ -14,7 +14,7 @@ public class ValoracionDAOImpl implements ValoracionDAO {
 
         String sql = """
         
-                INSERT INTO proyecto.tut_utec(id_criterio, puntaje, id_evaluacion, id_usuario, id_postulacion)
+                INSERT INTO proyecto.valoraciones(id_criterio, puntaje, id_evaluacion, id_usuario, id_postulacion)
         VALUES (?,?,?,?,?)
         """;
 

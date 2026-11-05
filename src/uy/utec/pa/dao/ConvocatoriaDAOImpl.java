@@ -278,6 +278,33 @@ public class ConvocatoriaDAOImpl implements ConvocatoriaDAO {
             }
 
         }
+
+
+    @Override
+    public int traerIdRubrica(int id_convocatoria) {
+        String sql = "SELECT id_rubrica FROM proyecto.convocatorias WHERE id_convocatoria = ?";
+
+        try (Connection conexion = ConexionBDSingleton.getInstancia().conectar();
+             PreparedStatement sentencia = conexion.prepareStatement(sql)) {
+
+            sentencia.setInt(1, id_convocatoria);
+
+            try (ResultSet resultado = sentencia.executeQuery()) {
+                if (resultado.next()) {
+                    return resultado.getInt("id_rubrica");
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al traer el ID de la rúbrica: " + e.getMessage());
+        }
+
+        return 0;
+    }
+
+
+
+
     }
 
 

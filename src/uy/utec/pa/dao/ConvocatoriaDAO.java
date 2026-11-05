@@ -13,4 +13,5 @@ public interface ConvocatoriaDAO {
     void editarConvocatoria(Convocatoria convocatoria);
     int buscarConvocatoriaPorNombre(String nombreConvocatoria);
     void darDeBajaConvocatoria(int idConvocatoria);
+    int traerIdRubrica (int id_convocatoria);
 }

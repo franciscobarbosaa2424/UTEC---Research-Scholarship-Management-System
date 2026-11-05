@@ -270,4 +270,11 @@ public class RubricaDAOImpl implements RubricaDAO{
             throw new IllegalStateException("Error al editar la rubrica.", e);
         }
     }
+
+
+
+
+
+
+
 }

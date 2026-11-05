@@ -407,7 +407,8 @@ public class PostulacionDAOImpl implements PostulacionDAO {
                 d.nombre AS nombre_departamento,
                 p.id_postulante,
                 p.id_sede,
-                s.nom_sede AS nombre_sede
+                s.nom_sede AS nombre_sede,
+                p.id_convocatoria
         FROM proyecto.postulaciones p
         INNER JOIN proyecto.depa_academicos d
             ON p.id_departamento = d.id_departamento
@@ -420,6 +421,7 @@ public class PostulacionDAOImpl implements PostulacionDAO {
 
         String sql2 = "SELECT * FROM proyecto.postulantes WHERE id_postulante=?";
         String sql3 = "SELECT * FROM proyecto.post_celulares WHERE id_postulante=?";
+        String sql4 = "SELECT * FROM proyecto.convocatorias WHERE id_convocatoria = ?";
 
         try (Connection conexion = ConexionBDSingleton.getInstancia().conectar();
              PreparedStatement sentencia = conexion.prepareStatement(sql)) {
@@ -444,6 +446,37 @@ public class PostulacionDAOImpl implements PostulacionDAO {
                     postulacion.setOtroGrupoInvestigacion(resultado.getString("otro_g_investigacion"));
                     postulacion.setOrden_final(resultado.getString("orden_final_ces"));
                     postulacion.setEstado(resultado.getString("estado"));
+                    int id_convocatoria = resultado.getInt("id_convocatoria");
+
+                    try (PreparedStatement sentenciaConv = conexion.prepareStatement(sql4)) {
+                        sentenciaConv.setInt(1, id_convocatoria);
+
+                        try (ResultSet resultadoConv = sentenciaConv.executeQuery()) {
+                            if (resultadoConv.next()) {
+
+                                Convocatoria convocatoria = new Convocatoria();
+
+                                convocatoria.setIdConvocatoria(resultadoConv.getInt("id_convocatoria"));
+                                convocatoria.setDescripcion(resultadoConv.getString("descripcion"));
+                                convocatoria.setAnio(resultadoConv.getInt("anio_convocatoria"));
+                                convocatoria.setCantidadBecas(resultadoConv.getInt("cantidad_becas"));
+                                convocatoria.setTipoBeca(resultadoConv.getString("tipo_beca"));
+                                convocatoria.setEstado(resultadoConv.getString("estado"));
+
+                                if (resultadoConv.getDate("fecha_cierre") != null) {
+                                    convocatoria.setFecha_cierre(Date.valueOf(resultadoConv.getDate("fecha_cierre").toLocalDate()));
+                                }
+
+                                if (resultadoConv.getDate("fecha_apertura") != null) {
+                                    convocatoria.setFecha_apertura(Date.valueOf(resultadoConv.getDate("fecha_apertura").toLocalDate()));
+                                }
+
+                                convocatoria.setNombre(resultadoConv.getString("nombre"));
+
+                                postulacion.setConvocatoria(convocatoria);
+                            }
+                        }
+                    }
 
                     DepartamentoAcademico departamentoAcademico = new DepartamentoAcademico(resultado.getString("nombre_departamento"), resultado.getInt("id_departamento"));
                     postulacion.setDepartamentoAcademico(departamentoAcademico);
@@ -482,10 +515,12 @@ public class PostulacionDAOImpl implements PostulacionDAO {
                                 }
 
                                 Postulante postulante = new Postulante(documento, paiProcedencia, depProcedencia, locProcedencia, idPostulante, correo, nombre, apellido, esDocUtec, nacionalidad, actLaboral, celulares, calle, apartamento, bis, numero);
-                                postulacion.setPostulante(postulante);
+                                 postulacion.setPostulante(postulante);
                             }
                         }
                     }
+
+
 
                     postulaciones.add(postulacion);
                 }

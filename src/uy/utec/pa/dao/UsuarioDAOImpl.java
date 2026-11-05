@@ -505,7 +505,33 @@ public class UsuarioDAOImpl implements UsuarioDAO{
         return false;
     }
 
+    @Override
+    public void aceptarAcuerdos(int id_usuario,int id_postulacion){
+        String sql = """
+        UPDATE proyecto.son_asignadas
+        SET fec_ace_acu_confidencialidad = CURRENT_DATE,
+            fec_ace_aus_confidencialidad = CURRENT_DATE
+        WHERE id_usuario = ? AND id_postulacion = ?
+        """;
 
+        try (Connection conexion = ConexionBDSingleton.getInstancia().conectar();
+             PreparedStatement ps = conexion.prepareStatement(sql)) {
+
+            ps.setInt(1, id_usuario);
+            ps.setInt(2,id_postulacion);
+
+            int filas = ps.executeUpdate();
+
+            if (filas > 0) {
+                System.out.println("Acuerdos aceptados correctamente.");
+            } else {
+                System.out.println("No se encontró el evaluador externo.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al aceptar los acuerdos: " + e.getMessage());
+        }
+    }
 
 
 }

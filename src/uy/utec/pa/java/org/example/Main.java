@@ -2501,7 +2501,10 @@ public class Main {
                 int idUsuario = Main.getIdUsuarioLogueado();
 
                 // 1. Listamos las postulaciones asignadas a este evaluador
-                daoPostulacion.listarPostulacionesAsignadas(idUsuario);
+               LinkedList<Postulacion> postulaciones =  daoPostulacion.listarPostulacionesAsignadas(idUsuario);
+                for(Postulacion p : postulaciones){
+                    System.out.println(p.toString());
+                }
 
                 System.out.print("Ingrese el ID de la postulación que desea evaluar: ");
                 int idPostulacionSeleccionada = scanner.nextInt();
@@ -2509,6 +2512,35 @@ public class Main {
 
                 //que acepte las fechas
                 //editar las fechas
+                System.out.println("Antes de continuar tiene que aceptar los acuerdos de confidencialidad y \n Declaración de ausencia de conflictos de interés");
+                System.out.println("¿Acepta los acuerdos correspondientes? (1.Sí - 2.No");
+                int opcionAcuerdos = scanner.nextInt();
+                scanner.nextLine();
+
+                    if(opcionAcuerdos==1){
+                        UsuarioDAOImpl usuarioDAO = new UsuarioDAOImpl();
+                        usuarioDAO.aceptarAcuerdos(idUsuario,idPostulacionSeleccionada);
+
+                    }else if (opcionAcuerdos==2) {
+                        System.out.println("No se aceptaron los acuerdos. Volviendo al menú anterior...");
+                        return;
+                    }
+
+
+                    ConvocatoriaDAOImpl daoCon = new ConvocatoriaDAOImpl();
+
+
+                    int idConvocatoriaAux = 0;
+                 int idRubricaAux = 0;
+                 for(Postulacion po : postulaciones){
+                   if(po.getId_postulacion() == idPostulacionSeleccionada){
+
+                  idConvocatoriaAux = daoCon.buscarConvocatoriaPorNombre(po.getConvocatoria().getNombre());
+                   idRubricaAux = daoCon.traerIdRubrica(idConvocatoriaAux);
+                    }
+               }
+
+
 
                 EvaluacionDAOImpl evaluacionDAO = new EvaluacionDAOImpl();
                 Evaluacion asignada = null;
@@ -2529,8 +2561,9 @@ public class Main {
 
                 // 2. Traemos las secciones de la rúbrica activa
                 RubricaDAOImpl rubricaDao = new RubricaDAOImpl();
-                // (Asumiendo que traemos las secciones de la rúbrica principal, por ejemplo ID 1 o listando las secciones)
-                LinkedList<SeccionRubrica> secciones = rubricaDao.listarSecciones(1); // Ajustar ID según corresponda
+
+                //ARREGLAR ACA
+                LinkedList<SeccionRubrica> secciones = rubricaDao.listarSecciones(idRubricaAux);
 
                 double puntajeTotalPonderado = 0.0;
 
@@ -2550,6 +2583,12 @@ public class Main {
 
                     // Traer criterios pertenecientes a esta sección
                     LinkedList<Criterio> criterios = criterioDao.listarCriterios(seccion.getId_secRubrica());
+
+                    if (criterios.isEmpty()) {
+                        System.out.println("Esta sección no tiene criterios asociados.");
+                        System.out.println("Se omite del cálculo.");
+                        continue;
+                    }
 
                     double sumaPuntajesCriterios = 0.0;
 
