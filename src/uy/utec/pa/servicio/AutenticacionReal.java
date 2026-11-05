@@ -26,8 +26,8 @@ public class AutenticacionReal implements ServicioAutenticacion{
         }
 
         boolean autentica;
-        System.out.println("contraseña: "+contrasena);
-        System.out.println("constraseña hasheada: "+contrasenaGuardada);
+       // System.out.println("contraseña: "+contrasena);
+      //  System.out.println("constraseña hasheada: "+contrasenaGuardada);
         if (contrasenaGuardada != null && contrasenaGuardada.equals(contrasena)){
             autentica = true;
         }else{
