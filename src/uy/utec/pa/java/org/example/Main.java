@@ -2,6 +2,7 @@ package uy.utec.pa.java.org.example;
 import uy.utec.pa.dao.*;
 import uy.utec.pa.modelo.*;
 import uy.utec.pa.servicio.*;
+import uy.utec.pa.util.HashContrasena;
 
 
 import java.sql.Date;
@@ -35,6 +36,9 @@ public class Main {
 
             Scanner scanner = entrada;
 
+            String hashContrasenaGenerica0 = HashContrasena.generarHash("secu1234");
+            System.out.println("Contraseña generica hasheada :" + hashContrasenaGenerica0);
+
             System.out.println("=== Menú Principal ===");
             System.out.println("1. Realizar Postulación a una convocatoria");
             System.out.println("2. Loguearse como Administrador/Evaluador Externo");
@@ -63,7 +67,9 @@ public class Main {
                 System.out.print("Ingrese la contraseña: ");
                 String contrasena = scanner.nextLine();
 
-                boolean accede = proxy.autenticar(correo, contrasena);
+                String contrasenaHasheada = HashContrasena.generarHash(contrasena);
+
+                boolean accede = proxy.autenticar(correo, contrasenaHasheada);
                 boolean esContraseñaGenerica = dao.esContraseñaGenerica(correo);
 
                 if (accede) {
@@ -80,7 +86,8 @@ public class Main {
                     if (esContraseñaGenerica) {
                         System.out.println("Ingrese contraseña nueva:");
                         String nuevaContrasena = scanner.nextLine();
-                        dao.guardarContraseñaNueva(correo, nuevaContrasena);
+                        String contrasenaNuevaHasheada = HashContrasena.generarHash(nuevaContrasena);
+                        dao.guardarContraseñaNueva(correo, contrasenaNuevaHasheada);
                     }
 
                     if (rol.equalsIgnoreCase("administrador")) {
@@ -108,7 +115,8 @@ public class Main {
                 String correo = scanner.nextLine();
 
                 UsuarioDAOImpl dao = new UsuarioDAOImpl();
-                dao.guardarContraseñaNueva(correo, "secu1234");
+                String hashContrasenaGenerica = HashContrasena.generarHash("secu1234");
+                dao.guardarContraseñaNueva(correo, hashContrasenaGenerica);
 
                 ServicioCorreo servicioCorreo = new ServicioCorreo();
 
@@ -1107,7 +1115,9 @@ public class Main {
 
             case 8:
                 System.out.println("Ingrese la nueva contraseña:");
-                auxiliar.setContrasena(scanner.nextLine());
+                String contrasenaNueva = scanner.nextLine();
+                String contrasenaHasheada = HashContrasena.generarHash(contrasenaNueva);
+                auxiliar.setContrasena(contrasenaHasheada);
                 break;
 
             case 9:
@@ -2666,17 +2676,20 @@ public class Main {
 
         System.out.println("Ingrese Contraseña actual:");
         String contrasenaActual = scanner.nextLine();
+        String hashContrasena = HashContrasena.generarHash(contrasenaActual);
 
-        if (contrasenaActual.equals(usuarioAuxiliar.getContrasena())) {
+        if (hashContrasena.equals(usuarioAuxiliar.getContrasena())) {
 
             System.out.println("Ingrese su nueva contraseña");
             String constrasena = scanner.nextLine();
 
+
             System.out.println("Ingrese nuevamente su contraseña para su confirmacion");
             String contrasenaConfirmacion = scanner.nextLine();
 
-            if (constrasena.equalsIgnoreCase(contrasenaConfirmacion)) {
-                dao.guardarContraseñaNueva(usuarioAuxiliar.getCorreo(), constrasena);
+            if (constrasena.equals(contrasenaConfirmacion)) {
+                String hashContrasenaNueva = HashContrasena.generarHash(constrasena);
+                dao.guardarContraseñaNueva(usuarioAuxiliar.getCorreo(), hashContrasenaNueva);
             } else {
                 System.out.println("La nueva contraseña no coincide con la confirmacion.");
             }
