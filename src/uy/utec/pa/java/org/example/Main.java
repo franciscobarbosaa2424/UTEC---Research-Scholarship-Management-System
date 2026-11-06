@@ -36,9 +36,6 @@ public class Main {
 
             Scanner scanner = entrada;
 
-            String hashContrasenaGenerica0 = HashContrasena.generarHash("secu1234");
-            System.out.println("Contraseña generica hasheada :" + hashContrasenaGenerica0);
-
             System.out.println("=== Menú Principal ===");
             System.out.println("1. Realizar Postulación a una convocatoria");
             System.out.println("2. Loguearse como Administrador/Evaluador Externo");

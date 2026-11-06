@@ -40,8 +40,9 @@ public class AutenticacionReal implements ServicioAutenticacion{
     @Override
     public boolean usuarioInactivo(String correo){
         boolean aux = false;
+
         for(Usuario u : usuarios){
-            if(u.getEstado().equalsIgnoreCase("inactivo")){
+            if(u.getCorreo().equalsIgnoreCase(correo) && u.getEstado().equalsIgnoreCase("inactivo")){
                 aux=true;
             }
         }
