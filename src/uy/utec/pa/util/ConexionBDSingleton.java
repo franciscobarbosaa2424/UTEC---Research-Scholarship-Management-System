@@ -10,9 +10,9 @@ public class ConexionBDSingleton {
     private ConexionBDSingleton() {
     }
 
-    private static final String URL = "jdbc:postgresql://localhost:5432/proyecto";
-    private static final String USUARIO = "postgres";
-    private static final String CONTRASENA = "1234";
+    private static final String URL = System.getenv("URL");
+    private static final String USUARIO = System.getenv("USUARIO");
+    private static final String CONTRASENA = System.getenv("CONTRASENA");
 
     public static synchronized ConexionBDSingleton getInstancia() {
         if (instancia == null) {
