@@ -9,7 +9,9 @@ public interface ConvocatoriaDAO {
 
     void crearConvocatoria(Convocatoria convocatoria);
     LinkedList<Convocatoria> listarConvocatorias();
+    LinkedList<Convocatoria> listarConvocatoriaNoCompletadas();
     void editarConvocatoria(Convocatoria convocatoria);
     int buscarConvocatoriaPorNombre(String nombreConvocatoria);
     void darDeBajaConvocatoria(int idConvocatoria);
+    int traerIdRubrica (int id_convocatoria);
 }

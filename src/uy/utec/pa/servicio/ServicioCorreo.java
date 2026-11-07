@@ -11,7 +11,7 @@ import java.util.Properties;
 public class ServicioCorreo {
 
     private final String correoEmisor = "secu0576@gmail.com";
-    private final String password = "pkvcsoqiitcxuzll";
+    private final String password = System.getenv("CONTRASENA_ENVIO_CORREO");
 
 
     public void enviarCorreo(String destinatario, String asunto, String contenido) {

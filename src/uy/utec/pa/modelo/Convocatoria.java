@@ -58,6 +58,10 @@ public class Convocatoria {
         this.rubrica=rubrica;
     }
 
+    public Convocatoria() {
+
+    }
+
     public int getIdConvocatoria() {
         return idConvocatoria;
     }

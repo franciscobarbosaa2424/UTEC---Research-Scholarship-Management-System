@@ -4,6 +4,8 @@ import uy.utec.pa.modelo.Administrador;
 import uy.utec.pa.modelo.EvaluadorExterno;
 import uy.utec.pa.modelo.Usuario;
 import uy.utec.pa.util.ConexionBDSingleton;
+import uy.utec.pa.util.HashContrasena;
+
 import java.sql.*;
 import java.util.LinkedList;
 
@@ -70,7 +72,7 @@ public class UsuarioDAOImpl implements UsuarioDAO{
             sentencia.setString(4, administrador.getCalle());
             sentencia.setString(5, administrador.getNacionalidad());
             sentencia.setString(6, administrador.getCi());
-            sentencia.setString(7, administrador.getContrasena());
+            sentencia.setString(7, HashContrasena.generarHash(administrador.getContrasena()));
             sentencia.setString(8, administrador.getEstado());
             sentencia.setString(9, administrador.getRol());
 
@@ -285,7 +287,7 @@ public class UsuarioDAOImpl implements UsuarioDAO{
             sentencia.setString(4, evaluador.getCalle());
             sentencia.setString(5, evaluador.getNacionalidad());
             sentencia.setString(6, evaluador.getCi());
-            sentencia.setString(7, evaluador.getContrasena());
+            sentencia.setString(7, HashContrasena.generarHash(evaluador.getContrasena()));
             sentencia.setString(8, evaluador.getEstado());
             sentencia.setString(9, evaluador.getRol());
 
@@ -364,10 +366,12 @@ public class UsuarioDAOImpl implements UsuarioDAO{
 
             sentencia.setString(1, correo);
 
+            String hashContrasenaGenerica = HashContrasena.generarHash("secu1234");
+
             try (ResultSet resultado = sentencia.executeQuery()) {
                 if (resultado.next()) {
                     String contraseña =  resultado.getString("contrasena");
-                    if(contraseña.equalsIgnoreCase("secu1234")){
+                    if(contraseña.equals(hashContrasenaGenerica)){
                         esGenerica = true;
                     }
                 }
@@ -461,9 +465,73 @@ public class UsuarioDAOImpl implements UsuarioDAO{
         return evaluadores;
     }
 
+    @Override
+    public boolean verificarCedulaExistente(String cedula) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM proyecto.usuarios WHERE ci = ?)";
 
+        try (Connection conexion = ConexionBDSingleton.getInstancia().conectar();
+             PreparedStatement ps = conexion.prepareStatement(sql);) {
+            ps.setString(1, cedula);
 
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getBoolean(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
+        return false;
+    }
+
+    @Override
+    public boolean verificarCorreoExistente(String correo) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM proyecto.usuarios WHERE LOWER(correo) = LOWER(?))";
+
+        try (Connection conexion = ConexionBDSingleton.getInstancia().conectar();
+             PreparedStatement ps = conexion.prepareStatement(sql);) {
+            ps.setString(1, correo);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getBoolean(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    @Override
+    public void aceptarAcuerdos(int id_usuario,int id_postulacion){
+        String sql = """
+        UPDATE proyecto.son_asignadas
+        SET fec_ace_acu_confidencialidad = CURRENT_DATE,
+            fec_ace_aus_confidencialidad = CURRENT_DATE
+        WHERE id_usuario = ? AND id_postulacion = ?
+        """;
+
+        try (Connection conexion = ConexionBDSingleton.getInstancia().conectar();
+             PreparedStatement ps = conexion.prepareStatement(sql)) {
+
+            ps.setInt(1, id_usuario);
+            ps.setInt(2,id_postulacion);
+
+            int filas = ps.executeUpdate();
+
+            if (filas > 0) {
+                System.out.println("Acuerdos aceptados correctamente.");
+            } else {
+                System.out.println("No se encontró el evaluador externo.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al aceptar los acuerdos: " + e.getMessage());
+        }
+    }
 
 
 }

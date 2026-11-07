@@ -13,4 +13,5 @@ public interface RubricaDAO {
     void editarRubrica(Rubrica rubrica);
     void editarSeccionRubrica(SeccionRubrica seccionRubrica);
     void eliminarRubrica(int id_rubrica);
+
 }
