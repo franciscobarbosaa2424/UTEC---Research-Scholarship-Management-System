@@ -41,3 +41,18 @@ The system uses **PostgreSQL** as its relational database management system, wit
 3. Import the SQL script located at [`database/SECU-database.sql`](./database/SECU-database.sql).
 4. Configure the database connection credentials in the Java application.
 5. Run the application.
+
+
+## Screenshots
+
+### Main Menu
+![Main Menu](./screenshots/main-menu.png)
+
+### Authentication and Administrator Dashboard
+![Login](./screenshots/login.png)
+
+### User Management
+![User Management](./screenshots/user-menu.png)
+
+### User Creation
+![User Creation](./screenshots/user-creation.png)
